@@ -5,10 +5,7 @@ import NavBar from './components/NavBar/NavBar';
 import NewQuestionForm from './components/NewQuestionForm/NewQuestionForm';
 
 
-function App(props) {
-
-    const { text } = props;
-
+function App() {
     return (
         <div className="App">
             <NavBar />

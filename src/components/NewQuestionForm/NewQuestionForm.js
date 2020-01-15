@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -14,6 +15,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import { addQuestion } from './../../store/actions/questionActions';
 
 
 
@@ -76,9 +78,15 @@ const useStyles = makeStyles({
     }
 });
 
-export const NewQuestionForm = () => {
+
+export const NewQuestionForm = (props) => {
 
     const classes = useStyles();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        props.addQuestion({ something: 'hello' });
+    }
 
     return (
         <div className={classes.container}>
@@ -88,8 +96,8 @@ export const NewQuestionForm = () => {
                         Add a new question
                     </Typography>
                     <form autoComplete="off" className={classes.content}>
-                        <TextField className={classes.input} id="filled-basic" label="Title" variant="filled" />
-                        <TextField className={classes.input} id="filled-basic" label="Question" variant="filled" />
+                        <TextField className={classes.input} label="Title" variant="filled" />
+                        <TextField className={classes.input} label="Question" variant="filled" />
 
                         <FormControl variant="filled" className={classes.input}>
                             <InputLabel id="demo-simple-select-filled-label">Category</InputLabel>
@@ -108,13 +116,13 @@ export const NewQuestionForm = () => {
 
 
 
-                        <TextField className={classes.input} id="filled-basic" label="Option" variant="filled" />
+                        <TextField className={classes.input} label="Option" variant="filled" />
                         <Button size="small" className={classes.optionsButton}>ADD OPTION</Button>
 
 
                         <FormControl component="fieldset" className={classes.radio}>
-                        <FormLabel component="legend">Mark the correct answer</FormLabel>
-                            <RadioGroup name="correct" className={classes.radio} column>
+                            <FormLabel component="legend">Mark the correct answer</FormLabel>
+                            <RadioGroup name="correct" className={classes.radio}>
                                 <FormControlLabel
                                     value="A"
                                     control={<Radio color="primary" />}
@@ -146,23 +154,20 @@ export const NewQuestionForm = () => {
                     </form>
                 </CardContent>
                 <CardActions>
-                    <Button size="medium">SAVE QUESTION</Button>
+                    <Button size="medium" onClick={handleSubmit}>SAVE QUESTION</Button>
                 </CardActions>
             </Card>
         </div>
     )
 }
 
-const mapStateToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
     return {
         addQuestion: (question) => dispatch(addQuestion(question))
     }
 };
 
-const mapDispatchToProps = {
-    
-};
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewQuestionForm);
+export default connect(null, mapDispatchToProps)(NewQuestionForm);
 
