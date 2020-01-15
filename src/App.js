@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './runtimeLogo.PNG';
 import './App.css';
 import { connect } from 'react-redux';
+import NavBar from './components/NavBar/NavBar';
 
 function App(props) {
 
@@ -9,12 +10,7 @@ function App(props) {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          I fetched this --> {text} from the Redux store.
-        </p>
-      </header>
+      <NavBar />
     </div>
   );
 }
