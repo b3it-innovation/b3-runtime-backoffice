@@ -153,5 +153,16 @@ export const NewQuestionForm = () => {
     )
 }
 
-export default NewQuestionForm;
+const mapStateToProps = (dispatch) => {
+    return {
+        addQuestion: (question) => dispatch(addQuestion(question))
+    }
+};
+
+const mapDispatchToProps = {
+    
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewQuestionForm);
 
