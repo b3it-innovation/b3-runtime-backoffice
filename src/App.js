@@ -1,24 +1,26 @@
 import React from 'react';
-import logo from './runtimeLogo.PNG';
 import './App.css';
 import { connect } from 'react-redux';
 import NavBar from './components/NavBar/NavBar';
+import NewQuestionForm from './components/NewQuestionForm/NewQuestionForm';
+
 
 function App(props) {
 
-  const { text } = props;
+    const { text } = props;
 
-  return (
-    <div className="App">
-      <NavBar />
-    </div>
-  );
+    return (
+        <div className="App">
+            <NavBar />
+            <NewQuestionForm />
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {
-  return {
-    text: state.someTextToRemove
-  }
+    return {
+        text: state.someTextToRemove
+    }
 }
 
 export default connect(mapStateToProps)(App);
