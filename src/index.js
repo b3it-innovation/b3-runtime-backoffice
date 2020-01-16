@@ -13,8 +13,25 @@ import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
 import { createFirestoreInstance } from 'redux-firestore'
 import fbConfig from './config/fbConfig';
 import firebase from 'firebase/app';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'; 
+import 'typeface-roboto';
 
 
+const theme = createMuiTheme({
+  palette: {
+     primary: {
+        light: '#fff',
+        main: 'rgb(23, 105, 170)',
+        dark: '#000'
+     },
+     secondary: {
+       main: '#006A8E',
+     },
+  },
+  typography: { 
+    fontFamily: 'typeface-roboto'
+  }
+});
 
 const store = createStore(
     rootReducer,
@@ -36,7 +53,7 @@ const store = createStore(
   ReactDOM.render(
     <Provider store={store}>
       <ReactReduxFirebaseProvider {...rrfProps}>
-        <App />
+      <MuiThemeProvider theme={theme}><App /></MuiThemeProvider>
       </ReactReduxFirebaseProvider>
     </Provider>,
     document.getElementById("root")
