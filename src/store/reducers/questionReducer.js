@@ -1,5 +1,5 @@
 const initState = {
-    questions: []
+    questions: [],
   }
   
   const questionReducer = (state = initState, action) => {
@@ -8,7 +8,7 @@ const initState = {
         console.log('add question success');
         return state;
       case 'ADD_QUESTION_ERROR':
-        console.log('add question error');
+        console.log('add question error', action.err);
         return state;
       default:
         return state;

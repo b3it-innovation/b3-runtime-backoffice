@@ -1,10 +1,9 @@
-const initState = {
-    /**Remove this when we want to start using redux */
-    someTextToRemove: '*William*'
-}
+import { combineReducers } from 'redux';
+import questionReducer from './questionReducer';
 
-const rootReducer = (state = initState, action) => {
-    return state;
-}
+
+const rootReducer = combineReducers({
+    questionReducer
+})
 
 export default rootReducer;

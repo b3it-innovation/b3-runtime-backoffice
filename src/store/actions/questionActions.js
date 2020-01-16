@@ -5,7 +5,7 @@ export const addQuestion = (payload) => {
             test: 'testText',
             createdAt: new Date()
         }).then(() => {
-            dispatch({ type: 'ADD_QUESTION_SUCCESSFULL', payload });
+            dispatch({ type: 'ADD_QUESTION_SUCCESS', payload });
         }).catch((err) => {
             dispatch({ type: 'ADD_QUESTION_ERROR', err });
         })
