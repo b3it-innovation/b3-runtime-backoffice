@@ -1,5 +1,17 @@
 .App {
   text-align: center;
+  font-family: 'typeface-roboto';
+}
+
+.Header {
+  background-color: #ccc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
 }
 
 .App-logo {
@@ -13,16 +25,6 @@
   }
 }
 
-.App-header {
-  background-color: #F7DF04;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-}
 
 .App-header img {
   width: 20%;

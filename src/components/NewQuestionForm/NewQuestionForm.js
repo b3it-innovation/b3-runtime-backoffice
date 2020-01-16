@@ -24,7 +24,6 @@ const useStyles = makeStyles({
         alignItems: 'center',
         width: '100%',
         margin: 'auto',
-        backgroundColor: 'lightgrey',
         flexWrap: 'nowrap',
     },
     card: {
