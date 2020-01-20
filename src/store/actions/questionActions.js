@@ -1,6 +1,12 @@
 import * as actionTypes from './actionTypes'
 import { firestore } from './../../config/fbConfig';
 
+export const addQuestionInit = () => {
+    return {
+        type: actionTypes.ADD_QUESTION_INIT
+    }
+}; 
+
 export const addQuestion = (payload) => {
     return (dispatch) => {
         firestore.collection('WilliamsTest').add(payload)
@@ -11,7 +17,6 @@ export const addQuestion = (payload) => {
         })
     }
 };
-
 
 const setCategories = (categories) => {
     return {

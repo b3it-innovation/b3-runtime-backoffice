@@ -3,15 +3,22 @@ import * as actionTypes from '../actions/actionTypes';
 const initState = {
     questions: [],
     categories: [],
+    questionAdded: false,
     error: null
 }
 
 const questionReducer = (state = initState, action) => {
     switch (action.type) {
+        case actionTypes.ADD_QUESTION_INIT:
+            return {
+                ...state,
+                questionAdded: false
+            };
         case actionTypes.ADD_QUESTION_SUCCESS:
             console.log('add question success');
             return {
                 ...state,
+                questionAdded: true,
                 error: null
             };
         case actionTypes.ADD_QUESTION_ERROR:
