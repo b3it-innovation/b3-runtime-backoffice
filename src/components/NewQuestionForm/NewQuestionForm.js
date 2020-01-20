@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -15,8 +15,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import { addQuestion } from './../../store/actions/questionActions';
-
+import * as actions from './../../store/actions/index';
 
 
 const useStyles = makeStyles({
@@ -80,11 +79,71 @@ const useStyles = makeStyles({
 
 export const NewQuestionForm = (props) => {
 
+    const [state, setState] = useState({
+        questionText: '',
+        category: '',
+        options: [],
+        correctAnswer: '',
+        title: '',
+    });
+
+    const [optionInput, setOptionInput] = useState({
+        currentOption: ''
+    });
+
+    useEffect(() => {
+        props.initCategories();
+    }, []);
+
+    const optionLetters = ['A', 'B', 'C', 'D']
+
     const classes = useStyles();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.addQuestion({ something: 'hello' });
+        props.addQuestion({ ...state });
+    }
+
+    function handleChange(e) {
+        const value = e.target.value;
+
+        if (e.target.name === 'option') {
+            setOptionInput({
+                ...optionInput,
+                currentOption: e.target.value
+            });
+        } else {
+            setState({
+                ...state,
+                [e.target.name]: value
+            });
+        }
+    }
+
+    const handleAddOption = (e) => {
+        e.preventDefault();
+        const option = (' ' + optionInput.currentOption).slice(1);
+        const newOptions = [...state.options, option];
+        setState({
+            ...state,
+            options: newOptions
+        });
+
+        setOptionInput({
+            ...optionInput,
+            currentOption: ''
+        });
+    }
+
+    let cats = null;
+    if (props.cat) {
+        cats = props.cat.map(c => (<MenuItem key={c.id} value={c.id}>{c.name.name}</MenuItem>));
+        console.log(cats);
+    }
+    else {
+        cats = (<MenuItem value="">
+            <em>None</em>
+        </MenuItem>);
     }
 
     return (
@@ -95,57 +154,41 @@ export const NewQuestionForm = (props) => {
                         Add a new question
                     </Typography>
                     <form autoComplete="off" className={classes.content}>
-                        <TextField className={classes.input} label="Title" variant="filled" />
-                        <TextField className={classes.input} label="Question" variant="filled" />
+                        <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
+                        <TextField className={classes.input} name='questionText' label="Question" variant="filled" value={state.questionText} onChange={handleChange} />
 
                         <FormControl variant="filled" className={classes.input}>
                             <InputLabel id="demo-simple-select-filled-label">Category</InputLabel>
                             <Select
                                 labelId="categoryId"
                                 id="categoryId"
+                                value={state.category}
+                                onChange={handleChange}
+                                name='category'
                             >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={10}>Java</MenuItem>
-                                <MenuItem value={20}>Javascript</MenuItem>
-                                <MenuItem value={30}>Other</MenuItem>
+                                {cats}
                             </Select>
                         </FormControl>
 
-
-
-                        <TextField className={classes.input} label="Option" variant="filled" />
-                        <Button size="small" className={classes.optionsButton}>ADD OPTION</Button>
-
+                        <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
+                        {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
+                            : <Button disabled='true' size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
 
                         <FormControl component="fieldset" className={classes.radio}>
                             <FormLabel component="legend">Mark the correct answer</FormLabel>
-                            <RadioGroup name="correct" className={classes.radio}>
-                                <FormControlLabel
-                                    value="A"
-                                    control={<Radio color="primary" />}
-                                    label="Option A"
-                                    labelPlacement="end"
-                                />
-                                <FormControlLabel
-                                    value="B"
-                                    control={<Radio color="primary" />}
-                                    label="Option B"
-                                    labelPlacement="end"
-                                />
-                                <FormControlLabel
-                                    value="C"
-                                    control={<Radio color="primary" />}
-                                    label="Option C"
-                                    labelPlacement="end"
-                                />
-                                <FormControlLabel
-                                    value="D"
-                                    control={<Radio color="primary" />}
-                                    label="Option D"
-                                    labelPlacement="end"
-                                />
+                            <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
+
+                                {state.options.map((option, index) => {
+                                    return (
+                                        <FormControlLabel
+                                            key={optionLetters[index]}
+                                            value={optionLetters[index]}
+                                            control={<Radio color="primary" />}
+                                            label={optionLetters[index] + ' ' + option}
+                                            labelPlacement="end"
+                                        />
+                                    )
+                                })}
 
                             </RadioGroup>
                         </FormControl>
@@ -160,13 +203,20 @@ export const NewQuestionForm = (props) => {
     )
 }
 
+const mapStateToProps = (state) => {
+    return {
+        cat: state.questions.categories,
+        err: state.questions.error
+    };
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        addQuestion: (question) => dispatch(addQuestion(question))
-    }
+        addQuestion: (question) => dispatch(actions.addQuestion(question)),
+        initCategories: () => dispatch(actions.initCategories())
+    };
 };
 
 
-
-export default connect(null, mapDispatchToProps)(NewQuestionForm);
+export default connect(mapStateToProps, mapDispatchToProps)(NewQuestionForm);
 

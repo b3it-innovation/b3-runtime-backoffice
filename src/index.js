@@ -7,57 +7,42 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import rootReducer from './store/reducers/rootReducer';
-import { reduxFirestore, getFirestore } from 'redux-firestore';
-import { getFirebase } from 'react-redux-firebase';
-import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
-import { createFirestoreInstance } from 'redux-firestore'
-import fbConfig from './config/fbConfig';
-import firebase from 'firebase/app';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'; 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import 'typeface-roboto';
 
 
 const theme = createMuiTheme({
   palette: {
-     primary: {
-        light: '#fff',
-        main: 'rgb(23, 105, 170)',
-        dark: '#000'
-     },
-     secondary: {
-       main: '#006A8E',
-     },
+    primary: {
+      light: '#fff',
+      main: 'rgb(23, 105, 170)',
+      dark: '#000'
+    },
+    secondary: {
+      main: '#006A8E',
+    },
   },
-  typography: { 
+  typography: {
     fontFamily: 'typeface-roboto'
   }
 });
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const store = createStore(
-    rootReducer,
-    compose(
-      applyMiddleware(thunk.withExtraArgument({ getFirestore, getFirebase })),
-      reduxFirestore(firebase, fbConfig)
-    )
-  );
-  
-  
-  const rrfProps = {
-    firebase,
-    config: fbConfig,
-    dispatch: store.dispatch,
-    createFirestoreInstance
-  };
-  
-  
-  ReactDOM.render(
-    <Provider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
-      <MuiThemeProvider theme={theme}><App /></MuiThemeProvider>
-      </ReactReduxFirebaseProvider>
-    </Provider>,
-    document.getElementById("root")
-  );
+  rootReducer,
+  compose(
+    composeEnhancers(applyMiddleware(thunk))
+  )
+);
+
+
+ReactDOM.render(
+  <Provider store={store}>
+    <MuiThemeProvider theme={theme}><App /></MuiThemeProvider>
+  </Provider>,
+  document.getElementById("root")
+);
 
 
 
