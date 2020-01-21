@@ -15,6 +15,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from './../../store/actions/index';
 
 
@@ -123,7 +124,18 @@ export const NewQuestionForm = (props) => {
     const handleAddOption = (e) => {
         e.preventDefault();
         const option = (' ' + optionInput.currentOption).slice(1);
-        const newOptions = [...state.options, option];
+        let optionLetter = null;
+        if(!state.options){
+            optionLetter = 'A';
+        } else {
+            optionLetter = optionLetters[state.options.length];
+        }
+        let object = {
+            text: option,
+            option: optionLetter,
+            imgUrl: null
+        }
+        const newOptions = [...state.options, object];
         setState({
             ...state,
             options: newOptions
@@ -146,14 +158,10 @@ export const NewQuestionForm = (props) => {
         </MenuItem>);
     }
 
-    return (
-        <div className={classes.container}>
-            <Card className={classes.card}>
-                <CardContent>
-                    <Typography className={classes.title} color="textPrimary" gutterBottom>
-                        Add a new question
-                    </Typography>
-                    <form autoComplete="off" className={classes.content}>
+    let form = <Spinner />;
+    if(!props.loading){
+        form = (
+            <form autoComplete="off" className={classes.content}>
                         <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
                         <TextField className={classes.input} name='questionText' label="Question" variant="filled" value={state.questionText} onChange={handleChange} />
 
@@ -184,7 +192,7 @@ export const NewQuestionForm = (props) => {
                                             key={optionLetters[index]}
                                             value={optionLetters[index]}
                                             control={<Radio color="primary" />}
-                                            label={optionLetters[index] + ' ' + option}
+                                            label={optionLetters[index] + ' ' + option.text}
                                             labelPlacement="end"
                                         />
                                     )
@@ -194,6 +202,17 @@ export const NewQuestionForm = (props) => {
                         </FormControl>
 
                     </form>
+        );
+    }
+
+    return (
+        <div className={classes.container}>
+            <Card className={classes.card}>
+            <CardContent>
+                    <Typography className={classes.title} color="textPrimary" gutterBottom>
+                        Add a new question
+                    </Typography>
+                    {form}
                 </CardContent>
                 <CardActions>
                     <Button size="medium" onClick={handleSubmit}>SAVE QUESTION</Button>
@@ -206,6 +225,7 @@ export const NewQuestionForm = (props) => {
 const mapStateToProps = (state) => {
     return {
         cat: state.questions.categories,
+        loading: state.questions.loading,
         err: state.questions.error
     };
 };

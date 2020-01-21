@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes'
-import { firestore } from './../../config/fbConfig';
+import { firestore } from '../../firestore/firestore';
+import * as collectionsNames from '../../firestore/collectionNames';
 
 export const addQuestionInit = () => {
     return {
@@ -7,9 +8,16 @@ export const addQuestionInit = () => {
     }
 }; 
 
+export const addQuestionStart = () => {
+    return {
+        type: actionTypes.ADD_QUESTION_START
+    }
+}
+
 export const addQuestion = (payload) => {
     return (dispatch) => {
-        firestore.collection('WilliamsTest').add(payload)
+        dispatch(addQuestionStart());
+        firestore.collection('WilliamsTest').doc("test").collection(collectionsNames.QUESTIONS).add(payload)
         .then(() => {
             dispatch({ type: actionTypes.ADD_QUESTION_SUCCESS, payload });
         }).catch((err) => {
