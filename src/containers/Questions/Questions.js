@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import NewQuestionForm from '../../components/NewQuestionForm/NewQuestionForm';
+import BrowseQuestions from '../../components/BrowseQuestions/BrowseQuestions';
 
 class Questions extends Component {
 
@@ -16,6 +17,7 @@ class Questions extends Component {
             <div>
                 {purchasedRedirect}
                 <NewQuestionForm />
+                <BrowseQuestions></BrowseQuestions>
             </div>
         );
     }
