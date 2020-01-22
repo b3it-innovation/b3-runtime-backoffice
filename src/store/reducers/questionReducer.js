@@ -1,9 +1,10 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initState = {
-    questions: [],
+    fetchedQuestions: [],
     categories: [],
     questionAdded: false,
+    questionDeleted: false,
     loading: false,
     error: null
 }
@@ -14,7 +15,8 @@ const questionReducer = (state = initState, action) => {
             return {
                 ...state,
                 loading: false,
-                questionAdded: false
+                questionAdded: false,
+                questionDeleted: false
             };
         case actionTypes.ADD_QUESTION_START:
             return {
@@ -45,6 +47,53 @@ const questionReducer = (state = initState, action) => {
                 ...state,
                 categories: catArray
             };
+        case actionTypes.SEARCH_QUESTIONS_START:
+            return {
+                ...state,
+                loading: true
+            };
+        case actionTypes.SEARCH_QUESTIONS_SUCCESS:
+            let questionArray = [];
+            action.fetchedQuestions.forEach(q => {
+                questionArray.push({
+                    id: q.id, category: q.data().category, correctAnswer: q.data().correctAnswer,
+                    text: q.data().text, title: q.data().title, options: q.data().options
+                });
+            });
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                fetchedQuestions: questionArray
+            };
+        case actionTypes.SEARCH_QUESTIONS_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
+        case actionTypes.DELETE_QUESTION_START:
+            return {
+                ...state,
+                loading: true,
+                error: null
+            }
+        case actionTypes.DELETE_QUESTION_SUCCESS:
+            let copy = [...state.fetchedQuestions];
+            const newValue = copy.filter(q => q.id !== action.id)
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                questionDeleted: true,
+                fetchedQuestions: newValue
+            }
+        case actionTypes.DELETE_QUESTION_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            }
         default:
             return state;
     }

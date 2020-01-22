@@ -1,6 +1,8 @@
 export {
     addQuestionInit,
     addQuestion,
-    initCategories
+    initCategories,
+    searchQuestions,
+    deleteQuestion
 } from './questionActions';
 

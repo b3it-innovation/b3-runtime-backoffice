@@ -7,16 +7,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from './../../store/actions/index';
+import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
 
 
 const useStyles = makeStyles({
@@ -81,7 +79,7 @@ const useStyles = makeStyles({
 export const NewQuestionForm = (props) => {
 
     const [state, setState] = useState({
-        questionText: '',
+        text: '',
         category: '',
         options: [],
         correctAnswer: '',
@@ -147,40 +145,19 @@ export const NewQuestionForm = (props) => {
         });
     }
 
-    let cats = null;
-    if (props.cat) {
-        cats = props.cat.map(c => (<MenuItem key={c.id} value={c.id}>{c.name.name}</MenuItem>));
-        console.log(cats);
-    }
-    else {
-        cats = (<MenuItem value="">
-            <em>None</em>
-        </MenuItem>);
-    }
 
     let form = <Spinner />;
     if(!props.loading){
         form = (
             <form autoComplete="off" className={classes.content}>
                         <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
-                        <TextField className={classes.input} name='questionText' label="Question" variant="filled" value={state.questionText} onChange={handleChange} />
+                        <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
-                        <FormControl variant="filled" className={classes.input}>
-                            <InputLabel id="demo-simple-select-filled-label">Category</InputLabel>
-                            <Select
-                                labelId="categoryId"
-                                id="categoryId"
-                                value={state.category}
-                                onChange={handleChange}
-                                name='category'
-                            >
-                                {cats}
-                            </Select>
-                        </FormControl>
+                        <CategoryDropDown value={state.category} handleChange={handleChange} cat={props.cat}/>
 
                         <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
                         {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
-                            : <Button disabled='true' size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
+                            : <Button disabled={true} size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
 
                         <FormControl component="fieldset" className={classes.radio}>
                             <FormLabel component="legend">Mark the correct answer</FormLabel>
@@ -200,7 +177,6 @@ export const NewQuestionForm = (props) => {
 
                             </RadioGroup>
                         </FormControl>
-
                     </form>
         );
     }

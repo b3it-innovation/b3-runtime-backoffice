@@ -3,11 +3,20 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import NewQuestionForm from '../../components/NewQuestionForm/NewQuestionForm';
+import BrowseQuestions from '../../components/BrowseQuestions/BrowseQuestions';
+import Button from '@material-ui/core/Button'
 
 class Questions extends Component {
 
     state = {
-        added: false
+        added: false,
+        browse: false
+    }
+
+    toggleBrowse = () => {
+        this.setState((prevState) => ({
+            browse: !prevState.browse
+        }))
     }
 
     render() {
@@ -15,7 +24,9 @@ class Questions extends Component {
         return (
             <div>
                 {purchasedRedirect}
-                <NewQuestionForm />
+                <Button variant="contained" color="primary" onClick={this.toggleBrowse}>{this.state.browse ? 'Add question' : 'Browse questions'}</Button>
+
+                {this.state.browse ? <BrowseQuestions /> : <NewQuestionForm />}
             </div>
         );
     }
