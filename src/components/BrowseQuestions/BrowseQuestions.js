@@ -8,8 +8,6 @@ import Button from '@material-ui/core/Button';
 import * as actions from '../../store/actions/index';
 import Panel from '../UI/ExpansionPanel/Panel';
 
-
-
 const styles = {
     container: {
         background: 'white',
@@ -19,6 +17,7 @@ const styles = {
         color: 'white',
         height: '500px',
         padding: '0 30px',
+        width: '800px',
     },
     input: {
         width: '70%',
@@ -52,6 +51,10 @@ class BrowseQuestions extends Component {
         this.props.searchQuestions(this.state.category);
     }
 
+    handleDeleteQuestion = (id) => {
+        this.props.deleteQuestion(id)
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -59,7 +62,7 @@ class BrowseQuestions extends Component {
         let questions = null;
         if (this.props.questions) {
             questions = this.props.questions.map(q => {
-                return <Panel key={q.id} label={q.title} object={q} />
+                return <Panel key={q.id} label={q.title} object={q} onDelete={this.handleDeleteQuestion} />
             })
         }
 
@@ -89,7 +92,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        searchQuestions: (category) => dispatch(actions.searchQuestions(category))
+        searchQuestions: (category) => dispatch(actions.searchQuestions(category)),
+        deleteQuestion: (id) => dispatch(actions.deleteQuestion(id))
     }
 }
 

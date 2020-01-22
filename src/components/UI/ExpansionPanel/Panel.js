@@ -30,13 +30,17 @@ function Panel(props) {
 
     const classes = useStyles();
 
-    let categoryName = props.categories.map(cat => {
-        if (cat.id === props.object.category) {
-            return cat.name.name;
-        } else {
-            return 'No category found';
-        }
-    })
+    let categoryName = null;
+    let matchedCategory = props.categories.find(cat => 
+        cat.id === props.object.category
+    )
+    if(matchedCategory == null){
+        categoryName = 'No category found';
+    } else {
+        categoryName = matchedCategory.name.name;
+    }
+
+    let id = props.object.id;
 
     return (
         <ExpansionPanel>
@@ -55,11 +59,11 @@ function Panel(props) {
                 <div className={classes.containerItem}>
 
                     Options: {props.object.options.map(option => {
-                        return <p>{option.option} {option.text}</p>
+                        return <p key={option.option}>{option.option} {option.text}</p>
                     })}
 
                     <p>Correct Answer: {props.object.correctAnswer}</p>
-                    <Button variant="contained" color="primary">Delete Question</Button>
+                    <Button variant="contained" color="primary" onClick={() => props.onDelete(id)}>Delete Question</Button>
                 </div>
                 <Typography>
                 </Typography>

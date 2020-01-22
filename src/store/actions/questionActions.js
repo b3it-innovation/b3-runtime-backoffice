@@ -76,3 +76,35 @@ export const searchQuestions = (category) => {
         })
     }
 };
+
+export const deleteQuestion = (questionId) => {
+    return (dispatch) => {
+        dispatch(deleteQuestionStart());
+        firestore.collection('WilliamsTest').doc("test").collection(collectionsNames.QUESTIONS).doc(questionId).delete()
+        .then(() => {
+            dispatch(deleteQuestionSuccess(questionId));
+        }).catch((err) => {
+            dispatch(deleteQuestionError(err));
+        });
+    }
+}
+
+const deleteQuestionStart = () => {
+    return {
+        type: actionTypes.DELETE_QUESTION_START
+    }
+}
+
+const deleteQuestionSuccess = (id) => {
+    return {
+        type: actionTypes.DELETE_QUESTION_SUCCESS,
+        id: id
+    }
+}
+
+const deleteQuestionError = (error) => {
+    return {
+        type: actionTypes.DELETE_QUESTION_ERROR,
+        error: error
+    }
+}
