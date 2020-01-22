@@ -5,10 +5,6 @@ import * as actions from '../../store/actions/index';
 
 class Home extends Component {
 
-    state = {
-        added: false
-    }
-
     componentDidMount(){
         this.props.initAddQuesion();
     }
