@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -27,24 +27,14 @@ const useStyles = makeStyles({
         flexWrap: 'nowrap',
     },
     card: {
-        minWidth: '50%',
+        minWidth: '100%',
         maxWidth: 1075,
-        margin: '100px'
-    },
-    content: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
+        margin: '50px'
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 24
-    },
-    pos: {
-        marginBottom: 12,
     },
     input: {
         width: '70%',
@@ -56,11 +46,6 @@ const useStyles = makeStyles({
         alignSelf: 'center',
         fontSize: 14,
         marginBottom: 8
-    },
-    option: {
-        fontWeight: 'bold',
-        width: '40%',
-        marginTop: 12,
     },
     radio: {
         display: 'flex',
@@ -149,7 +134,7 @@ export const NewQuestionForm = (props) => {
     let form = <Spinner />;
     if(!props.loading){
         form = (
-            <form autoComplete="off" className={classes.content}>
+            <form autoComplete="off">
                         <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
                         <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
@@ -215,4 +200,3 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewQuestionForm);
-
