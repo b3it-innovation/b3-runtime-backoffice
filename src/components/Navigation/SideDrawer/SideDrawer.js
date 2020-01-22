@@ -1,67 +1,47 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import NavigationItem from '../../Navigation/NavigationItems/NavigationItem/NavigationItem';
 
 const useStyles = makeStyles({
     list: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
         width: 250,
     },
-    fullList: {
-        width: 'auto',
-    },
+    divider: {
+        paddingTop: '10px'
+    }
 });
 
-export default function TemporaryDrawer() {
-    const classes = useStyles();
-    const [state, setState] = React.useState({
-        open: false
-    });
+export default function TemporaryDrawer(props) {
 
-    const toggleDrawer = (open) => event => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
-        }
-        setState({ ...state, open: open });
-    };
+    const classes = useStyles();
 
     const sideList = () => (
         <div
             className={classes.list}
             role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
+            onClick={() => props.close(false)}
+            onKeyDown={() => props.close(false)}
         >
             <NavigationItem path="/" label='Home' iconType='home' />
+            <Divider className={classes.divider} />
             <NavigationItem path="/tracks" label='Tracks' iconType='tracks' />
+            <Divider className={classes.divider} />
             <NavigationItem path="/questions" label='Questions' iconType='questions' />
+            <Divider className={classes.divider} />
             <NavigationItem path="/results" label='Results' iconType='results' />
-            {/* <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-                <NavigationItem path="/" label='Home' iconType='home' />
-            </List> */}
+            <Divider className={classes.divider} />
+
         </div>
     );
 
     return (
         <div>
-            <Button onClick={toggleDrawer(true)}>Open Left</Button>
-            <Drawer open={state.open} onClose={toggleDrawer(false)}>
+            <Drawer open={props.open} onClose={() => props.close(false)}>
                 {sideList()}
             </Drawer>
         </div>

@@ -14,14 +14,12 @@ function App() {
     return (
         <Router>
             <Layout>
-                <header className="Header">
                     <div className="App">
                         <Route path="/" exact component={Home} />
                         <Route path="/questions" exact component={Questions} />
                         <Route path="/tracks" exact render={() => <h1>Tracks</h1>} />
                         <Route path="/results" exact render={() => <h1>Results</h1>} />
                     </div>
-                </header>
             </Layout>
         </Router>
     );

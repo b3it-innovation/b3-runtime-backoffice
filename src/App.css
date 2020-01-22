@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   font-family: 'typeface-roboto';
+  min-width: 100vh;
 }
 
 .Header {
@@ -17,6 +18,11 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+h1 {
+  margin: 0;
+  padding-top: 50px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
