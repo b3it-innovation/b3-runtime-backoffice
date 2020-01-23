@@ -17,6 +17,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 import * as actions from './../../store/actions/index';
 import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
+import DeleteButton from '../UI/DeleteButton/DeleteButton';
 
 
 const useStyles = makeStyles({
@@ -42,6 +43,10 @@ const useStyles = makeStyles({
         width: '70%',
         marginTop: 12
 
+    },
+    options: {
+        display: 'flex',
+        flexFlow: 'column-nowrap'
     },
     optionsButton: {
         width: '70%',
@@ -131,6 +136,28 @@ export const NewQuestionForm = (props) => {
         });
     }
 
+    function handleDeleteOption(index) {
+        let options = state.options;
+        let newOptions = options.filter(option => {
+            console.log(option.option !== index)
+            return option.option !== index
+        })
+
+        console.log('oldOptions', newOptions)
+        let updOptions = newOptions.map((opt, i) => {
+            opt.option = optionLetters[i]
+            return opt;
+        })
+        console.log('updOptions', updOptions);
+
+        setState({
+            ...state,
+            options: updOptions
+        }); 
+
+        console.log(state.options)
+    }
+
 
     let form = <Spinner />;
     if (!props.loading) {
@@ -151,15 +178,17 @@ export const NewQuestionForm = (props) => {
 
                         {state.options.map((option, index) => {
                             return (
-                                <FormControlLabel
-                                    key={optionLetters[index]}
-                                    value={optionLetters[index]}
-                                    control={<Radio color="primary" />}
-                                    label={optionLetters[index] + ' ' + option.text}
-                                    labelPlacement="end"
-                                />
+                                <div className={classes.options} key={optionLetters[index]}>
+                                    <FormControlLabel
+                                        value={optionLetters[index]}
+                                        control={<Radio color="primary" />}
+                                        label={optionLetters[index] + ' ' + option.text}
+                                        labelPlacement="end"
+                                    /><DeleteButton click={handleDeleteOption} index={option.option}></DeleteButton>
+                                </div>
                             )
                         })}
+  
                     </RadioGroup>
                 </FormControl>
             </form>
@@ -176,7 +205,7 @@ export const NewQuestionForm = (props) => {
                     {form}
                 </CardContent>
                 <CardActions>
-                    <Button size="medium" onClick={handleSubmit}>SAVE QUESTION</Button>
+                    <Button size="large" onClick={handleSubmit}>SAVE QUESTION</Button>
                 </CardActions>
             </Card>
         </div>
