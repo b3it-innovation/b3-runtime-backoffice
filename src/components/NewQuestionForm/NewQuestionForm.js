@@ -15,6 +15,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from './../../store/actions/index';
 import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
+import DeleteButton from '../UI/DeleteButton/DeleteButton';
 
 
 const useStyles = makeStyles({
@@ -40,6 +41,10 @@ const useStyles = makeStyles({
         width: '70%',
         marginTop: 12
 
+    },
+    options: {
+        display: 'flex',
+        flexFlow: 'column-nowrap'
     },
     optionsButton: {
         width: '70%',
@@ -108,7 +113,7 @@ export const NewQuestionForm = (props) => {
         e.preventDefault();
         const option = (' ' + optionInput.currentOption).slice(1);
         let optionLetter = null;
-        if(!state.options){
+        if (!state.options) {
             optionLetter = 'A';
         } else {
             optionLetter = optionLetters[state.options.length];
@@ -130,53 +135,76 @@ export const NewQuestionForm = (props) => {
         });
     }
 
+    function handleDeleteOption(index) {
+        let options = state.options;
+        let newOptions = options.filter(option => {
+            console.log(option.option !== index)
+            return option.option !== index
+        })
+
+        console.log('oldOptions', newOptions)
+        let updOptions = newOptions.map((opt, i) => {
+            opt.option = optionLetters[i]
+            return opt;
+        })
+        console.log('updOptions', updOptions);
+
+        setState({
+            ...state,
+            options: updOptions
+        }); 
+
+        console.log(state.options)
+    }
+
 
     let form = <Spinner />;
-    if(!props.loading){
+    if (!props.loading) {
         form = (
             <form autoComplete="off">
-                        <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
-                        <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
+                <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
+                <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
-                        <CategoryDropDown value={state.category} handleChange={handleChange} cat={props.cat}/>
+                <CategoryDropDown value={state.category} handleChange={handleChange} cat={props.cat} />
 
-                        <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
-                        {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
-                            : <Button disabled={true} size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
+                <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
+                {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
+                    : <Button disabled={true} size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
 
-                        <FormControl component="fieldset" className={classes.radio}>
-                            <FormLabel component="legend">Mark the correct answer</FormLabel>
-                            <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
+                <FormControl component="fieldset" className={classes.radio}>
+                    <FormLabel component="legend">Mark the correct answer</FormLabel>
+                    <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
 
-                                {state.options.map((option, index) => {
-                                    return (
-                                        <FormControlLabel
-                                            key={optionLetters[index]}
-                                            value={optionLetters[index]}
-                                            control={<Radio color="primary" />}
-                                            label={optionLetters[index] + ' ' + option.text}
-                                            labelPlacement="end"
-                                        />
-                                    )
-                                })}
+                        {state.options.map((option, index) => {
+                            return (
+                                <div className={classes.options} key={optionLetters[index]}>
+                                    <FormControlLabel
+                                        value={optionLetters[index]}
+                                        control={<Radio color="primary" />}
+                                        label={optionLetters[index] + ' ' + option.text}
+                                        labelPlacement="end"
+                                    /><DeleteButton click={handleDeleteOption} index={option.option}></DeleteButton>
+                                </div>
+                            )
+                        })}
 
-                            </RadioGroup>
-                        </FormControl>
-                    </form>
+                    </RadioGroup>
+                </FormControl>
+            </form>
         );
     }
 
     return (
         <div className={classes.container}>
             <Card className={classes.card}>
-            <CardContent>
+                <CardContent>
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Add a new question
                     </Typography>
                     {form}
                 </CardContent>
                 <CardActions>
-                    <Button size="medium" onClick={handleSubmit}>SAVE QUESTION</Button>
+                    <Button size="large" onClick={handleSubmit}>SAVE QUESTION</Button>
                 </CardActions>
             </Card>
         </div>
