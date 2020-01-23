@@ -26,7 +26,7 @@ export const fetchResultsByTrackKey = (trackKey) => {
     return dispatch => {
         dispatch(connectResultsStart());
         firestore.collection(collectionsNames.RESULTS)
-            .where("attendee.trackKey", "==", trackKey).get()
+            .where("attendee.trackKey", "==", trackKey).orderBy('totalTime').get()
             .then((response) => {
                 dispatch(fetchResultsSuccess(response));
             }).catch((err) => {

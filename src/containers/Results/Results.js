@@ -7,6 +7,11 @@ import { withStyles } from '@material-ui/core/styles';
 import DropDown from '../../components/UI/Dropdown/DropDown'
 import * as actions from '../../store/actions/index';
 import SearchButton from '../../components/UI/Button/SearchButton/SearchButton';
+import { TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Table } from '@material-ui/core';
+import TransitionModal from '../../components/UI/Modal/Modal';
+import ResultDisplay from '../../components/ResultDisplay/ResultDisplay';
+
+import { millisToMinutesAndSeconds } from '../../Util/Util';
 
 const styles = {
     container: {
@@ -36,6 +41,9 @@ const styles = {
         fontWeight: 'bold',
         marginBottom: 24
     },
+    table: {
+        minWidth: 650
+    }
 };
 
 class Results extends Component {
@@ -43,7 +51,9 @@ class Results extends Component {
     state = {
         competition: null,
         track: null,
-        tracksFetched: false
+        tracksFetched: false,
+        modalOpen: false,
+        chosenResult: null,
     }
 
     componentDidMount() {
@@ -70,6 +80,30 @@ class Results extends Component {
         this.props.searchResults(this.state.track);
     }
 
+    showDetails = (id) => {
+        let result = this.props.results.find(res => {
+            return res.id === id
+        })
+        this.setState({
+            chosenResult: result
+        })
+        console.log(this.state.chosenResult)
+        this.handleOpen();
+    }
+
+    handleOpen = () => {
+        this.setState({
+            modalOpen: true
+        })
+    };
+
+    handleClose = () => {
+        this.setState({
+            modalOpen: false
+        })
+    };
+
+
     render() {
 
         const { classes } = this.props;
@@ -82,13 +116,42 @@ class Results extends Component {
         }
         let tracksDropDown = null;
         if (this.props.tracks) {
-            console.log(this.props.tracks);
             tracksDropDown = <DropDown obj={this.props.tracks} value={this.state.track || ''} handleChange={this.handleChange}
                 label="Tracks" name="track" id="trackId" />
         }
         let button = null;
-        if(this.state.track){
-            button = <SearchButton click={this.handleSearch}/>
+        if (this.state.track) {
+            button = <SearchButton click={this.handleSearch} />
+        }
+
+        let table = null;
+        if (this.props.results) {
+            table = (
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label='simple table'>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>
+                                    Username
+                                </TableCell>
+                                <TableCell align='right'>
+                                    Total time
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>{this.props.results.map(res => (
+                            <TableRow key={res.id} onClick={() => this.showDetails(res.id)}>
+                                <TableCell component='th' scope='row'>
+                                    {res.attendee.name}
+                                </TableCell>
+                                <TableCell align='right'>
+                                    {res.totalTime ? millisToMinutesAndSeconds(res.totalTime) : 'Did not finish'}
+                                </TableCell>
+                            </TableRow>
+                        ))}</TableBody>
+                    </Table>
+                </TableContainer>
+            );
         }
 
         return (
@@ -97,6 +160,8 @@ class Results extends Component {
                 {dropDown}
                 {tracksDropDown}
                 {button}
+                <TransitionModal open={this.state.modalOpen} handleClose={this.handleClose}>{this.state.chosenResult ? <ResultDisplay result={this.state.chosenResult}/> : null}</TransitionModal>
+                {table}
             </div>
         );
     }

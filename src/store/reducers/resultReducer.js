@@ -19,7 +19,8 @@ const fetchResultsSuccess = (state, action) => {
     action.fetchedResults.forEach(r => {
         results.push({
             id: r.id, lastUpdatedDate: r.data().lastUpdatedDate, key: r.data().key,
-            attendee: r.data().attendee, results: r.data().results
+            attendee: r.data().attendee, results: r.data().results,
+            totalTime: r.data().totalTime
         });
     });
     return {
