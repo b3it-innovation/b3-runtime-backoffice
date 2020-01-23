@@ -13,44 +13,40 @@ const styles = {
     }
 }
 
-function CategoryDropDown(props) {
+function CompetitionDropDown(props) {
 
     const { classes } = props;
 
-    let cats = null;
+    let items = null;
 
-    if (props.cat) {
-        cats = props.cat.map(c => (<MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>));
-        if(props.allCat) {
-            cats.push(<MenuItem key='all' value='all'>All</MenuItem>)
+    if (props.obj) {
+        items = props.obj.map(o => (<MenuItem key={o.id} value={o.id}>{o.name}</MenuItem>));
+        if (props.all) {
+            items.push(<MenuItem key='all' value='all'>All</MenuItem>)
         }
     }
     else {
-        cats = (
-            <MenuItem value="">
-                <em>None</em>
-            </MenuItem>
-        );
+        items = <MenuItem value=""><em>None</em></MenuItem>;
     }
 
     return (
         <FormControl variant="filled" className={classes.input}>
-            <InputLabel id="demo-simple-select-filled-label">Category</InputLabel>
+            <InputLabel id="demo-simple-select-filled-label">{props.label}</InputLabel>
             <Select
-                labelId="categoryId"
-                id="categoryId"
+                labelId={props.id}
+                id={props.id}
                 value={props.value}
                 onChange={props.handleChange}
-                name='category'
+                name={props.name}
             >
-                {cats}
+                {items}
             </Select>
         </FormControl>
     )
 }
 
-CategoryDropDown.propTypes = {
+CompetitionDropDown.propTypes = {
     classes: PropTypes.object.isRequired
-  };
+};
 
-export default withStyles(styles)(CategoryDropDown)
+export default withStyles(styles)(CompetitionDropDown)

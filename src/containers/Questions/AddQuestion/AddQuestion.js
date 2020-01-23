@@ -13,11 +13,11 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import Spinner from '../../components/UI/Spinner/Spinner';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
-import * as actions from './../../store/actions/index';
-import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
-import DeleteButton from '../UI/DeleteButton/DeleteButton';
+import * as actions from '../../../store/actions/index';
+import DropDown from '../../../components/UI/Dropdown/DropDown';
+import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
 
 
 const useStyles = makeStyles({
@@ -153,7 +153,7 @@ export const NewQuestionForm = (props) => {
         setState({
             ...state,
             options: updOptions
-        }); 
+        });
 
         console.log(state.options)
     }
@@ -166,7 +166,8 @@ export const NewQuestionForm = (props) => {
                 <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
                 <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
-                <CategoryDropDown value={state.category} handleChange={handleChange} cat={props.categories} />
+                <DropDown value={state.category} handleChange={handleChange} obj={props.categories}
+                    label="Category" name="category" id="categoryId" />
 
                 <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
                 {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
@@ -188,7 +189,7 @@ export const NewQuestionForm = (props) => {
                                 </div>
                             )
                         })}
-  
+
                     </RadioGroup>
                 </FormControl>
             </form>

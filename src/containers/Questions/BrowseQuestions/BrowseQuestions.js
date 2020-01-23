@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
-import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import * as actions from '../../store/actions/index';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import Panel from '../UI/ExpansionPanel/Panel';
-import Spinner from '../UI/Spinner/Spinner';
+import DropDown from '../../../components/UI/Dropdown/DropDown';
+import Panel from '../../../components/UI/ExpansionPanel/Panel';
+import Spinner from '../../../components/UI/Spinner/Spinner';
+import * as actions from '../../../store/actions/index';
+import SearchButton from '../../../components/UI/Button/SearchButton/SearchButton';
 
 
 const styles = {
@@ -60,7 +61,7 @@ class BrowseQuestions extends Component {
         });
     }
 
-    handleSearch = (e) => {
+    handleSearch = () => {
         this.props.searchQuestions(this.state.category);
     }
 
@@ -78,7 +79,7 @@ class BrowseQuestions extends Component {
             })
         }
         let spinner = null;
-        if(this.props.loading){
+        if (this.props.loading) {
             spinner = <Spinner />;
         }
 
@@ -89,9 +90,11 @@ class BrowseQuestions extends Component {
                         <Typography className={classes.title} color="textPrimary" gutterBottom>
                             Browse questions
                     </Typography>
-                        <CategoryDropDown allCat cat={this.props.categories} value={this.state.category || ''} handleChange={this.handleChange} />
+                        <DropDown
+                            all obj={this.props.categories} value={this.state.category || ''} handleChange={this.handleChange}
+                            label="Category" name="category" id="categoryId" />
                         <TextField className={classes.input} name='searchText' label="Search" variant="filled" value={this.state.searchText || ''} onChange={this.handleChange} />
-                        <Button size="small" className={classes.optionsButton} onClick={this.handleSearch}>SEARCH</Button>
+                        <SearchButton click={this.handleSearch} />
                         {spinner}
                         {questions}
                     </CardContent>
