@@ -20,7 +20,7 @@ function CategoryDropDown(props) {
     let cats = null;
 
     if (props.cat) {
-        cats = props.cat.map(c => (<MenuItem key={c.id} value={c.id}>{c.name.name}</MenuItem>));
+        cats = props.cat.map(c => (<MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>));
         if(props.allCat) {
             cats.push(<MenuItem key='all' value='all'>All</MenuItem>)
         }

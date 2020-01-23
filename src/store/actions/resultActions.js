@@ -26,12 +26,12 @@ export const fetchResultsByTrackKey = (trackKey) => {
     return dispatch => {
         dispatch(connectResultsStart());
         firestore.collection(collectionsNames.RESULTS)
-        .where("attendee.trackKey", "==", trackKey).get()
-        .then((response) => {
-            dispatch(fetchResultsSuccess(response));
-        }).catch((err) => {
-            dispatch(fetchResultsError(err));
-        });
+            .where("attendee.trackKey", "==", trackKey).get()
+            .then((response) => {
+                dispatch(fetchResultsSuccess(response));
+            }).catch((err) => {
+                dispatch(fetchResultsError(err));
+            });
     };
 };
 

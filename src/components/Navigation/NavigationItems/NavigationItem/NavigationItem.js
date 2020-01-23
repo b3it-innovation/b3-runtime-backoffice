@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Typography from '@material-ui/core/Typography';
-import { ListItemText } from '@material-ui/core';
-import { Home, RoomRounded, ContactSupportRounded, FormatListNumberedRounded } from '@material-ui/icons';
+import { ListItemText, Typography } from '@material-ui/core';
+import { Home, RoomRounded, ContactSupportRounded, FormatListNumberedRounded, DirectionsRun } from '@material-ui/icons';
 import classes from './NavigationItem.module.css';
 
 const navigationItem = (props) => {
@@ -14,6 +13,9 @@ const navigationItem = (props) => {
             break;
         case 'questions':
             icon = <ContactSupportRounded />;
+            break;
+        case 'competitions':
+            icon = <DirectionsRun />;
             break;
         case 'tracks':
             icon = <RoomRounded />;

@@ -2,11 +2,10 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import { Menu } from '@material-ui/icons';
+import { Button, List, ListItem } from '@material-ui/core';
 import 'typeface-roboto';
 import NavigationItems from '../NavigationItems/NavigationItems';
-import { Menu } from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
-
 
 const NavBar = (props) => {
     return (
@@ -17,7 +16,11 @@ const NavBar = (props) => {
                     <Typography variant='h5' color='inherit'>
                         b3runtime
                     </Typography>
-                    <NavigationItems />
+                    <List component='nav'>
+                        <ListItem component='div'>
+                            <NavigationItems />
+                        </ListItem>
+                    </List>
                 </Toolbar>
             </AppBar>
         </div>

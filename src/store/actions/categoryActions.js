@@ -26,11 +26,11 @@ export const fetchCategories = () => {
     return dispatch => {
         dispatch(connectCategoriesStart);
         firestore.collection(collectionsNames.CATEGORIES).get()
-        .then(querySnapshot => {
-            dispatch(fetchCategoriesSuccess(querySnapshot));
-        }).catch(error => {
-            dispatch(fetchCategoriesError(error));
-        });
+            .then(querySnapshot => {
+                dispatch(fetchCategoriesSuccess(querySnapshot));
+            }).catch(error => {
+                dispatch(fetchCategoriesError(error));
+            });
     };
 };
 
@@ -77,10 +77,10 @@ export const deleteCategory = (categoryId) => {
     return (dispatch) => {
         dispatch(connectCategoriesStart());
         firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
-        .then(() => {
-            dispatch(deleteCategorySuccess(categoryId));
-        }).catch((err) => {
-            dispatch(deleteCategoryError(err));
-        });
+            .then(() => {
+                dispatch(deleteCategorySuccess(categoryId));
+            }).catch((err) => {
+                dispatch(deleteCategoryError(err));
+            });
     };
 };

@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button'
 class Questions extends Component {
 
     state = {
-        added: false,
         browse: false
     }
 
@@ -20,10 +19,10 @@ class Questions extends Component {
     }
 
     render() {
-        const purchasedRedirect = this.props.added ? <Redirect to="/" /> : null;
+        const questionAddedRedirect = this.props.added ? <Redirect to="/" /> : null;
         return (
             <div>
-                {purchasedRedirect}
+                {questionAddedRedirect}
                 <Button variant="contained" color="primary" onClick={this.toggleBrowse}>{this.state.browse ? 'Add question' : 'Browse questions'}</Button>
 
                 {this.state.browse ? <BrowseQuestions /> : <NewQuestionForm />}

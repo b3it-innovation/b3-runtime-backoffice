@@ -26,12 +26,12 @@ export const fetchCompetitions = () => {
     return dispatch => {
         dispatch(connectCompetitionsStart());
         firestore.collection(collectionsNames.COMPETITIONS)
-        .get()
-        .then((response) => {
-            dispatch(fetchCompetitionsSuccess(response));
-        }).catch((err) => {
-            dispatch(fetchCompetitionsError(err));
-        });
+            .get()
+            .then((response) => {
+                dispatch(fetchCompetitionsSuccess(response));
+            }).catch((err) => {
+                dispatch(fetchCompetitionsError(err));
+            });
     };
 };
 
@@ -78,10 +78,10 @@ export const deleteCompetition = (competitionId) => {
     return (dispatch) => {
         dispatch(connectCompetitionsStart());
         firestore.collection(collectionsNames.COMPETITIONS).doc(competitionId).delete()
-        .then(() => {
-            dispatch(deleteCompetitionSuccess(competitionId));
-        }).catch((err) => {
-            dispatch(deleteCompetitionError(err));
-        });
+            .then(() => {
+                dispatch(deleteCompetitionSuccess(competitionId));
+            }).catch((err) => {
+                dispatch(deleteCompetitionError(err));
+            });
     };
 };

@@ -9,7 +9,7 @@ class Results extends Component {
         fetched: false
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.searchResults("lwtjvmMDPP0v4djxYHuA");
     }
 
@@ -19,10 +19,10 @@ class Results extends Component {
     }
 
     render() {
-        if(this.props.competitions && !this.state.fetched){
+        if (this.props.competitions && !this.state.fetched) {
             this.searchTracksByKeys();
         }
-        
+
         return (
             <div>
                 <h1>Results</h1>

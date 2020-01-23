@@ -10,18 +10,21 @@ import Layout from './hoc/Layout/Layout';
 import Home from './containers/Home/Home';
 import Questions from './containers/Questions/Questions';
 import Results from './containers/Results/Results';
+import Competitions from './containers/Competitions/Competitions';
+import Tracks from './containers/Tracks/Tracks';
 
 
 function App() {
     return (
         <Router>
             <Layout>
-                    <div className="App">
-                        <Route path="/" exact component={Home} />
-                        <Route path="/questions" exact component={Questions} />
-                        <Route path="/tracks" exact render={() => <h1>Tracks</h1>} />
-                        <Route path="/results" exact component={Results} />
-                    </div>
+                <div className="App">
+                    <Route path="/" exact component={Home} />
+                    <Route path="/competitions" exact component={Competitions} />
+                    <Route path="/questions" exact component={Questions} />
+                    <Route path="/tracks" exact component={Tracks} />
+                    <Route path="/results" exact component={Results} />
+                </div>
             </Layout>
         </Router>
     );

@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+
+import { withStyles } from '@material-ui/core/styles';
 import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import * as actions from '../../store/actions/index';
-import Panel from '../UI/ExpansionPanel/Panel';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+
+import Panel from '../UI/ExpansionPanel/Panel';
+import Spinner from '../UI/Spinner/Spinner';
 
 
 const styles = {
@@ -42,7 +45,6 @@ const styles = {
     },
 };
 
-
 class BrowseQuestions extends Component {
 
     state = {
@@ -67,7 +69,6 @@ class BrowseQuestions extends Component {
     }
 
     render() {
-
         const { classes } = this.props;
 
         let questions = null;
@@ -76,18 +77,22 @@ class BrowseQuestions extends Component {
                 return <Panel key={q.id} label={q.title} object={q} onDelete={this.handleDeleteQuestion} />
             })
         }
+        let spinner = null;
+        if(this.props.loading){
+            spinner = <Spinner />;
+        }
 
         return (
-
             <div className={classes.container}>
                 <Card className={classes.card}>
                     <CardContent>
-                    <Typography className={classes.title} color="textPrimary" gutterBottom>
-                        Browse questions
+                        <Typography className={classes.title} color="textPrimary" gutterBottom>
+                            Browse questions
                     </Typography>
-                        <CategoryDropDown allCat cat={this.props.cat} value={this.state.category || ''} handleChange={this.handleChange} />
+                        <CategoryDropDown allCat cat={this.props.categories} value={this.state.category || ''} handleChange={this.handleChange} />
                         <TextField className={classes.input} name='searchText' label="Search" variant="filled" value={this.state.searchText || ''} onChange={this.handleChange} />
                         <Button size="small" className={classes.optionsButton} onClick={this.handleSearch}>SEARCH</Button>
+                        {spinner}
                         {questions}
                     </CardContent>
                 </Card>
@@ -102,7 +107,7 @@ BrowseQuestions.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        cat: state.questions.categories,
+        categories: state.categories.categories,
         questions: state.questions.fetchedQuestions,
         loading: state.questions.loading,
         err: state.questions.error
