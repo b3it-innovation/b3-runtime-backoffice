@@ -5,7 +5,7 @@ import * as actions from '../../store/actions/index';
 
 class Home extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.initAddQuesion();
     }
 

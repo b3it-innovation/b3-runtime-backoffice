@@ -8,4 +8,4 @@ export const TRACKS = 'tracks';
 export const USER_ACCOUNTS = 'user_accounts';
 
 // Subcollections
-export const CHECKPOINTS = 'checkpoints';
+export const CHECKPOINTS = 'checkpoints'; // in tracks

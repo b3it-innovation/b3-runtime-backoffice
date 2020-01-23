@@ -1,17 +1,31 @@
 import React from 'react';
 
-import { List, ListItem } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
+import { makeStyles } from '@material-ui/core/styles';
+
 import NavigationItem from './NavigationItem/NavigationItem';
+import Aux from '../../../hoc/Auxiliary/Auxiliary';
 
-const navigationItems = () => (
-    <List component='nav'>
-        <ListItem component='div'>
-            <NavigationItem path="/" label='Home' iconType='home' />
-            <NavigationItem path="/tracks" label='Tracks' iconType='tracks' />
-            <NavigationItem path="/questions" label='Questions' iconType='questions' />
-            <NavigationItem path="/results" label='Results' iconType='results' />
-        </ListItem>
-    </List>
-);
+const useStyles = makeStyles({
+    divider: {
+        paddingTop: '10px'
+    }
+});
 
-export default navigationItems;
+export default function NavigationItems(props) {
+
+    const classes = useStyles();
+
+    return (<Aux>
+        <NavigationItem path="/" label='Home' iconType='home' />
+        <Divider className={classes.divider} />
+        <NavigationItem path="/competitions" label='Competitions' iconType='competitions' />
+        <Divider className={classes.divider} />
+        <NavigationItem path="/tracks" label='Tracks' iconType='tracks' />
+        <Divider className={classes.divider} />
+        <NavigationItem path="/questions" label='Questions' iconType='questions' />
+        <Divider className={classes.divider} />
+        <NavigationItem path="/results" label='Results' iconType='results' />
+    </Aux>);
+
+}

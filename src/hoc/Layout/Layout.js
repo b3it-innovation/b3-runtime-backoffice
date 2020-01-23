@@ -12,14 +12,14 @@ class Layout extends Component {
     }
 
     toggleDrawer = (open) => {
-        this.setState(({ open: open  }))
+        this.setState(({ open: open }))
     }
 
     render() {
         return (
             <Aux>
-                <NavBar click={this.toggleDrawer}/>
-                <SideDrawer close={this.toggleDrawer} open={this.state.open}/>
+                <NavBar click={this.toggleDrawer} />
+                <SideDrawer close={this.toggleDrawer} open={this.state.open} />
                 <main className={classes.Content}>
                     {this.props.children}
                 </main>

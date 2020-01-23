@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
-import NavigationItem from '../../Navigation/NavigationItems/NavigationItem/NavigationItem';
+import NavigationItems from '../NavigationItems/NavigationItems';
 
 const useStyles = makeStyles({
     list: {
@@ -27,15 +26,7 @@ export default function TemporaryDrawer(props) {
             onClick={() => props.close(false)}
             onKeyDown={() => props.close(false)}
         >
-            <NavigationItem path="/" label='Home' iconType='home' />
-            <Divider className={classes.divider} />
-            <NavigationItem path="/tracks" label='Tracks' iconType='tracks' />
-            <Divider className={classes.divider} />
-            <NavigationItem path="/questions" label='Questions' iconType='questions' />
-            <Divider className={classes.divider} />
-            <NavigationItem path="/results" label='Results' iconType='results' />
-            <Divider className={classes.divider} />
-
+            <NavigationItems />
         </div>
     );
 

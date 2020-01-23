@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,6 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Spinner from '../../components/UI/Spinner/Spinner';
+
 import * as actions from './../../store/actions/index';
 import CategoryDropDown from '../UI/Dropdown/CategoryDropDown';
 
@@ -60,7 +62,6 @@ const useStyles = makeStyles({
     }
 });
 
-
 export const NewQuestionForm = (props) => {
 
     const [state, setState] = useState({
@@ -76,7 +77,7 @@ export const NewQuestionForm = (props) => {
     });
 
     useEffect(() => {
-        props.initCategories();
+        props.fetchCategories();
     }, []);
 
     const optionLetters = ['A', 'B', 'C', 'D']
@@ -108,7 +109,7 @@ export const NewQuestionForm = (props) => {
         e.preventDefault();
         const option = (' ' + optionInput.currentOption).slice(1);
         let optionLetter = null;
-        if(!state.options){
+        if (!state.options) {
             optionLetter = 'A';
         } else {
             optionLetter = optionLetters[state.options.length];
@@ -132,44 +133,43 @@ export const NewQuestionForm = (props) => {
 
 
     let form = <Spinner />;
-    if(!props.loading){
+    if (!props.loading) {
         form = (
             <form autoComplete="off">
-                        <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
-                        <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
+                <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
+                <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
-                        <CategoryDropDown value={state.category} handleChange={handleChange} cat={props.cat}/>
+                <CategoryDropDown value={state.category} handleChange={handleChange} cat={props.categories} />
 
-                        <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
-                        {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
-                            : <Button disabled={true} size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
+                <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
+                {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
+                    : <Button disabled={true} size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
 
-                        <FormControl component="fieldset" className={classes.radio}>
-                            <FormLabel component="legend">Mark the correct answer</FormLabel>
-                            <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
+                <FormControl component="fieldset" className={classes.radio}>
+                    <FormLabel component="legend">Mark the correct answer</FormLabel>
+                    <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
 
-                                {state.options.map((option, index) => {
-                                    return (
-                                        <FormControlLabel
-                                            key={optionLetters[index]}
-                                            value={optionLetters[index]}
-                                            control={<Radio color="primary" />}
-                                            label={optionLetters[index] + ' ' + option.text}
-                                            labelPlacement="end"
-                                        />
-                                    )
-                                })}
-
-                            </RadioGroup>
-                        </FormControl>
-                    </form>
+                        {state.options.map((option, index) => {
+                            return (
+                                <FormControlLabel
+                                    key={optionLetters[index]}
+                                    value={optionLetters[index]}
+                                    control={<Radio color="primary" />}
+                                    label={optionLetters[index] + ' ' + option.text}
+                                    labelPlacement="end"
+                                />
+                            )
+                        })}
+                    </RadioGroup>
+                </FormControl>
+            </form>
         );
     }
 
     return (
         <div className={classes.container}>
             <Card className={classes.card}>
-            <CardContent>
+                <CardContent>
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Add a new question
                     </Typography>
@@ -185,7 +185,7 @@ export const NewQuestionForm = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        cat: state.questions.categories,
+        categories: state.categories.categories,
         loading: state.questions.loading,
         err: state.questions.error
     };
@@ -194,7 +194,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addQuestion: (question) => dispatch(actions.addQuestion(question)),
-        initCategories: () => dispatch(actions.initCategories())
+        fetchCategories: () => dispatch(actions.fetchCategories())
     };
 };
 
