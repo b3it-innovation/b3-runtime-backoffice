@@ -1,4 +1,5 @@
-.Link {
-    text-decoration: none;
-    color: white;
+@media (max-width: 1096px) {
+    .DesktopOnly {
+        display: none;
+    }
 }
