@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react'
-import { GOOGLE_MAP_API_KEY } from '../../../Util/apiKeys'
+import { GOOGLE_MAP_API_KEY } from '../../../utility/Util/apiKeys'
+import { Container } from '@material-ui/core';
 
 let map = null;
 
@@ -15,7 +16,6 @@ class GoogleMap extends Component {
         googleMapScript.addEventListener('load', () => {
             this.googleMap = this.createGoogleMap();
             map = this.googleMap;
-            this.marker = this.createMarker();
             window.google.maps.event.addDomListener(window, "resize", function () {
                 let center = map.getCenter();
                 window.google.maps.event.trigger(this.googleMap, "resize");
@@ -68,11 +68,13 @@ class GoogleMap extends Component {
 
     render() {
         return (
-            <div
-                id="google-map"
-                ref={this.googleMapRef}
-                style={{ width: '800px', height: '650px' }}
-            />
+            <Container maxWidth="lg">
+                <div
+                    id="google-map"
+                    ref={this.googleMapRef}
+                    style={{ width: '80%', height: '500px' }}
+                />
+            </Container>
         );
     }
 }

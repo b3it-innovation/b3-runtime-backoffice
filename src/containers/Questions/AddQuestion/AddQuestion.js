@@ -88,6 +88,14 @@ const AddQuestion = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.addQuestion({ ...state });
+        setState({
+            text: '',
+            category: '',
+            options: [],
+            correctAnswer: '',
+            title: '',
+        });
+        setOptionInput({currentOption: ''});
     }
 
     function handleChange(e) {

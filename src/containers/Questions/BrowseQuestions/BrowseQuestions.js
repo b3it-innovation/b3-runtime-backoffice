@@ -95,7 +95,9 @@ class BrowseQuestions extends Component {
                         <DropDown
                             all obj={this.props.categories} value={this.state.category || ''} handleChange={this.handleChange}
                             label="Category" name="category" id="categoryId" />
-                        <TextField className={classes.input} name='searchText' label="Search" variant="filled" value={this.state.searchText || ''} onChange={this.handleChange} />
+                        {/* <TextField 
+                            className={classes.input} name='searchText' label="Search" 
+                            variant="filled" value={this.state.searchText || ''} onChange={this.handleChange} /> */}
                         <SearchButton click={this.handleSearch} />
                         {spinner}
                         {questions}
