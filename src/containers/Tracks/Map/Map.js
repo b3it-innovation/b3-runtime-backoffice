@@ -1,6 +1,5 @@
 import React, { Component, createRef } from 'react'
-
-const GOOGLE_MAP_API_KEY = 'AIzaSyCbwwzKmHTpilftt3kGyDaQyFDTG3ChSRQ';
+import { GOOGLE_MAP_API_KEY } from '../../../Util/apiKeys'
 
 class GoogleMap extends Component {
 
@@ -21,13 +20,13 @@ class GoogleMap extends Component {
         new window.google.maps.Map(this.googleMapRef.current, {
             zoom: 16,
             center: {
-                lat: 43.642567,
-                lng: -79.387054,
+                lat: 59.33331080609333,
+                lng: 18.05421561640526,
             },
             disableDefaultUI: true,
             mapTypeId: 'hybrid',
         });
-        
+
 
     createMarker = (lat, lng) => {
         let marker = new window.google.maps.Marker({
