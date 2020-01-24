@@ -67,7 +67,7 @@ const useStyles = makeStyles({
     }
 });
 
-export const NewQuestionForm = (props) => {
+const AddQuestion = (props) => {
 
     const [state, setState] = useState({
         text: '',
@@ -224,4 +224,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewQuestionForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AddQuestion);

@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 import AddQuestion from './AddQuestion/AddQuestion';
 import BrowseQuestions from './BrowseQuestions/BrowseQuestions';
-import Button from '@material-ui/core/Button'
 import * as actions from '../../store/actions/index';
 import CenteredTabs from '../../components/Navigation/CenterdTabs/CenteredTabs';
+import Categories from './Categories/Categories';
 
 class Questions extends Component {
 
@@ -37,7 +37,7 @@ class Questions extends Component {
                 content = <BrowseQuestions />;
                 break;
             case 2:
-                content = null;
+                content = <Categories />;
                 break;
             default:
                 content = null

@@ -24,9 +24,9 @@ const fetchCategoriesError = (error) => {
 
 export const fetchCategories = () => {
     return dispatch => {
-        dispatch(connectCategoriesStart);
-        firestore.collection(collectionsNames.CATEGORIES).get()
+        firestore.collection(collectionsNames.CATEGORIES).orderBy('name').get()
             .then(querySnapshot => {
+                dispatch(connectCategoriesStart());
                 dispatch(fetchCategoriesSuccess(querySnapshot));
             }).catch(error => {
                 dispatch(fetchCategoriesError(error));
@@ -49,10 +49,12 @@ const addCategoryError = (error) => {
 
 export const addCategory = (newCategory) => {
     return dispatch => {
+        console.log(newCategory);
         dispatch(connectCategoriesStart());
         firestore.collection(collectionsNames.CATEGORIES).add(newCategory)
             .then(() => {
                 dispatch(addCategorySuccess());
+                dispatch(fetchCategories());
             }).catch((err) => {
                 dispatch(addCategoryError(err));
             });
