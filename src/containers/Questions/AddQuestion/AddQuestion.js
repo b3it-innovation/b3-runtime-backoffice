@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,13 +26,13 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         alignItems: 'center',
         width: '100%',
-        margin: 'auto',
+        padding: '0',
+        margin: '0',
         flexWrap: 'nowrap',
     },
     card: {
         minWidth: '100%',
         maxWidth: 1075,
-        margin: '50px'
     },
     title: {
         fontSize: 24,
@@ -67,7 +67,7 @@ const useStyles = makeStyles({
     }
 });
 
-export const NewQuestionForm = (props) => {
+const AddQuestion = (props) => {
 
     const [state, setState] = useState({
         text: '',
@@ -80,10 +80,6 @@ export const NewQuestionForm = (props) => {
     const [optionInput, setOptionInput] = useState({
         currentOption: ''
     });
-
-    useEffect(() => {
-        props.fetchCategories();
-    }, []);
 
     const optionLetters = ['A', 'B', 'C', 'D']
 
@@ -164,7 +160,7 @@ export const NewQuestionForm = (props) => {
         form = (
             <form autoComplete="off">
                 <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
-                <TextField className={classes.input} name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
+                <TextField className={classes.input} multiline name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
                 <DropDown value={state.category} handleChange={handleChange} obj={props.categories}
                     label="Category" name="category" id="categoryId" />
@@ -223,10 +219,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addQuestion: (question) => dispatch(actions.addQuestion(question)),
-        fetchCategories: () => dispatch(actions.fetchCategories())
+        addQuestion: (question) => dispatch(actions.addQuestion(question))
     };
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewQuestionForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AddQuestion);

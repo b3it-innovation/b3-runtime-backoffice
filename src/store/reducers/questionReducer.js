@@ -66,8 +66,7 @@ const searchQuestionError = (state, action) => {
 };
 
 const deleteQuestionSuccess = (state, action) => {
-    let copy = [...state.fetchedQuestions];
-    const newValue = copy.filter(q => q.id !== action.id)
+    const newValue = state.fetchedQuestions.filter(q => q.id !== action.id)
     return {
         ...state,
         loading: false,

@@ -1,6 +1,8 @@
 import React, { Component, createRef } from 'react'
 import { GOOGLE_MAP_API_KEY } from '../../../Util/apiKeys'
 
+let map = null;
+
 class GoogleMap extends Component {
 
     googleMapRef = React.createRef();
@@ -11,13 +13,20 @@ class GoogleMap extends Component {
         window.document.body.appendChild(googleMapScript);
 
         googleMapScript.addEventListener('load', () => {
-            this.googleMap = this.createGoogleMap()
+            this.googleMap = this.createGoogleMap();
+            map = this.googleMap;
+            this.marker = this.createMarker();
+            window.google.maps.event.addDomListener(window, "resize", function () {
+                let center = map.getCenter();
+                window.google.maps.event.trigger(this.googleMap, "resize");
+                map.setCenter(center);
+            });
             this.addMapClickListener();
-        })
+        });
     }
 
-    createGoogleMap = () =>
-        new window.google.maps.Map(this.googleMapRef.current, {
+    createGoogleMap = () => {
+        return new window.google.maps.Map(this.googleMapRef.current, {
             zoom: 16,
             center: {
                 lat: 59.33331080609333,
@@ -26,6 +35,8 @@ class GoogleMap extends Component {
             disableDefaultUI: true,
             mapTypeId: 'hybrid',
         });
+    }
+
 
 
     createMarker = (lat, lng) => {
@@ -34,8 +45,6 @@ class GoogleMap extends Component {
             map: this.googleMap,
             draggable: true,
         });
-
-        console.log(marker)
 
         let checkpoint = {
             lat: marker.position.lat(),
@@ -55,7 +64,6 @@ class GoogleMap extends Component {
         map.addListener('click', (event) => {
             this.createMarker(event.latLng.lat(), event.latLng.lng())
         });
-
     }
 
     render() {
@@ -63,7 +71,7 @@ class GoogleMap extends Component {
             <div
                 id="google-map"
                 ref={this.googleMapRef}
-                style={{ width: '800px', height: '500px' }}
+                style={{ width: '800px', height: '650px' }}
             />
         );
     }

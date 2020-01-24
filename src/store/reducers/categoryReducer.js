@@ -9,7 +9,7 @@ const initState = {
 const connectCategoriesStart = (state, action) => {
     return {
         ...state,
-        loading: true
+        loading: true,
     };
 };
 
@@ -30,7 +30,7 @@ const fetchCategoriesError = (state, action) => {
     return {
         ...state,
         loading: false,
-        error: null
+        error: action.error
     };
 };
 
@@ -51,8 +51,10 @@ const addCategoryError = (state, action) => {
 };
 
 const deleteCategorySuccess = (state, action) => {
+    let newCategories = state.categories.filter(c => c.id !== action.deletedId);
     return {
         ...state,
+        categories: newCategories,
         loading: false,
         error: null
     };
@@ -70,7 +72,7 @@ const deleteCategoryError = (state, action) => {
 const categoryReducer = (state = initState, action) => {
     switch (action.type) {
         case actionTypes.CONNECT_CATEGORIES_START:
-            return connectCategoriesStart();
+            return connectCategoriesStart(state, action);
         case actionTypes.FETCH_CATEGORIES_SUCCESS:
             return fetchCategoriesSuccess(state, action);
         case actionTypes.FETCH_CATEGORIES_ERROR:

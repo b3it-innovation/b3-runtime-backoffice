@@ -55,8 +55,10 @@ const addCompetitionError = (state, action) => {
 };
 
 const deleteCompetitionSuccess = (state, action) => {
+    let newArray = state.competitions.filter(c => c !== atob.deletedId);
     return {
         ...state,
+        competitions: newArray,
         loading: false,
         error: null
     };

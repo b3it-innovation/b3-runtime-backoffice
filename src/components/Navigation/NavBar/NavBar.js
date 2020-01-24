@@ -6,6 +6,7 @@ import { Menu } from '@material-ui/icons';
 import { Button, List, ListItem } from '@material-ui/core';
 import 'typeface-roboto';
 import NavigationItems from '../NavigationItems/NavigationItems';
+import classes from './NavBar.module.css';
 
 const NavBar = (props) => {
     return (
@@ -16,7 +17,7 @@ const NavBar = (props) => {
                     <Typography variant='h5' color='inherit'>
                         b3runtime
                     </Typography>
-                    <List component='nav'>
+                    <List component='nav' className={classes.DesktopOnly}>
                         <ListItem component='div'>
                             <NavigationItems />
                         </ListItem>

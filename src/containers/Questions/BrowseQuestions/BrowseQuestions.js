@@ -23,11 +23,13 @@ const styles = {
         alignItems: 'center',
         width: '100%',
         flexWrap: 'nowrap',
+        padding: '0',
+        margin: '0'
     },
     card: {
         minWidth: '100%',
         maxWidth: 1075,
-        margin: '50px'
+        margin: '0'
     },
     input: {
         width: '70%',

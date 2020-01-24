@@ -1,23 +1,7 @@
 .App {
   text-align: center;
   font-family: 'typeface-roboto';
-  min-width: 100vh;
-}
-
-.Header {
-  background-color: #ccc;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  min-width: 375px;
 }
 
 h1 {
@@ -25,24 +9,3 @@ h1 {
   padding-top: 50px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 10s linear;
-  }
-}
-
-
-.App-header img {
-  width: 20%;
-  height: 10%;
-  margin-bottom: 200px;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

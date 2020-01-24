@@ -4,28 +4,50 @@ import { connect } from 'react-redux';
 
 import AddQuestion from './AddQuestion/AddQuestion';
 import BrowseQuestions from './BrowseQuestions/BrowseQuestions';
-import Button from '@material-ui/core/Button'
+import * as actions from '../../store/actions/index';
+import CenteredTabs from '../../components/Navigation/CenterdTabs/CenteredTabs';
+import Categories from './Categories/Categories';
 
 class Questions extends Component {
 
     state = {
-        browse: false
+        tabValue: 0
     }
 
-    toggleBrowse = () => {
-        this.setState((prevState) => ({
-            browse: !prevState.browse
-        }))
+    componentDidMount() {
+        this.props.fetchCategories();
     }
+
+    handleChange = (event, newValue) => {
+        console.log("handleChange:", event.target.label, newValue);
+        this.setState({ tabValue: newValue });
+    };
 
     render() {
         const questionAddedRedirect = this.props.added ? <Redirect to="/" /> : null;
+
+        const tabs = ["Add Question", "Browse Questions", "Add Category"];
+
+        let content = null;
+        switch (this.state.tabValue) {
+            case 0:
+                content = <AddQuestion />;
+                break;
+            case 1:
+                content = <BrowseQuestions />;
+                break;
+            case 2:
+                content = <Categories />;
+                break;
+            default:
+                content = null
+        }
+
         return (
             <div>
                 {questionAddedRedirect}
-                <Button variant="contained" color="primary" onClick={this.toggleBrowse}>{this.state.browse ? 'Add question' : 'Browse questions'}</Button>
-
-                {this.state.browse ? <BrowseQuestions /> : <AddQuestion />}
+                <CenteredTabs tabs={tabs} value={this.state.tabValue} change={this.handleChange} />
+                {content}
             </div>
         );
     }
@@ -39,6 +61,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        fetchCategories: () => dispatch(actions.fetchCategories())
     }
 }
 
