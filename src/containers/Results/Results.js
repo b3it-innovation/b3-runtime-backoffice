@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
 import DropDown from '../../components/UI/Dropdown/DropDown'
 import * as actions from '../../store/actions/index';
@@ -10,8 +13,9 @@ import SearchButton from '../../components/UI/Button/SearchButton/SearchButton';
 import { TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Table } from '@material-ui/core';
 import TransitionModal from '../../components/UI/Modal/Modal';
 import ResultDisplay from '../../components/ResultDisplay/ResultDisplay';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
-import { millisToMinutesAndSeconds } from '../../Util/Util';
+import { millisToMinutesAndSeconds } from '../../utility/Util/Util';
 
 const styles = {
     container: {
@@ -24,7 +28,7 @@ const styles = {
     card: {
         minWidth: '100%',
         maxWidth: 1075,
-        margin: '50px'
+        margin: '0'
     },
     input: {
         width: '70%',
@@ -108,6 +112,12 @@ class Results extends Component {
 
         const { classes } = this.props;
 
+        let spinner = null;
+        if (this.props.compLoading || this.props.trackLoading || this.props.resultLoading) {
+            console.log("here")
+            spinner = <Spinner />;
+        }
+
         let dropDown = null;
         if (this.props.competitions) {
             dropDown = <DropDown
@@ -155,13 +165,20 @@ class Results extends Component {
         }
 
         return (
-            <div>
-                <h1>Results</h1>
-                {dropDown}
-                {tracksDropDown}
-                {button}
-                <TransitionModal open={this.state.modalOpen} handleClose={this.handleClose}>{this.state.chosenResult ? <ResultDisplay result={this.state.chosenResult}/> : null}</TransitionModal>
-                {table}
+            <div className={classes.container}>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Typography className={classes.title} color="textPrimary" gutterBottom>
+                            Results
+                        </Typography>
+                        {dropDown}
+                        {tracksDropDown}
+                        {button}
+                        <TransitionModal open={this.state.modalOpen} handleClose={this.handleClose}>{this.state.chosenResult ? <ResultDisplay result={this.state.chosenResult} /> : null}</TransitionModal>
+                        {table}
+                        {spinner}
+                    </CardContent>
+                </Card>
             </div>
         );
     }
@@ -175,7 +192,10 @@ const mapStateToProps = state => {
     return {
         competitions: state.competitions.competitions,
         tracks: state.tracks.tracks,
-        results: state.results.results
+        results: state.results.results,
+        compLoading: state.competitions.loading,
+        trackLoading: state.tracks.loading,
+        resultLoading: state.results.loading,
     }
 }
 

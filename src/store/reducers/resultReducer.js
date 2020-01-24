@@ -9,7 +9,7 @@ const initState = {
 const connectResultsStart = (state, action) => {
     return {
         ...state,
-        loading: false,
+        loading: true,
         error: null
     };
 };

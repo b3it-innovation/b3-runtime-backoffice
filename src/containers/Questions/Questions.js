@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AddQuestion from './AddQuestion/AddQuestion';
@@ -19,12 +18,10 @@ class Questions extends Component {
     }
 
     handleChange = (event, newValue) => {
-        console.log("handleChange:", event.target.label, newValue);
         this.setState({ tabValue: newValue });
     };
 
     render() {
-        const questionAddedRedirect = this.props.added ? <Redirect to="/" /> : null;
 
         const tabs = ["Add Question", "Browse Questions", "Add Category"];
 
@@ -45,7 +42,6 @@ class Questions extends Component {
 
         return (
             <div>
-                {questionAddedRedirect}
                 <CenteredTabs tabs={tabs} value={this.state.tabValue} change={this.handleChange} />
                 {content}
             </div>

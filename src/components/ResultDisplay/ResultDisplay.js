@@ -1,5 +1,5 @@
 import React from 'react';
-import { millisToMinutesAndSeconds } from '../../Util/Util';
+import { millisToMinutesAndSeconds } from '../../utility/Util/Util';
 
 
 export default function ResultDisplay(props) {
