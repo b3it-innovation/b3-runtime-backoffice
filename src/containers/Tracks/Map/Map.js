@@ -13,8 +13,8 @@ class GoogleMap extends Component {
 
         googleMapScript.addEventListener('load', () => {
             this.googleMap = this.createGoogleMap()
-            this.marker = this.createMarker()      
-          })
+            this.addMapClickListener();
+        })
     }
 
     createGoogleMap = () =>
@@ -25,20 +25,46 @@ class GoogleMap extends Component {
                 lng: -79.387054,
             },
             disableDefaultUI: true,
+            mapTypeId: 'hybrid',
+        });
+        
+
+    createMarker = (lat, lng) => {
+        let marker = new window.google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: this.googleMap,
+            draggable: true,
         });
 
-    createMarker = () =>
-        new window.google.maps.Marker({
-            position: { lat: 43.642567, lng: -79.387054 },
-            map: this.googleMap,
+        console.log(marker)
+
+        let checkpoint = {
+            lat: marker.position.lat(),
+            lng: marker.position.lng(),
+            order: this.props.length + 1
+        }
+
+        marker.addListener('dragend', (event) => {
+            this.props.drag(checkpoint.order, event.latLng.lat(), event.latLng.lng());
+        })
+
+        this.props.addCheckpoint(checkpoint);
+    }
+
+    addMapClickListener = () => {
+        let map = this.googleMap;
+        map.addListener('click', (event) => {
+            this.createMarker(event.latLng.lat(), event.latLng.lng())
         });
+
+    }
 
     render() {
         return (
             <div
                 id="google-map"
                 ref={this.googleMapRef}
-                style={{ width: '400px', height: '300px' }}
+                style={{ width: '800px', height: '500px' }}
             />
         );
     }
