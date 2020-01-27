@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react'
-import { GOOGLE_MAP_API_KEY } from '../../../Util/apiKeys'
+import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys'
 
 let map = null;
 

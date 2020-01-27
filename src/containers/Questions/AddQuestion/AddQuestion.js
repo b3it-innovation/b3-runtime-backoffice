@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -83,9 +83,13 @@ const AddQuestion = (props) => {
         currentOption: ''
     });
 
-    const [stateFlash, setFlash] = useState({
-        flash: false,
-    });
+    useEffect(() => {
+        setTimeout(() => {
+            if (props.added) {
+                props.init();
+            }
+        }, 2000)
+    }, [props.added]);
 
     const optionLetters = ['A', 'B', 'C', 'D']
 
@@ -94,7 +98,6 @@ const AddQuestion = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.addQuestion({ ...state });
-        setFlash({flash: true})
     }
 
     function handleChange(e) {
@@ -206,11 +209,11 @@ const AddQuestion = (props) => {
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Add a new question
                     </Typography>
-                    {
-                        stateFlash.flash ?                     <ImageTransitionOverlay>
-                        <img src={checkbox} width='400px' height='400px' />
-                    </ImageTransitionOverlay> : null
-                    }
+                    {props.added
+                        ? <ImageTransitionOverlay>
+                            <img src={checkbox} width='400px' height='400px' />
+                        </ImageTransitionOverlay>
+                        : null}
                     {form}
                 </CardContent>
                 <CardActions>
@@ -225,13 +228,15 @@ const mapStateToProps = (state) => {
     return {
         categories: state.categories.categories,
         loading: state.questions.loading,
-        err: state.questions.error
+        err: state.questions.error,
+        added: state.questions.questionAdded
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addQuestion: (question) => dispatch(actions.addQuestion(question))
+        addQuestion: (question) => dispatch(actions.addQuestion(question)),
+        init: () => dispatch(actions.addQuestionInit())
     };
 };
 
