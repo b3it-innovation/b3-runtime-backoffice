@@ -10,7 +10,7 @@ import Categories from './Categories/Categories';
 class Questions extends Component {
 
     state = {
-        tabValue: 0
+        tabValue: 0,
     }
 
     componentDidMount() {
@@ -22,7 +22,6 @@ class Questions extends Component {
     };
 
     render() {
-
         const tabs = ["Add Question", "Browse Questions", "Add Category"];
 
         let content = null;

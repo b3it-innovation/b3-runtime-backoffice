@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,6 +18,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
 import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
+import ImageTransitionOverlay from '../../../components/UI/ImageTransitionOverlay/ImageTransitionOverlay';
+import checkbox from '../../../assets/images/checkbox.png'
 
 
 const useStyles = makeStyles({
@@ -80,6 +82,14 @@ const AddQuestion = (props) => {
     const [optionInput, setOptionInput] = useState({
         currentOption: ''
     });
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (props.added) {
+                props.init();
+            }
+        }, 2000)
+    }, [props.added]);
 
     const optionLetters = ['A', 'B', 'C', 'D']
 
@@ -207,6 +217,11 @@ const AddQuestion = (props) => {
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Add a new question
                     </Typography>
+                    {props.added
+                        ? <ImageTransitionOverlay>
+                            <img src={checkbox} width='400px' height='400px' />
+                        </ImageTransitionOverlay>
+                        : null}
                     {form}
                 </CardContent>
                 <CardActions>
@@ -221,13 +236,15 @@ const mapStateToProps = (state) => {
     return {
         categories: state.categories.categories,
         loading: state.questions.loading,
-        err: state.questions.error
+        err: state.questions.error,
+        added: state.questions.questionAdded
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addQuestion: (question) => dispatch(actions.addQuestion(question))
+        addQuestion: (question) => dispatch(actions.addQuestion(question)),
+        init: () => dispatch(actions.addQuestionInit())
     };
 };
 
