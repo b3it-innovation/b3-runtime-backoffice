@@ -11,7 +11,7 @@ import Categories from './Categories/Categories';
 class Questions extends Component {
 
     state = {
-        tabValue: 0
+        tabValue: 0,
     }
 
     componentDidMount() {
@@ -24,8 +24,8 @@ class Questions extends Component {
     };
 
     render() {
-        const questionAddedRedirect = this.props.added ? <Redirect to="/" /> : null;
-
+/*         const questionAddedRedirect = this.props.added ? <Redirect to="/" /> : null;
+ */
         const tabs = ["Add Question", "Browse Questions", "Add Category"];
 
         let content = null;
@@ -45,8 +45,8 @@ class Questions extends Component {
 
         return (
             <div>
-                {questionAddedRedirect}
-                <CenteredTabs tabs={tabs} value={this.state.tabValue} change={this.handleChange} />
+{/*                 {questionAddedRedirect}
+ */}                <CenteredTabs tabs={tabs} value={this.state.tabValue} change={this.handleChange} />
                 {content}
             </div>
         );

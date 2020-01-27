@@ -15,7 +15,6 @@ class GoogleMap extends Component {
         googleMapScript.addEventListener('load', () => {
             this.googleMap = this.createGoogleMap();
             map = this.googleMap;
-            this.marker = this.createMarker();
             window.google.maps.event.addDomListener(window, "resize", function () {
                 let center = map.getCenter();
                 window.google.maps.event.trigger(this.googleMap, "resize");

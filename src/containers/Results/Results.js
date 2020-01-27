@@ -160,7 +160,7 @@ class Results extends Component {
                 {dropDown}
                 {tracksDropDown}
                 {button}
-                <TransitionModal open={this.state.modalOpen} handleClose={this.handleClose}>{this.state.chosenResult ? <ResultDisplay result={this.state.chosenResult}/> : null}</TransitionModal>
+                <TransitionModal open={this.state.modalOpen} handleClose={this.handleClose}>{this.state.chosenResult ? <ResultDisplay result={this.state.chosenResult} /> : null}</TransitionModal>
                 {table}
             </div>
         );

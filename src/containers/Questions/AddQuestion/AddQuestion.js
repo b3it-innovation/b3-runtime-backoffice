@@ -18,6 +18,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
 import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
+import ImageTransitionOverlay from '../../../components/UI/ImageTransitionOverlay/ImageTransitionOverlay';
+import checkbox from '../../../assets/images/checkbox.png'
 
 
 const useStyles = makeStyles({
@@ -81,6 +83,10 @@ const AddQuestion = (props) => {
         currentOption: ''
     });
 
+    const [stateFlash, setFlash] = useState({
+        flash: false,
+    });
+
     const optionLetters = ['A', 'B', 'C', 'D']
 
     const classes = useStyles();
@@ -88,6 +94,7 @@ const AddQuestion = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.addQuestion({ ...state });
+        setFlash({flash: true})
     }
 
     function handleChange(e) {
@@ -199,6 +206,11 @@ const AddQuestion = (props) => {
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Add a new question
                     </Typography>
+                    {
+                        stateFlash.flash ?                     <ImageTransitionOverlay>
+                        <img src={checkbox} width='400px' height='400px' />
+                    </ImageTransitionOverlay> : null
+                    }
                     {form}
                 </CardContent>
                 <CardActions>
