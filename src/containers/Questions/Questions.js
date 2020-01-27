@@ -18,7 +18,6 @@ class Questions extends Component {
     }
 
     handleChange = (event, newValue) => {
-        console.log("handleChange:", event.target.label, newValue);
         this.setState({ tabValue: newValue });
     };
 

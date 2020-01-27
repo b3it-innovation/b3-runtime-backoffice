@@ -1,6 +1,8 @@
 import React, { Component, createRef } from 'react'
 import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys'
 
+import { Container } from '@material-ui/core';
+
 let map = null;
 
 class GoogleMap extends Component {
@@ -67,11 +69,13 @@ class GoogleMap extends Component {
 
     render() {
         return (
-            <div
-                id="google-map"
-                ref={this.googleMapRef}
-                style={{ width: '800px', height: '650px' }}
-            />
+            <Container maxWidth="lg">
+                <div
+                    id="google-map"
+                    ref={this.googleMapRef}
+                    style={{ width: '80%', height: '500px' }}
+                />
+            </Container>
         );
     }
 }

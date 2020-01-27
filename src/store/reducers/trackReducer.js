@@ -9,7 +9,7 @@ const initState = {
 const connectTracksStart = (state, action) => {
     return {
         ...state,
-        loading: false,
+        loading: true,
         error: null
     };
 };
