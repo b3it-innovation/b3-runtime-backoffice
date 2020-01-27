@@ -12,9 +12,10 @@
 /build
 
 # API keys
-/src/Util/apiKeys.js
+/src/utility/apiKeys.js
 
 # misc
+/.idea
 .DS_Store
 .env.local
 .env.development.local
