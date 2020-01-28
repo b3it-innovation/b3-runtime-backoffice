@@ -16,6 +16,7 @@ import {
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
 import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
+import { checkValidity, updateObject } from '../../../utility/Util/Util';
 
 const styles = {
     container: {
@@ -47,19 +48,58 @@ class Categories extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
+        form: {
+            name: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Name'
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
+        },
+        formIsValid: false
         };
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.addCategory({ name: this.state.name });
+        this.props.addCategory({ name: this.state.form.name.value });
         this.setState({ name: '' });
+        const updatedFormElement = updateObject(this.state.form.name, {
+            value: '',
+            valid: false,
+            touched: false
+        });
+        const updatedForm = updateObject(this.state.form, {
+            name: updatedFormElement
+        });
+
+        this.setState({ form: updatedForm });
     }
 
     handleChange = (e) => {
-        const { value } = e.target;
-        this.setState({ [e.target.name]: value });
+        const updatedFormElement = updateObject(this.state.form[e.target.name], {
+            value: e.target.value,
+            valid: checkValidity(e.target.value, this.state.form[e.target.name].validation),
+            touched: true
+        });
+
+        const updatedForm = updateObject(this.state.form, {
+            [e.target.name]: updatedFormElement
+        });
+
+        let formIsValid = true;
+        for (let inputIdentifier in updatedForm) {
+            formIsValid = updatedForm[inputIdentifier].valid && formIsValid;
+        }
+
+        this.setState({ form: updatedForm, formIsValid: formIsValid });
     }
 
     handleDelete = (id) => {
@@ -73,7 +113,13 @@ class Categories extends Component {
         if (!this.props.loading) {
             form = (
                 <form autoComplete="off">
-                    <TextField className={classes.input} name="name" label="Name" variant="filled" value={this.state.name} onChange={this.handleChange} />
+
+                    <TextField
+                        className={classes.input} error={!this.state.form.name.valid && this.state.form.name.touched}
+                        name='name' label={this.state.form.name.elementConfig.placeholder}
+                        type={this.state.form.name.elementConfig.type} variant="filled" value={this.state.form.name.value}
+                        onChange={this.handleChange}
+                        helperText={!this.state.form.name.valid && this.state.form.name.touched ? "Required" : null} />
                 </form>
             );
         }
@@ -118,7 +164,7 @@ class Categories extends Component {
                         {form}
                     </CardContent>
                     <CardActions>
-                        <Button size="large" onClick={this.handleSubmit}>ADD CATEGORY</Button>
+                        <Button size="large" onClick={this.handleSubmit} disabled={!this.state.formIsValid}>ADD CATEGORY</Button>
                     </CardActions>
                 </Card>
                 {table}

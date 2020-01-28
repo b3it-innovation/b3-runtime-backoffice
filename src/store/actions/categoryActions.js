@@ -50,6 +50,7 @@ const addCategoryError = (error) => (
 
 export const addCategory = (newCategory) => (
     (dispatch) => {
+
         dispatch(connectCategoriesStart());
         firestore.collection(collectionsNames.CATEGORIES).add(newCategory)
             .then(() => {
