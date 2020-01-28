@@ -13,7 +13,7 @@ const styles = {
     },
 };
 
-function CompetitionDropDown(props) {
+function DropDown(props) {
     const { classes } = props;
 
     const {
@@ -47,8 +47,8 @@ function CompetitionDropDown(props) {
     );
 }
 
-CompetitionDropDown.propTypes = {
-    classes: PropTypes.object.isRequired,
+DropDown.propTypes = {
+    classes: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
-export default withStyles(styles)(CompetitionDropDown);
+export default withStyles(styles)(DropDown);
