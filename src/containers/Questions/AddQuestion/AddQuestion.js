@@ -19,7 +19,7 @@ import * as actions from '../../../store/actions/index';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
 import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
 import ImageTransitionOverlay from '../../../components/UI/ImageTransitionOverlay/ImageTransitionOverlay';
-import checkbox from '../../../assets/images/checkbox.png'
+import checkbox from '../../../assets/images/checkbox.png';
 
 
 const useStyles = makeStyles({
@@ -39,38 +39,37 @@ const useStyles = makeStyles({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 24
+        marginBottom: 24,
     },
     input: {
         width: '70%',
-        marginTop: 12
+        marginTop: 12,
 
     },
     options: {
         display: 'flex',
-        flexFlow: 'column-nowrap'
+        flexFlow: 'column-nowrap',
     },
     optionsButton: {
         width: '70%',
         alignSelf: 'center',
         fontSize: 14,
-        marginBottom: 8
+        marginBottom: 8,
     },
     radio: {
         display: 'flex',
         width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     radioButton: {
         width: '50%',
         alignSelf: 'center',
-    }
+    },
 });
 
 const AddQuestion = (props) => {
-
     const [state, setState] = useState({
         text: '',
         category: '',
@@ -80,7 +79,7 @@ const AddQuestion = (props) => {
     });
 
     const [optionInput, setOptionInput] = useState({
-        currentOption: ''
+        currentOption: '',
     });
 
     useEffect(() => {
@@ -88,10 +87,10 @@ const AddQuestion = (props) => {
             if (props.added) {
                 props.init();
             }
-        }, 2000)
+        }, 2000);
     }, [props.added]);
 
-    const optionLetters = ['A', 'B', 'C', 'D']
+    const optionLetters = ['A', 'B', 'C', 'D'];
 
     const classes = useStyles();
 
@@ -105,71 +104,71 @@ const AddQuestion = (props) => {
             correctAnswer: '',
             title: '',
         });
-        setOptionInput({currentOption: ''});
-    }
+        setOptionInput({ currentOption: '' });
+    };
 
     function handleChange(e) {
-        const value = e.target.value;
+        const { value } = e.target;
 
         if (e.target.name === 'option') {
             setOptionInput({
                 ...optionInput,
-                currentOption: e.target.value
+                currentOption: e.target.value,
             });
         } else {
             setState({
                 ...state,
-                [e.target.name]: value
+                [e.target.name]: value,
             });
         }
     }
 
     const handleAddOption = (e) => {
         e.preventDefault();
-        const option = (' ' + optionInput.currentOption).slice(1);
+        const option = (` ${optionInput.currentOption}`).slice(1);
         let optionLetter = null;
         if (!state.options) {
             optionLetter = 'A';
         } else {
             optionLetter = optionLetters[state.options.length];
         }
-        let object = {
+        const object = {
             text: option,
             option: optionLetter,
-            imgUrl: null
-        }
+            imgUrl: null,
+        };
         const newOptions = [...state.options, object];
         setState({
             ...state,
-            options: newOptions
+            options: newOptions,
         });
 
         setOptionInput({
             ...optionInput,
-            currentOption: ''
+            currentOption: '',
         });
-    }
+    };
 
     function handleDeleteOption(index) {
-        let options = state.options;
-        let newOptions = options.filter(option => {
-            console.log(option.option !== index)
-            return option.option !== index
-        })
+        const { options } = state;
+        const newOptions = options.filter((option) => {
+            console.log(option.option !== index);
+            return option.option !== index;
+        });
 
-        console.log('oldOptions', newOptions)
-        let updOptions = newOptions.map((opt, i) => {
-            opt.option = optionLetters[i]
+        console.log('oldOptions', newOptions);
+        const updOptions = newOptions.map((opt, i) => {
+            opt.option = optionLetters[i];
             return opt;
-        })
+        });
         console.log('updOptions', updOptions);
 
         setState({
             ...state,
-            options: updOptions
+            options: updOptions,
         });
 
-        console.log(state.options)
+        console.log(state.options);
     }
 
 
@@ -177,32 +176,37 @@ const AddQuestion = (props) => {
     if (!props.loading) {
         form = (
             <form autoComplete="off">
-                <TextField className={classes.input} name='title' label="Title" variant="filled" value={state.title} onChange={handleChange} />
-                <TextField className={classes.input} multiline name='text' label="Question" variant="filled" value={state.text} onChange={handleChange} />
+                <TextField className={classes.input} name="title" label="Title" variant="filled" value={state.title} onChange={handleChange} />
+                <TextField className={classes.input} multiline name="text" label="Question" variant="filled" value={state.text} onChange={handleChange} />
 
-                <DropDown value={state.category} handleChange={handleChange} obj={props.categories}
-                    label="Category" name="category" id="categoryId" />
+                <DropDown
+                    value={state.category}
+                    handleChange={handleChange}
+                    obj={props.categories}
+                    label="Category"
+                    name="category"
+                    id="categoryId"
+                />
 
-                <TextField name='option' value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
+                <TextField name="option" value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
                 {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
-                    : <Button disabled={true} size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
+                    : <Button disabled size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
 
                 <FormControl component="fieldset" className={classes.radio}>
                     <FormLabel component="legend">Mark the correct answer</FormLabel>
                     <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
 
-                        {state.options.map((option, index) => {
-                            return (
-                                <div className={classes.options} key={optionLetters[index]}>
-                                    <FormControlLabel
-                                        value={optionLetters[index]}
-                                        control={<Radio color="primary" />}
-                                        label={optionLetters[index] + ' ' + option.text}
-                                        labelPlacement="end"
-                                    /><DeleteButton click={handleDeleteOption} index={option.option}></DeleteButton>
-                                </div>
-                            )
-                        })}
+                        {state.options.map((option, index) => (
+                            <div className={classes.options} key={optionLetters[index]}>
+                                <FormControlLabel
+                                    value={optionLetters[index]}
+                                    control={<Radio color="primary" />}
+                                    label={`${optionLetters[index]} ${option.text}`}
+                                    labelPlacement="end"
+                                />
+                                <DeleteButton click={handleDeleteOption} index={option.option} />
+                            </div>
+                        ))}
 
                     </RadioGroup>
                 </FormControl>
@@ -218,9 +222,11 @@ const AddQuestion = (props) => {
                         Add a new question
                     </Typography>
                     {props.added
-                        ? <ImageTransitionOverlay>
-                            <img src={checkbox} width='400px' height='400px' />
-                        </ImageTransitionOverlay>
+                        ? (
+                            <ImageTransitionOverlay>
+                                <img src={checkbox} width="400px" height="400px" />
+                            </ImageTransitionOverlay>
+                        )
                         : null}
                     {form}
                 </CardContent>
@@ -229,24 +235,20 @@ const AddQuestion = (props) => {
                 </CardActions>
             </Card>
         </div>
-    )
-}
-
-const mapStateToProps = (state) => {
-    return {
-        categories: state.categories.categories,
-        loading: state.questions.loading,
-        err: state.questions.error,
-        added: state.questions.questionAdded
-    };
+    );
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addQuestion: (question) => dispatch(actions.addQuestion(question)),
-        init: () => dispatch(actions.addQuestionInit())
-    };
-};
+const mapStateToProps = (state) => ({
+    categories: state.categories.categories,
+    loading: state.questions.loading,
+    err: state.questions.error,
+    added: state.questions.questionAdded,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    addQuestion: (question) => dispatch(actions.addQuestion(question)),
+    init: () => dispatch(actions.addQuestionInit()),
+});
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddQuestion);

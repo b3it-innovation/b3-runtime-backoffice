@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Button } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
     },
@@ -23,25 +23,22 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
     },
     containerItem: {
-        width: '50%'
-    }
+        width: '50%',
+    },
 }));
 
 function Panel(props) {
-
     const classes = useStyles();
 
     let categoryName = null;
-    let matchedCategory = props.categories.find(cat =>
-        cat.id === props.object.category
-    )
+    const matchedCategory = props.categories.find((cat) => cat.id === props.object.category);
     if (matchedCategory == null) {
         categoryName = 'No category found';
     } else {
         categoryName = matchedCategory.name;
     }
 
-    let id = props.object.id;
+    const { id } = props.object;
 
     return (
         <ExpansionPanel>
@@ -54,29 +51,39 @@ function Panel(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.container}>
                 <div className={classes.containerItem}>
-                    <p>Text:</p> <p>{props.object.text}</p>
-                    <p>Category:</p> <p>{categoryName}</p>
+                    <p>Text:</p>
+                    {' '}
+                    <p>{props.object.text}</p>
+                    <p>Category:</p>
+                    {' '}
+                    <p>{categoryName}</p>
                 </div>
                 <div className={classes.containerItem}>
 
-                    Options: {props.object.options.map(option => {
-                        return <p key={option.option}>{option.option} {option.text}</p>
-                    })}
+                    Options:
+                    {' '}
+                    {props.object.options.map((option) => (
+                        <p key={option.option}>
+                            {option.option}
+                            {' '}
+                            {option.text}
+                        </p>
+                    ))}
 
-                    <p>Correct Answer: {props.object.correctAnswer}</p>
+                    <p>
+Correct Answer:
+                        {props.object.correctAnswer}
+                    </p>
                     <Button variant="contained" color="primary" onClick={() => props.onDelete(id)}>Delete Question</Button>
                 </div>
-                <Typography>
-                </Typography>
+                <Typography />
             </ExpansionPanelDetails>
         </ExpansionPanel>
-    )
+    );
 }
 
-const mapStateToProps = (state) => {
-    return {
-        categories: state.categories.categories
-    }
-}
+const mapStateToProps = (state) => ({
+    categories: state.categories.categories,
+});
 
 export default connect(mapStateToProps)(Panel);

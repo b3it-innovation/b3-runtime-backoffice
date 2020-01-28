@@ -3,20 +3,18 @@ import * as actionTypes from '../actions/actionTypes';
 const initState = {
     tracks: null,
     loading: false,
-    error: null
+    error: null,
 };
 
-const connectTracksStart = (state, action) => {
-    return {
-        ...state,
-        loading: true,
-        error: null
-    };
-};
+const connectTracksStart = (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+});
 
 const fetchTracksSuccess = (state, action) => {
-    let tracks = [];
-    action.fetchedTracks.forEach(t => {
+    const tracks = [];
+    action.fetchedTracks.forEach((t) => {
         tracks.push({
             id: t.id, name: t.data().name, category: t.data().category,
         });
@@ -25,50 +23,39 @@ const fetchTracksSuccess = (state, action) => {
         ...state,
         loading: false,
         error: null,
-        tracks: tracks
+        tracks,
     };
 };
 
-const fetchTracksError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.error
-    };
-};
+const fetchTracksError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.error,
+});
 
-const addTrackSuccess = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: null
-    };
-};
+const addTrackSuccess = (state) => ({
+    ...state,
+    loading: false,
+    error: null,
+});
 
-const addTrackError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.error
-    };
-};
+const addTrackError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.error,
+});
 
-const deleteTrackSuccess = (state, action) => {
-    console.log("deleted id:", action.deletedId);
-    return {
-        ...state,
-        loading: false,
-        error: null
-    };
-};
+const deleteTrackSuccess = (state) => ({
+    ...state,
+    loading: false,
+    error: null,
+});
 
-const deleteTrackError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.error
-    };
-};
+const deleteTrackError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.error,
+});
 
 const trackReducer = (state = initState, action) => {
     switch (action.type) {
@@ -88,7 +75,7 @@ const trackReducer = (state = initState, action) => {
             return deleteTrackError(state, action);
         default:
             return state;
-    };
+    }
 };
 
 export default trackReducer;

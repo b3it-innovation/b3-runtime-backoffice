@@ -11,12 +11,11 @@ const useStyles = makeStyles({
         width: 250,
     },
     divider: {
-        paddingTop: '10px'
-    }
+        paddingTop: '10px',
+    },
 });
 
 export default function TemporaryDrawer(props) {
-
     const classes = useStyles();
 
     const sideList = () => (

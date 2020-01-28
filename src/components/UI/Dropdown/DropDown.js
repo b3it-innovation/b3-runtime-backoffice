@@ -9,23 +9,21 @@ import PropTypes from 'prop-types';
 const styles = {
     input: {
         width: '70%',
-        marginTop: 12
-    }
-}
+        marginTop: 12,
+    },
+};
 
 function CompetitionDropDown(props) {
-
     const { classes } = props;
 
     let items = null;
 
     if (props.obj) {
-        items = props.obj.map(o => (<MenuItem key={o.id} value={o.id}>{o.name}</MenuItem>));
+        items = props.obj.map((o) => (<MenuItem key={o.id} value={o.id}>{o.name}</MenuItem>));
         if (props.all) {
-            items.push(<MenuItem key='all' value='all'>All</MenuItem>)
+            items.push(<MenuItem key="all" value="all">All</MenuItem>);
         }
-    }
-    else {
+    } else {
         items = <MenuItem value=""><em>None</em></MenuItem>;
     }
 
@@ -42,11 +40,11 @@ function CompetitionDropDown(props) {
                 {items}
             </Select>
         </FormControl>
-    )
+    );
 }
 
 CompetitionDropDown.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CompetitionDropDown)
+export default withStyles(styles)(CompetitionDropDown);

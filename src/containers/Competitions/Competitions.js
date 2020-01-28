@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
 class Competitions extends Component {
-
     render() {
         return (
             <div>
@@ -14,14 +13,10 @@ class Competitions extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-    }
-}
+const mapStateToProps = (state) => ({
+});
 
-const mapDispatchToProps = dispatch => {
-    return {
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Competitions);

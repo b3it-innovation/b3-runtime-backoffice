@@ -3,75 +3,77 @@ import * as actionTypes from '../actions/actionTypes';
 const initState = {
     competitions: null,
     loading: false,
-    error: null
+    error: null,
 };
 
-const connectCompetitionsStart = (state, action) => {
-    return {
+const connectCompetitionsStart = (state) => (
+    {
         ...state,
         loading: true,
-        error: null
-    };
-};
+        error: null,
+    }
+);
 
 const fetchCompetitionsSuccess = (state, action) => {
-    let competitions = [];
-    action.fetchedCompetitions.forEach(c => {
-        competitions.push({
-            id: c.id, active: c.data().active, date: c.data().date,
-            name: c.data().name, trackKeys: c.data().trackKeys
+    const comps = [];
+    action.fetchedCompetitions.forEach((c) => {
+        comps.push({
+            id: c.id,
+            active: c.data().active,
+            date: c.data().date,
+            name: c.data().name,
+            trackKeys: c.data().trackKeys,
         });
     });
     return {
         ...state,
         loading: false,
         error: null,
-        competitions: competitions
+        competitions: comps,
     };
 };
 
-const fetchCompetitionsError = (state, action) => {
-    return {
+const fetchCompetitionsError = (state, action) => (
+    {
         ...state,
         loading: false,
-        error: action.error
-    };
-};
+        error: action.err,
+    }
+);
 
-const addCompetitionSuccess = (state, action) => {
-    return {
+const addCompetitionSuccess = (state) => (
+    {
         ...state,
         loading: false,
-        error: null
-    };
-};
+        error: null,
+    }
+);
 
-const addCompetitionError = (state, action) => {
-    return {
+const addCompetitionError = (state, action) => (
+    {
         ...state,
         loading: false,
-        error: action.error
-    };
-};
+        error: action.err,
+    }
+);
 
-const deleteCompetitionSuccess = (state, action) => {
-    let newArray = state.competitions.filter(c => c !== atob.deletedId);
+const deleteCompetitionSuccess = (state) => {
+    const newArray = state.competitions.filter((c) => c !== atob.deletedId);
     return {
         ...state,
         competitions: newArray,
         loading: false,
-        error: null
+        error: null,
     };
 };
 
-const deleteCompetitionError = (state, action) => {
-    console.log("delete id: ", action.deletedId);
-    return {
+const deleteCompetitionError = (state, action) => (
+    {
         ...state,
         loading: false,
-        error: action.error
-    };
-};
+        error: action.err,
+    }
+);
 
 const competitionReducer = (state = initState, action) => {
     switch (action.type) {
@@ -91,7 +93,7 @@ const competitionReducer = (state = initState, action) => {
             return deleteCompetitionError(state, action);
         default:
             return state;
-    };
+    }
 };
 
 export default competitionReducer;

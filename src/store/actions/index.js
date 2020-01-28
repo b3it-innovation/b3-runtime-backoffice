@@ -2,28 +2,27 @@ export {
     addQuestionInit,
     addQuestion,
     searchQuestions,
-    deleteQuestion
+    deleteQuestion,
 } from './questionActions';
 
 export {
     fetchCategories,
     addCategory,
-    deleteCategory
+    deleteCategory,
 } from './categoryActions';
 
 export {
     fetchCompetitions,
     addCompetition,
-    deleteCompetition
+    deleteCompetition,
 } from './competitionActions';
 
 export {
     searchTracksByKeys,
     addTrack,
-    deleteTrack
+    deleteTrack,
 } from './trackActions';
 
 export {
-    fetchResultsByTrackKey
+    fetchResultsByTrackKey,
 } from './resultActions';
-
