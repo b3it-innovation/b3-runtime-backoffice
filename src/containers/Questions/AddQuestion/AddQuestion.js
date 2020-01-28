@@ -91,7 +91,7 @@ const AddQuestion = (props) => {
                 props.init();
             }
         }, 2000);
-    }, [props.added]);
+    }, [added]);
 
     const optionLetters = ['A', 'B', 'C', 'D'];
 
