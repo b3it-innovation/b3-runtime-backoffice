@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initState = {
-    categories: [],
+    categories: null,
     loading: false,
     error: null,
 };

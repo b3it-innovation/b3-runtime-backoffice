@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { ListItemText, Typography } from '@material-ui/core';
 import {
-    Home, RoomRounded, ContactSupportRounded, FormatListNumberedRounded, DirectionsRun,
+    Home, RoomRounded, ContactSupportRounded, FormatListNumberedRounded, DirectionsRun, Category,
 } from '@material-ui/icons';
 import classes from './NavigationItem.module.css';
 
@@ -23,6 +23,9 @@ const navigationItem = (props) => {
             break;
         case 'tracks':
             icon = <RoomRounded />;
+            break;
+        case 'categories':
+            icon = <Category />;
             break;
         case 'results':
             icon = <FormatListNumberedRounded />;

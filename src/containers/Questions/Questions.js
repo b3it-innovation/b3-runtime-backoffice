@@ -5,7 +5,6 @@ import AddQuestion from './AddQuestion/AddQuestion';
 import BrowseQuestions from './BrowseQuestions/BrowseQuestions';
 import * as actions from '../../store/actions/index';
 import CenteredTabs from '../../components/Navigation/CenterdTabs/CenteredTabs';
-import Categories from './Categories/Categories';
 
 class Questions extends Component {
     constructor(props) {
@@ -16,8 +15,10 @@ class Questions extends Component {
     }
 
     componentDidMount() {
-        const { fetchCategories } = this.props;
-        fetchCategories();
+        const { categories, fetchCategories } = this.props;
+        if (!categories) {
+            fetchCategories();
+        }
     }
 
     handleChange = (event, newValue) => {
@@ -25,7 +26,7 @@ class Questions extends Component {
     };
 
     render() {
-        const tabs = ['Add Question', 'Browse Questions', 'Add Category'];
+        const tabs = ['Add Question', 'Browse Questions'];
         const { tabValue } = this.state;
         let content = null;
         switch (tabValue) {
@@ -34,9 +35,6 @@ class Questions extends Component {
                 break;
             case 1:
                 content = <BrowseQuestions />;
-                break;
-            case 2:
-                content = <Categories />;
                 break;
             default:
                 content = null;
@@ -53,6 +51,7 @@ class Questions extends Component {
 
 const mapStateToProps = (state) => ({
     added: state.questions.questionAdded,
+    categories: state.categories.categories,
 });
 
 const mapDispatchToProps = (dispatch) => ({
