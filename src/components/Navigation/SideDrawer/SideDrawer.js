@@ -11,13 +11,14 @@ const useStyles = makeStyles({
         width: 250,
     },
     divider: {
-        paddingTop: '10px'
-    }
+        paddingTop: '10px',
+    },
 });
 
 export default function TemporaryDrawer(props) {
-
     const classes = useStyles();
+
+    const { open } = props;
 
     const sideList = () => (
         <div
@@ -32,7 +33,7 @@ export default function TemporaryDrawer(props) {
 
     return (
         <div>
-            <Drawer open={props.open} onClose={() => props.close(false)}>
+            <Drawer open={open} onClose={() => props.close(false)}>
                 {sideList()}
             </Drawer>
         </div>

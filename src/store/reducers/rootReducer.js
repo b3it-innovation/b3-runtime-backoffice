@@ -5,13 +5,12 @@ import competitionReducer from './competitionReducer';
 import trackReducer from './trackReducer';
 import resultReducer from './resultReducer';
 
-
 const rootReducer = combineReducers({
     questions: questionReducer,
     categories: categoryReducer,
     competitions: competitionReducer,
     tracks: trackReducer,
-    results: resultReducer
+    results: resultReducer,
 });
 
 export default rootReducer;

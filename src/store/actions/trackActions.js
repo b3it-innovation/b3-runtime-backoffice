@@ -1,128 +1,108 @@
-import * as actionTypes from './actionTypes'
+import * as actionTypes from './actionTypes';
 import { firestore, fieldPath, fieldValue } from '../../firestore/firestore';
 import * as collectionsNames from '../../firestore/collectionNames';
 
-const connectTracksStart = () => {
-    return {
-        type: actionTypes.CONNECT_TRACKS_START
-    };
+const connectTracksStart = () => ({
+    type: actionTypes.CONNECT_TRACKS_START,
+});
+
+const fetchTracksSuccess = (tracks) => ({
+    type: actionTypes.FETCH_TRACKS_SUCCESS,
+    fetchedTracks: tracks,
+});
+
+const fetchTracksError = (error) => ({
+    type: actionTypes.FETCH_TRACKS_ERROR,
+    error,
+});
+
+export const searchTracksByKeys = (trackKeys) => (dispatch) => {
+    dispatch(connectTracksStart());
+    firestore.collection(collectionsNames.TRACKS)
+        .where(fieldPath.documentId(), 'in', trackKeys).get()
+        .then((response) => {
+            dispatch(fetchTracksSuccess(response));
+        })
+        .catch((err) => {
+            dispatch(fetchTracksError(err));
+        });
 };
 
-const fetchTracksSuccess = (tracks) => {
-    return {
-        type: actionTypes.FETCH_TRACKS_SUCCESS,
-        fetchedTracks: tracks
-    };
+const addTrackSuccess = () => ({
+    type: actionTypes.ADD_TRACK_SUCCESS,
+});
+
+const addTrackError = (error) => ({
+    type: actionTypes.ADD_TRACK_ERROR,
+    error,
+});
+
+export const addTrack = (newTrack) => (dispatch) => {
+    dispatch(connectTracksStart());
+    firestore.collection(collectionsNames.TRACKS).add(newTrack)
+        .then(() => {
+            dispatch(addTrackSuccess());
+        }).catch((err) => {
+            dispatch(addTrackError(err));
+        });
 };
 
-const fetchTracksError = (error) => {
-    return {
-        type: actionTypes.FETCH_TRACKS_ERROR,
-        error: error
-    };
-};
+const deleteTrackSuccess = (id) => ({
+    type: actionTypes.DELETE_TRACK_SUCCESS,
+    deletedId: id,
+});
 
-export const searchTracksByKeys = (trackKeys) => {
-    return dispatch => {
-        dispatch(connectTracksStart());
-        firestore.collection(collectionsNames.TRACKS)
-            .where(fieldPath.documentId(), "in", trackKeys).get()
-            .then((response) => {
-                dispatch(fetchTracksSuccess(response));
-            }).catch((err) => {
-                dispatch(fetchTracksError(err));
-            });
-    };
-};
-
-const addTrackSuccess = () => {
-    return {
-        type: actionTypes.ADD_TRACK_SUCCESS
-    };
-};
-
-const addTrackError = (error) => {
-    return {
-        type: actionTypes.ADD_TRACK_ERROR,
-        error: error
-    };
-};
-
-export const addTrack = (newTrack) => {
-    return dispatch => {
-        dispatch(connectTracksStart());
-        firestore.collection(collectionsNames.TRACKS).add(newTrack)
-            .then(() => {
-                dispatch(addTrackSuccess());
-            }).catch((err) => {
-                dispatch(addTrackError(err));
-            });
-    };
-};
-
-const deleteTrackSuccess = (id) => {
-    return {
-        type: actionTypes.DELETE_TRACK_SUCCESS,
-        deletedId: id
-    };
-};
-
-const deleteTrackError = (error) => {
-    return {
-        type: actionTypes.DELETE_COMPETITION_ERROR,
-        error: error
-    };
-};
+const deleteTrackError = (error) => ({
+    type: actionTypes.DELETE_COMPETITION_ERROR,
+    error,
+});
 
 // TODO: DO TEST
-export const deleteTrack = (trackId) => {
-    return (dispatch) => {
-        dispatch(connectTracksStart());
+export const deleteTrack = (trackId) => (dispatch) => {
+    dispatch(connectTracksStart());
 
-        firestore.collection(collectionsNames.COMPETITIONS)
-            .where("trackKeys", "array-contains", trackId).get()
-            .then(response => {
-                let docRefs = [];
-                response.forEach(doc => {
-                    docRefs.push(doc);
+    firestore.collection(collectionsNames.COMPETITIONS)
+        .where('trackKeys', 'array-contains', trackId).get()
+        .then((response) => {
+            const docRefs = [];
+            response.forEach((doc) => {
+                docRefs.push(doc);
+            });
+            return firestore.runTransaction((transaction) => {
+                const promises = docRefs.map((doc) => new Promise((doc) => transaction.get(doc)));
+                const transactions = Promise.all(promises);
+                transactions.forEach((t) => {
+                    t.update({ trackKeys: fieldValue.arrayRemove(trackId) });
                 });
-                return firestore.runTransaction((transaction) => {
-                    let promises = docRefs.map(doc => new Promise(doc => transaction.get(doc)));
-                    const transactions = Promise.all(promises);
-                    transactions.forEach(t => {
-                        t.update({ trackKeys: fieldValue.arrayRemove(trackId) });
-                    })
-                })
+            });
+        })
+        .catch((err) => {
+            dispatch(deleteTrackError(err));
+        });
+    //     firestore.collection(collectionsNames.TRACKS).doc(trackId).delete()
+    //         .then(() => {
+    //             // fetch all competitions that have deleted track
+    //             firestore.collection(collectionsNames.COMPETITIONS)
+    //                 .where("trackKeys", "array-contains", trackId).get()
+    //                 .then((response) => {
+    //                     response.forEach(doc => {
+    //                         // loop competitions and delete the track
+    //                         firestore.collection(collectionsNames.COMPETITIONS).doc(doc.id)
+    //                             .update({ trackKeys: fieldValue.arrayRemove(trackId) })
+    //                             .then(() => {
 
-            })
-            .catch(err => {
-                dispatch(deleteTrackError(err));
-            })
-        //     firestore.collection(collectionsNames.TRACKS).doc(trackId).delete()
-        //         .then(() => {
-        //             // fetch all competitions that have deleted track
-        //             firestore.collection(collectionsNames.COMPETITIONS)
-        //                 .where("trackKeys", "array-contains", trackId).get()
-        //                 .then((response) => {
-        //                     response.forEach(doc => {
-        //                         // loop competitions and delete the track
-        //                         firestore.collection(collectionsNames.COMPETITIONS).doc(doc.id)
-        //                             .update({ trackKeys: fieldValue.arrayRemove(trackId) })
-        //                             .then(() => {
-
-        //                             })
-        //                             .catch((err) => {
-        //                                 dispatch(deleteTrackError(err));
-        //                             });
-        //                     })
-        //                     dispatch(deleteTrackSuccess(trackId));
-        //                 })
-        //                 .catch((err) => {
-        //                     dispatch(deleteTrackError(err));
-        //                 });
-        //         }).catch((err) => {
-        //             dispatch(deleteTrackError(err));
-        //         });
-        // };
-    };
+    //                             })
+    //                             .catch((err) => {
+    //                                 dispatch(deleteTrackError(err));
+    //                             });
+    //                     })
+    //                     dispatch(deleteTrackSuccess(trackId));
+    //                 })
+    //                 .catch((err) => {
+    //                     dispatch(deleteTrackError(err));
+    //                 });
+    //         }).catch((err) => {
+    //             dispatch(deleteTrackError(err));
+    //         });
+    // };
 };

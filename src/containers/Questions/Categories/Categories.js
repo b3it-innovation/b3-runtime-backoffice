@@ -9,7 +9,9 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import { TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Table } from '@material-ui/core';
+import {
+    TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Table,
+} from '@material-ui/core';
 
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
@@ -33,18 +35,19 @@ const styles = {
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 24
+        marginBottom: 24,
     },
     input: {
         width: '70%',
-        marginTop: 12
+        marginTop: 12,
 
     },
 };
 
 class Categories extends Component {
-
-    state = {
+    constructor(props) {
+        super(props);
+        this.state = {
         form: {
             name: {
                 elementType: 'input',
@@ -61,6 +64,7 @@ class Categories extends Component {
             },
         },
         formIsValid: false
+        };
     }
 
     handleSubmit = (e) => {
@@ -109,6 +113,7 @@ class Categories extends Component {
         if (!this.props.loading) {
             form = (
                 <form autoComplete="off">
+
                     <TextField
                         className={classes.input} error={!this.state.form.name.valid && this.state.form.name.touched}
                         name='name' label={this.state.form.name.elementConfig.placeholder}
@@ -123,26 +128,27 @@ class Categories extends Component {
         if (this.props.categories) {
             table = (
                 <TableContainer component={Paper}>
-                    <Table className={classes.table} aria-label='simple table'>
+                    <Table className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>
                                     Name
                                 </TableCell>
-                                <TableCell align='right'>
-                                </TableCell>
+                                <TableCell align="right" />
                             </TableRow>
                         </TableHead>
-                        <TableBody>{this.props.categories.map(cat => (
-                            <TableRow key={cat.id}>
-                                <TableCell component='th' scope='row'>
-                                    {cat.name}
-                                </TableCell>
-                                <TableCell align='right'>
-                                    <DeleteButton click={this.handleDelete} index={cat.id} />
-                                </TableCell>
-                            </TableRow>
-                        ))}</TableBody>
+                        <TableBody>
+                            {this.props.categories.map((cat) => (
+                                <TableRow key={cat.id}>
+                                    <TableCell component="th" scope="row">
+                                        {cat.name}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <DeleteButton click={this.handleDelete} index={cat.id} />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
                     </Table>
                 </TableContainer>
             );
@@ -168,23 +174,18 @@ class Categories extends Component {
 }
 
 Categories.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
-const mapStateToProps = (state) => {
-    return {
-        categories: state.categories.categories,
-        loading: state.categories.loading,
-        err: state.categories.error
-    };
-};
+const mapStateToProps = (state) => ({
+    categories: state.categories.categories,
+    loading: state.categories.loading,
+    err: state.categories.error,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addCategory: (category) => dispatch(actions.addCategory(category)),
-        deleteCategory: (id) => dispatch(actions.deleteCategory(id))
-    };
-};
-
+const mapDispatchToProps = (dispatch) => ({
+    addCategory: (category) => dispatch(actions.addCategory(category)),
+    deleteCategory: (id) => dispatch(actions.deleteCategory(id)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Categories));

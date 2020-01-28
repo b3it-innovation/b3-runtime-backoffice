@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -24,42 +23,42 @@ const styles = {
         width: '100%',
         flexWrap: 'nowrap',
         padding: '0',
-        margin: '0'
+        margin: '0',
     },
     card: {
         minWidth: '100%',
         maxWidth: 1075,
-        margin: '0'
+        margin: '0',
     },
     input: {
         width: '70%',
-        marginTop: 12
+        marginTop: 12,
     },
     optionsButton: {
         width: '70%',
         alignSelf: 'center',
         fontSize: 14,
-        marginBottom: 8
+        marginBottom: 8,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 24
+        marginBottom: 24,
     },
 };
 
 class BrowseQuestions extends Component {
-
-    state = {
-        category: null,
-        error: null,
-        searchText: null,
+    constructor(props) {
+        super(props);
+        this.state = {
+            category: null,
+        };
     }
 
     handleChange = (e) => {
-        const value = e.target.value;
+        const { value } = e.target;
         this.setState({
-            [e.target.name]: value
+            [e.target.name]: value,
         });
     }
 
@@ -68,20 +67,22 @@ class BrowseQuestions extends Component {
     }
 
     handleDeleteQuestion = (id) => {
-        this.props.deleteQuestion(id)
+        this.props.deleteQuestion(id);
     }
 
     render() {
         const { classes } = this.props;
+        const { category } = this.state;
+        const { categories, questions, loading } = this.props;
 
-        let questions = null;
-        if (this.props.questions) {
-            questions = this.props.questions.map(q => {
-                return <Panel key={q.id} label={q.title} object={q} onDelete={this.handleDeleteQuestion} />
-            })
+        let questionList = null;
+        if (questions) {
+            questionList = questions.map((q) => (
+                <Panel key={q.id} label={q.title} object={q} onDelete={this.handleDeleteQuestion} />
+            ));
         }
         let spinner = null;
-        if (this.props.loading) {
+        if (loading) {
             spinner = <Spinner />;
         }
 
@@ -91,41 +92,40 @@ class BrowseQuestions extends Component {
                     <CardContent>
                         <Typography className={classes.title} color="textPrimary" gutterBottom>
                             Browse questions
-                    </Typography>
+                        </Typography>
                         <DropDown
-                            all obj={this.props.categories} value={this.state.category || ''} handleChange={this.handleChange}
-                            label="Category" name="category" id="categoryId" />
-                        {/* <TextField 
-                            className={classes.input} name='searchText' label="Search" 
-                            variant="filled" value={this.state.searchText || ''} onChange={this.handleChange} /> */}
+                            all
+                            obj={categories}
+                            value={category || ''}
+                            handleChange={this.handleChange}
+                            label="Category"
+                            name="category"
+                            id="categoryId"
+                        />
                         <SearchButton click={this.handleSearch} />
                         {spinner}
-                        {questions}
+                        {questionList}
                     </CardContent>
                 </Card>
             </div>
-        )
+        );
     }
 }
 
 BrowseQuestions.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
-const mapStateToProps = (state) => {
-    return {
-        categories: state.categories.categories,
-        questions: state.questions.fetchedQuestions,
-        loading: state.questions.loading,
-        err: state.questions.error
-    };
-};
+const mapStateToProps = (state) => ({
+    categories: state.categories.categories,
+    questions: state.questions.fetchedQuestions,
+    loading: state.questions.loading,
+    err: state.questions.error,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        searchQuestions: (category) => dispatch(actions.searchQuestions(category)),
-        deleteQuestion: (id) => dispatch(actions.deleteQuestion(id))
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    searchQuestions: (category) => dispatch(actions.searchQuestions(category)),
+    deleteQuestion: (id) => dispatch(actions.deleteQuestion(id)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BrowseQuestions))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BrowseQuestions));

@@ -8,24 +8,24 @@ import Aux from '../../../hoc/Auxiliary/Auxiliary';
 
 const useStyles = makeStyles({
     divider: {
-        paddingTop: '10px'
-    }
+        paddingTop: '10px',
+    },
 });
 
-export default function NavigationItems(props) {
-
+export default function NavigationItems() {
     const classes = useStyles();
 
-    return (<Aux>
-        <NavigationItem path="/" label='Home' iconType='home' />
-        <Divider className={classes.divider} />
-        <NavigationItem path="/competitions" label='Competitions' iconType='competitions' />
-        <Divider className={classes.divider} />
-        <NavigationItem path="/tracks" label='Tracks' iconType='tracks' />
-        <Divider className={classes.divider} />
-        <NavigationItem path="/questions" label='Questions' iconType='questions' />
-        <Divider className={classes.divider} />
-        <NavigationItem path="/results" label='Results' iconType='results' />
-    </Aux>);
-
+    return (
+        <Aux>
+            <NavigationItem path="/" label="Home" iconType="home" />
+            <Divider className={classes.divider} />
+            <NavigationItem path="/competitions" label="Competitions" iconType="competitions" />
+            <Divider className={classes.divider} />
+            <NavigationItem path="/tracks" label="Tracks" iconType="tracks" />
+            <Divider className={classes.divider} />
+            <NavigationItem path="/questions" label="Questions" iconType="questions" />
+            <Divider className={classes.divider} />
+            <NavigationItem path="/results" label="Results" iconType="results" />
+        </Aux>
+    );
 }

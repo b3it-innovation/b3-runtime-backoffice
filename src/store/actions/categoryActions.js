@@ -1,87 +1,90 @@
-import * as actionTypes from './actionTypes'
+import * as actionTypes from './actionTypes';
 import { firestore } from '../../firestore/firestore';
 import * as collectionsNames from '../../firestore/collectionNames';
 
-const connectCategoriesStart = () => {
-    return {
-        type: actionTypes.CONNECT_CATEGORIES_START
-    };
-};
+const connectCategoriesStart = () => (
+    {
+        type: actionTypes.CONNECT_CATEGORIES_START,
+    }
+);
 
-const fetchCategoriesSuccess = (categories) => {
-    return {
+const fetchCategoriesSuccess = (categories) => (
+    {
         type: actionTypes.FETCH_CATEGORIES_SUCCESS,
-        fetchedCategories: categories
-    };
-};
+        fetchedCategories: categories,
+    }
+);
 
-const fetchCategoriesError = (error) => {
-    return {
+const fetchCategoriesError = (error) => (
+    {
         type: actionTypes.FETCH_CATEGORIES_ERROR,
-        error: error
-    };
-};
+        err: error,
+    }
+);
 
-export const fetchCategories = () => {
-    return dispatch => {
+export const fetchCategories = () => (
+    (dispatch) => {
         firestore.collection(collectionsNames.CATEGORIES).orderBy('name').get()
-            .then(querySnapshot => {
+            .then((querySnapshot) => {
                 dispatch(connectCategoriesStart());
                 dispatch(fetchCategoriesSuccess(querySnapshot));
-            }).catch(error => {
-                dispatch(fetchCategoriesError(error));
+            })
+            .catch((err) => {
+                dispatch(fetchCategoriesError(err));
             });
-    };
-};
+    }
+);
 
-const addCategorySuccess = () => {
-    return {
-        type: actionTypes.ADD_CATEGORY_SUCCESS
-    };
-};
+const addCategorySuccess = () => (
+    {
+        type: actionTypes.ADD_CATEGORY_SUCCESS,
+    }
+);
 
-const addCategoryError = (error) => {
-    return {
+const addCategoryError = (error) => (
+    {
         type: actionTypes.ADD_CATEGORY_ERROR,
-        error: error
-    };
-};
+        err: error,
+    }
+);
 
-export const addCategory = (newCategory) => {
-    return dispatch => {
+export const addCategory = (newCategory) => (
+    (dispatch) => {
+
         dispatch(connectCategoriesStart());
         firestore.collection(collectionsNames.CATEGORIES).add(newCategory)
             .then(() => {
                 dispatch(addCategorySuccess());
                 dispatch(fetchCategories());
-            }).catch((err) => {
-                dispatch(addCategoryError(err));
+            }).catch((error) => {
+                dispatch(addCategoryError(error));
             });
-    };
-};
+    }
+);
 
-const deleteCategorySuccess = (id) => {
-    return {
+const deleteCategorySuccess = (id) => (
+    {
         type: actionTypes.DELETE_CATEGORY_SUCCESS,
-        deletedId: id
-    };
-};
+        deletedId: id,
+    }
+);
 
-const deleteCategoryError = (error) => {
-    return {
+const deleteCategoryError = (error) => (
+    {
         type: actionTypes.DELETE_CATEGORY_ERROR,
-        error: error
-    };
-};
+        err: error,
+    }
+);
 
-export const deleteCategory = (categoryId) => {
-    return (dispatch) => {
+export const deleteCategory = (categoryId) => (
+    (dispatch) => {
         dispatch(connectCategoriesStart());
         firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
             .then(() => {
                 dispatch(deleteCategorySuccess(categoryId));
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 dispatch(deleteCategoryError(err));
             });
-    };
-};
+    }
+);

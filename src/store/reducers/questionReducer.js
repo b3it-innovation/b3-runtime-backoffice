@@ -5,84 +5,76 @@ const initState = {
     questionAdded: false,
     questionDeleted: false,
     loading: false,
-    error: null
+    error: null,
 };
 
-const addQuestionInit = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        questionAdded: false,
-        questionDeleted: false
-    };
-};
+const addQuestionInit = (state) => ({
+    ...state,
+    loading: false,
+    questionAdded: false,
+    questionDeleted: false,
+});
 
-const connectQuestionsStart = (state, action) => {
-    return {
-        ...state,
-        loading: true
-    };
-};
+const connectQuestionsStart = (state) => ({
+    ...state,
+    loading: true,
+});
 
-const addQuestionSuccess = (state, action) => {
-    return {
-        ...state,
-        questionAdded: true,
-        loading: false,
-        error: null
-    };
-};
+const addQuestionSuccess = (state) => ({
+    ...state,
+    questionAdded: true,
+    loading: false,
+    error: null,
+});
 
-const addQuestionError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.err
-    };
-};
+const addQuestionError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.err,
+});
 
 const searchQuestionsSuccess = (state, action) => {
-    let questionArray = [];
-    action.fetchedQuestions.forEach(q => {
+    const questionArray = [];
+    action.fetchedQuestions.forEach((q) => {
         questionArray.push({
-            id: q.id, category: q.data().category, correctAnswer: q.data().correctAnswer,
-            text: q.data().text, title: q.data().title, options: q.data().options
+            id: q.id,
+            category: q.data().category,
+            correctAnswer: q.data().correctAnswer,
+            text: q.data().text,
+            title: q.data().title,
+            options: q.data().options,
         });
     });
     return {
         ...state,
         loading: false,
         error: null,
-        fetchedQuestions: questionArray
+        fetchedQuestions: questionArray,
     };
 };
 
-const searchQuestionError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.error
-    };
-};
+const searchQuestionError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.error,
+});
 
 const deleteQuestionSuccess = (state, action) => {
-    const newValue = state.fetchedQuestions.filter(q => q.id !== action.id)
+    const newValue = state.fetchedQuestions.filter((q) => q.id !== action.id);
     return {
         ...state,
         loading: false,
         error: null,
         questionDeleted: true,
-        fetchedQuestions: newValue
+        fetchedQuestions: newValue,
     };
 };
 
-const deleteQuestionError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.error
-    };
-};
+const deleteQuestionError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.error,
+});
 
 const questionReducer = (state = initState, action) => {
     switch (action.type) {
@@ -104,7 +96,7 @@ const questionReducer = (state = initState, action) => {
             return deleteQuestionError(state, action);
         default:
             return state;
-    };
+    }
 };
 
 export default questionReducer;

@@ -8,25 +8,22 @@ import 'typeface-roboto';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import classes from './NavBar.module.css';
 
-const NavBar = (props) => {
-    return (
-        <div>
-            <AppBar position='static' color='secondary'>
-                <Toolbar>
-                    <Button onClick={() => props.click(true)}><Menu></Menu></Button>
-                    <Typography variant='h5' color='inherit'>
+const NavBar = (props) => (
+    <div>
+        <AppBar position="static" color="secondary">
+            <Toolbar>
+                <Button onClick={() => props.click(true)}><Menu /></Button>
+                <Typography variant="h5" color="inherit">
                         b3runtime
-                    </Typography>
-                    <List component='nav' className={classes.DesktopOnly}>
-                        <ListItem component='div'>
-                            <NavigationItems />
-                        </ListItem>
-                    </List>
-                </Toolbar>
-            </AppBar>
-        </div>
-    )
-}
+                </Typography>
+                <List component="nav" className={classes.DesktopOnly}>
+                    <ListItem component="div">
+                        <NavigationItems />
+                    </ListItem>
+                </List>
+            </Toolbar>
+        </AppBar>
+    </div>
+);
 
 export default NavBar;
-

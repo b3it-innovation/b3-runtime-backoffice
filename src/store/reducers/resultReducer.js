@@ -3,41 +3,40 @@ import * as actionTypes from '../actions/actionTypes';
 const initState = {
     results: null,
     loading: false,
-    error: null
+    error: null,
 };
 
-const connectResultsStart = (state, action) => {
-    return {
-        ...state,
-        loading: true,
-        error: null
-    };
-};
+const connectResultsStart = (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+});
 
 const fetchResultsSuccess = (state, action) => {
-    let results = [];
-    action.fetchedResults.forEach(r => {
+    const results = [];
+    action.fetchedResults.forEach((r) => {
         results.push({
-            id: r.id, lastUpdatedDate: r.data().lastUpdatedDate, key: r.data().key,
-            attendee: r.data().attendee, results: r.data().results,
-            totalTime: r.data().totalTime
+            id: r.id,
+            lastUpdatedDate: r.data().lastUpdatedDate,
+            key: r.data().key,
+            attendee: r.data().attendee,
+            results: r.data().results,
+            totalTime: r.data().totalTime,
         });
     });
     return {
         ...state,
         loading: false,
         error: null,
-        results: results
+        results,
     };
 };
 
-const fetchResultsError = (state, action) => {
-    return {
-        ...state,
-        loading: false,
-        error: action.error
-    };
-};
+const fetchResultsError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.error,
+});
 
 const resultReducer = (state = initState, action) => {
     switch (action.type) {
@@ -49,7 +48,7 @@ const resultReducer = (state = initState, action) => {
             return fetchResultsError(state, action);
         default:
             return state;
-    };
+    }
 };
 
 export default resultReducer;

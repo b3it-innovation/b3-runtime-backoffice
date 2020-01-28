@@ -8,13 +8,16 @@ import CenteredTabs from '../../components/Navigation/CenterdTabs/CenteredTabs';
 import Categories from './Categories/Categories';
 
 class Questions extends Component {
-
-    state = {
-        tabValue: 0,
+    constructor(props) {
+        super(props);
+        this.state = {
+            tabValue: 0,
+        };
     }
 
     componentDidMount() {
-        this.props.fetchCategories();
+        const { fetchCategories } = this.props;
+        fetchCategories();
     }
 
     handleChange = (event, newValue) => {
@@ -22,10 +25,10 @@ class Questions extends Component {
     };
 
     render() {
-        const tabs = ["Add Question", "Browse Questions", "Add Category"];
-
+        const tabs = ['Add Question', 'Browse Questions', 'Add Category'];
+        const { tabValue } = this.state;
         let content = null;
-        switch (this.state.tabValue) {
+        switch (tabValue) {
             case 0:
                 content = <AddQuestion />;
                 break;
@@ -36,28 +39,24 @@ class Questions extends Component {
                 content = <Categories />;
                 break;
             default:
-                content = null
+                content = null;
         }
 
         return (
             <div>
-                <CenteredTabs tabs={tabs} value={this.state.tabValue} change={this.handleChange} />
+                <CenteredTabs tabs={tabs} value={tabValue} change={this.handleChange} />
                 {content}
             </div>
         );
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        added: state.questions.questionAdded
-    }
-}
+const mapStateToProps = (state) => ({
+    added: state.questions.questionAdded,
+});
 
-const mapDispatchToProps = dispatch => {
-    return {
-        fetchCategories: () => dispatch(actions.fetchCategories())
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    fetchCategories: () => dispatch(actions.fetchCategories()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

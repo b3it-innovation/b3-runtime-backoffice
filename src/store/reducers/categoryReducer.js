@@ -3,71 +3,70 @@ import * as actionTypes from '../actions/actionTypes';
 const initState = {
     categories: [],
     loading: false,
-    error: null
-}
-
-const connectCategoriesStart = (state, action) => {
-    return {
-        ...state,
-        loading: true,
-    };
+    error: null,
 };
 
+const connectCategoriesStart = (state) => (
+    {
+        ...state,
+        loading: true,
+    }
+);
+
 const fetchCategoriesSuccess = (state, action) => {
-    let categories = [];
-    action.fetchedCategories.forEach(element => {
-        categories.push({ id: element.id, name: element.data().name });
+    const cats = [];
+    action.fetchedCategories.forEach((category) => {
+        cats.push({ id: category.id, name: category.data().name });
     });
     return {
         ...state,
-        categories: categories,
+        categories: cats,
         loading: false,
-        error: null
+        error: null,
     };
 };
 
-const fetchCategoriesError = (state, action) => {
-    return {
+const fetchCategoriesError = (state, action) => (
+    {
         ...state,
         loading: false,
-        error: action.error
-    };
-};
+        error: action.err,
+    }
+);
 
-const addCategorySuccess = (state, action) => {
-    return {
+const addCategorySuccess = (state) => (
+    {
         ...state,
         loading: false,
-        error: null
-    };
-};
+        error: null,
+    }
+);
 
-const addCategoryError = (state, action) => {
-    return {
+const addCategoryError = (state, action) => (
+    {
         ...state,
         loading: false,
-        error: action.error
-    };
-};
+        error: action.err,
+    }
+);
 
 const deleteCategorySuccess = (state, action) => {
-    let newCategories = state.categories.filter(c => c.id !== action.deletedId);
+    const newCategories = state.categories.filter((c) => c.id !== action.deletedId);
     return {
         ...state,
         categories: newCategories,
         loading: false,
-        error: null
+        error: null,
     };
 };
 
-const deleteCategoryError = (state, action) => {
-    console.log("deleted id: ", action.deletedId);
-    return {
+const deleteCategoryError = (state, action) => (
+    {
         ...state,
         loading: false,
-        error: action.error
-    };
-};
+        error: action.err,
+    }
+);
 
 const categoryReducer = (state = initState, action) => {
     switch (action.type) {

@@ -4,11 +4,6 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
 class Home extends Component {
-
-    componentDidMount() {
-        this.props.initAddQuesion();
-    }
-
     render() {
         return (
             <div>
@@ -18,15 +13,10 @@ class Home extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-    }
-}
+const mapStateToProps = (state) => ({
+});
 
-const mapDispatchToProps = dispatch => {
-    return {
-        initAddQuesion: () => dispatch(actions.addQuestionInit())
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
