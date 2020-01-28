@@ -4,12 +4,10 @@ export function millisToMinutesAndSeconds(millis) {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
-export const updateObject = (oldObject, updatedProperties) => {
-    return {
-        ...oldObject,
-        ...updatedProperties
-    };
-};
+export const updateObject = (oldObject, updatedProperties) => ({
+    ...oldObject,
+    ...updatedProperties,
+});
 
 export const checkValidity = (value, rules) => {
     let isValid = true;
@@ -31,4 +29,4 @@ export const checkValidity = (value, rules) => {
     }
 
     return isValid;
-}
+};

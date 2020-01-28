@@ -48,58 +48,59 @@ class Categories extends Component {
     constructor(props) {
         super(props);
         this.state = {
-        form: {
-            name: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'text',
-                    placeholder: 'Name'
+            form: {
+                name: {
+                    elementType: 'input',
+                    elementConfig: {
+                        type: 'text',
+                        placeholder: 'Name',
+                    },
+                    value: '',
+                    validation: {
+                        required: true,
+                    },
+                    valid: false,
+                    touched: false,
                 },
-                value: '',
-                validation: {
-                    required: true
-                },
-                valid: false,
-                touched: false
             },
-        },
-        formIsValid: false
+            formIsValid: false,
         };
     }
 
     handleSubmit = (e) => {
+        const { form } = this.state;
         e.preventDefault();
         this.props.addCategory({ name: this.state.form.name.value });
-        this.setState({ name: '' });
         const updatedFormElement = updateObject(this.state.form.name, {
             value: '',
             valid: false,
-            touched: false
+            touched: false,
         });
-        const updatedForm = updateObject(this.state.form, {
-            name: updatedFormElement
+        const updatedForm = updateObject(form, {
+            name: updatedFormElement,
         });
 
         this.setState({ form: updatedForm });
     }
 
     handleChange = (e) => {
-        const updatedFormElement = updateObject(this.state.form[e.target.name], {
+        const { form } = this.state;
+        const updatedFormElement = updateObject(form[e.target.name], {
             value: e.target.value,
-            valid: checkValidity(e.target.value, this.state.form[e.target.name].validation),
-            touched: true
+            valid: checkValidity(e.target.value, form[e.target.name].validation),
+            touched: true,
         });
 
-        const updatedForm = updateObject(this.state.form, {
-            [e.target.name]: updatedFormElement
+        const updatedForm = updateObject(form, {
+            [e.target.name]: updatedFormElement,
         });
 
         let formIsValid = true;
-        for (let inputIdentifier in updatedForm) {
-            formIsValid = updatedForm[inputIdentifier].valid && formIsValid;
-        }
+        Object.keys(updatedForm).forEach((key) => {
+            formIsValid = updatedForm[key].valid && formIsValid;
+        });
 
-        this.setState({ form: updatedForm, formIsValid: formIsValid });
+        this.setState({ form: updatedForm, formIsValid });
     }
 
     handleDelete = (id) => {
@@ -108,24 +109,31 @@ class Categories extends Component {
 
     render() {
         const { classes } = this.props;
+        const { categories, loading } = this.props;
+        const { form, formIsValid } = this.state;
 
-        let form = <Spinner />;
-        if (!this.props.loading) {
-            form = (
+        let formContent = <Spinner />;
+        if (!loading) {
+            formContent = (
                 <form autoComplete="off">
 
                     <TextField
-                        className={classes.input} error={!this.state.form.name.valid && this.state.form.name.touched}
-                        name='name' label={this.state.form.name.elementConfig.placeholder}
-                        type={this.state.form.name.elementConfig.type} variant="filled" value={this.state.form.name.value}
+                        className={classes.input}
+                        error={!form.name.valid && form.name.touched}
+                        name="name"
+                        label={form.name.elementConfig.placeholder}
+                        type={form.name.elementConfig.type}
+                        variant="filled"
+                        value={form.name.value}
                         onChange={this.handleChange}
-                        helperText={!this.state.form.name.valid && this.state.form.name.touched ? "Required" : null} />
+                        helperText={!form.name.valid && form.name.touched ? 'Required' : null}
+                    />
                 </form>
             );
         }
 
         let table = null;
-        if (this.props.categories) {
+        if (categories) {
             table = (
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
@@ -138,7 +146,7 @@ class Categories extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.props.categories.map((cat) => (
+                            {categories.map((cat) => (
                                 <TableRow key={cat.id}>
                                     <TableCell component="th" scope="row">
                                         {cat.name}
@@ -161,10 +169,10 @@ class Categories extends Component {
                         <Typography className={classes.title} color="textPrimary" gutterBottom>
                             Add a new category
                         </Typography>
-                        {form}
+                        {formContent}
                     </CardContent>
                     <CardActions>
-                        <Button size="large" onClick={this.handleSubmit} disabled={!this.state.formIsValid}>ADD CATEGORY</Button>
+                        <Button size="large" onClick={this.handleSubmit} disabled={!formIsValid}>ADD CATEGORY</Button>
                     </CardActions>
                 </Card>
                 {table}
