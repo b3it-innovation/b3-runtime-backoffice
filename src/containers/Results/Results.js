@@ -67,7 +67,6 @@ class Results extends Component {
     componentDidUpdate() {
         if (this.state.competition && !this.state.tracksFetched) {
             let comp = this.props.competitions.find(c => c.id === this.state.competition);
-            console.log(comp);
             this.props.searchTracks(comp.trackKeys);
             this.setState({ tracksFetched: true });
         }
@@ -91,7 +90,6 @@ class Results extends Component {
         this.setState({
             chosenResult: result
         })
-        console.log(this.state.chosenResult)
         this.handleOpen();
     }
 
@@ -114,7 +112,6 @@ class Results extends Component {
 
         let spinner = null;
         if (this.props.compLoading || this.props.trackLoading || this.props.resultLoading) {
-            console.log("here")
             spinner = <Spinner />;
         }
 
