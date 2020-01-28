@@ -105,7 +105,7 @@ const AddQuestion = (props) => {
             correctAnswer: '',
             title: '',
         });
-        setOptionInput({currentOption: ''});
+        setOptionInput({ currentOption: '' });
     }
 
     function handleChange(e) {

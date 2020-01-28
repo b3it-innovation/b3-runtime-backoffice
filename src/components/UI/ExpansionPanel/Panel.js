@@ -38,7 +38,7 @@ function Panel(props) {
     if (matchedCategory == null) {
         categoryName = 'No category found';
     } else {
-        categoryName = matchedCategory.name.name;
+        categoryName = matchedCategory.name;
     }
 
     let id = props.object.id;

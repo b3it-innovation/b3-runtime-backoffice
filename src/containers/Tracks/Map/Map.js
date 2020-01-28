@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react'
-import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys'
+import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys';
 
 import { Container } from '@material-ui/core';
 
