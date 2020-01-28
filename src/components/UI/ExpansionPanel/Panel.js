@@ -76,6 +76,7 @@ function Panel(props) {
 Correct Answer:
                         {object.correctAnswer}
                     </p>
+                    <Button variant="contained" color="secondary" onClick={() => props.onEdit(id)}>Edit Question</Button>
                     <Button variant="contained" color="primary" onClick={() => props.onDelete(id)}>Delete Question</Button>
                 </div>
                 <Typography />

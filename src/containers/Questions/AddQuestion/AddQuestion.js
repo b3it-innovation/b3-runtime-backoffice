@@ -83,7 +83,7 @@ const AddQuestion = (props) => {
     });
 
     const { options } = state;
-    const { added, loading } = props;
+    const { added, loading, questionKey } = props;
 
     useEffect(() => {
         setTimeout(() => {
@@ -100,6 +100,20 @@ const AddQuestion = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.addQuestion({ ...state });
+        setState({
+            text: '',
+            category: '',
+            options: [],
+            correctAnswer: '',
+            title: '',
+        });
+        setOptionInput({ currentOption: '' });
+    };
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        props.updateQuestion(questionKey, { ...state });
+        props.resetKey(null);
         setState({
             text: '',
             category: '',
@@ -168,6 +182,7 @@ const AddQuestion = (props) => {
 
 
     let form = <Spinner />;
+
     if (!loading) {
         form = (
             <form autoComplete="off">
@@ -209,12 +224,26 @@ const AddQuestion = (props) => {
         );
     }
 
+    console.log('innan nullcheck: ', questionKey);
+    if (questionKey !== null && state.text === '') { // TODO: Find another way to prevent loop
+        const newState = [...props.questions];
+        const questionToEdit = newState.find((question) => question.id === questionKey);
+        console.log('inne i nullcheck: ', questionToEdit);
+        setState({
+            text: questionToEdit.text,
+            category: questionToEdit.category,
+            options: questionToEdit.options,
+            correctAnswer: questionToEdit.correctAnswer,
+            title: questionToEdit.title,
+        });
+    }
+
     return (
         <div className={classes.container}>
             <Card className={classes.card}>
                 <CardContent>
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
-                        Add a new question
+                        {questionKey ? 'Edit question' : 'Add new question'}
                     </Typography>
                     {added
                         ? (
@@ -226,7 +255,9 @@ const AddQuestion = (props) => {
                     {form}
                 </CardContent>
                 <CardActions>
-                    <Button size="large" onClick={handleSubmit}>SAVE QUESTION</Button>
+                    {questionKey ? <Button size="large" onClick={handleUpdate}>UPDATE QUESTION</Button>
+                        : <Button size="large" onClick={handleSubmit}>SAVE QUESTION</Button>}
+
                 </CardActions>
             </Card>
         </div>
@@ -238,10 +269,12 @@ const mapStateToProps = (state) => ({
     loading: state.questions.loading,
     err: state.questions.error,
     added: state.questions.questionAdded,
+    questions: state.questions.fetchedQuestions,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     addQuestion: (question) => dispatch(actions.addQuestion(question)),
+    updateQuestion: (questionKey, question) => dispatch(actions.updateQuestion(questionKey, question)),
     init: () => dispatch(actions.addQuestionInit()),
 });
 

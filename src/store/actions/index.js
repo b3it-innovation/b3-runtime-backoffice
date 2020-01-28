@@ -3,6 +3,7 @@ export {
     addQuestion,
     searchQuestions,
     deleteQuestion,
+    updateQuestion,
 } from './questionActions';
 
 export {

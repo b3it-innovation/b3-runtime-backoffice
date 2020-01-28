@@ -33,6 +33,18 @@ const addQuestionError = (state, action) => ({
     error: action.err,
 });
 
+const updateQuestionSuccess = (state) => ({
+    ...state,
+    loading: false,
+    error: null,
+});
+
+const updateQuestionError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.err,
+});
+
 const searchQuestionsSuccess = (state, action) => {
     const questionArray = [];
     action.fetchedQuestions.forEach((q) => {
@@ -94,6 +106,10 @@ const questionReducer = (state = initState, action) => {
             return deleteQuestionSuccess(state, action);
         case actionTypes.DELETE_QUESTION_ERROR:
             return deleteQuestionError(state, action);
+        case actionTypes.UPDATE_QUESTION_SUCCESS:
+            return updateQuestionSuccess(state, action);
+        case actionTypes.UPDATE_QUESTION_ERROR:
+            return updateQuestionError(state, action);
         default:
             return state;
     }

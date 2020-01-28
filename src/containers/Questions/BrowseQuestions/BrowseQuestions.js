@@ -73,12 +73,14 @@ class BrowseQuestions extends Component {
     render() {
         const { classes } = this.props;
         const { category } = this.state;
-        const { categories, questions, loading } = this.props;
+        const {
+            categories, questions, loading, editQuestion,
+        } = this.props;
 
         let questionList = null;
         if (questions) {
             questionList = questions.map((q) => (
-                <Panel key={q.id} label={q.title} object={q} onDelete={this.handleDeleteQuestion} />
+                <Panel key={q.id} label={q.title} object={q} onDelete={this.handleDeleteQuestion} onEdit={editQuestion} />
             ));
         }
         let spinner = null;
