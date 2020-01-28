@@ -82,6 +82,9 @@ const AddQuestion = (props) => {
         currentOption: '',
     });
 
+    const { options } = state;
+    const { added, loading } = props;
+
     useEffect(() => {
         setTimeout(() => {
             if (props.added) {
@@ -150,30 +153,22 @@ const AddQuestion = (props) => {
     };
 
     function handleDeleteOption(index) {
-        const { options } = state;
-        const newOptions = options.filter((option) => {
-            console.log(option.option !== index);
-            return option.option !== index;
-        });
+        const newOptions = options.filter((option) => option.option !== index);
 
-        console.log('oldOptions', newOptions);
         const updOptions = newOptions.map((opt, i) => {
             opt.option = optionLetters[i];
             return opt;
         });
-        console.log('updOptions', updOptions);
 
         setState({
             ...state,
             options: updOptions,
         });
-
-        console.log(state.options);
     }
 
 
     let form = <Spinner />;
-    if (!props.loading) {
+    if (!loading) {
         form = (
             <form autoComplete="off">
                 <TextField className={classes.input} name="title" label="Title" variant="filled" value={state.title} onChange={handleChange} />
@@ -221,10 +216,10 @@ const AddQuestion = (props) => {
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Add a new question
                     </Typography>
-                    {props.added
+                    {added
                         ? (
                             <ImageTransitionOverlay>
-                                <img src={checkbox} width="400px" height="400px" />
+                                <img alt="success" src={checkbox} width="400px" height="400px" />
                             </ImageTransitionOverlay>
                         )
                         : null}

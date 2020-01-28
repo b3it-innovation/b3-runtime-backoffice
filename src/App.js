@@ -3,8 +3,8 @@ import './App.css';
 import { connect } from 'react-redux';
 import {
     BrowserRouter as Router,
-    Route
-} from "react-router-dom";
+    Route,
+} from 'react-router-dom';
 
 import Layout from './hoc/Layout/Layout';
 import Home from './containers/Home/Home';
@@ -30,10 +30,8 @@ function App() {
     );
 }
 
-const mapStateToProps = (state) => {
-    return {
-        text: state.someTextToRemove
-    }
-}
+const mapStateToProps = (state) => ({
+    text: state.someTextToRemove,
+});
 
 export default connect(mapStateToProps)(App);

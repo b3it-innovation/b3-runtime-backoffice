@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function NavigationItems(props) {
+export default function NavigationItems() {
     const classes = useStyles();
 
     return (

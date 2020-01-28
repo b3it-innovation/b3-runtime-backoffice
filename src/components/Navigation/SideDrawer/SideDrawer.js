@@ -18,6 +18,8 @@ const useStyles = makeStyles({
 export default function TemporaryDrawer(props) {
     const classes = useStyles();
 
+    const { open } = props;
+
     const sideList = () => (
         <div
             className={classes.list}
@@ -31,7 +33,7 @@ export default function TemporaryDrawer(props) {
 
     return (
         <div>
-            <Drawer open={props.open} onClose={() => props.close(false)}>
+            <Drawer open={open} onClose={() => props.close(false)}>
                 {sideList()}
             </Drawer>
         </div>

@@ -2,10 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { ListItemText, Typography } from '@material-ui/core';
-import { Home, RoomRounded, ContactSupportRounded, FormatListNumberedRounded, DirectionsRun } from '@material-ui/icons';
+import {
+    Home, RoomRounded, ContactSupportRounded, FormatListNumberedRounded, DirectionsRun,
+} from '@material-ui/icons';
 import classes from './NavigationItem.module.css';
 
 const navigationItem = (props) => {
+    const { path, label } = props;
+
     let icon = null;
     switch (props.iconType) {
         case 'home':
@@ -26,10 +30,11 @@ const navigationItem = (props) => {
         default:
             icon = null;
     }
+
     return (
         <ListItemText inset>
             <Typography color="inherit" variant="h6">
-                <Link to={props.path} className={classes.Link}>{props.label}</Link>
+                <Link to={path} className={classes.Link}>{label}</Link>
                 {icon}
             </Typography>
         </ListItemText>

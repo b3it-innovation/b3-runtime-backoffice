@@ -6,41 +6,45 @@ export default function ResultDisplay(props) {
     let totalCheckpoints = 0;
     let totalCorrect = 0;
 
-    props.result.results.forEach((pin) => {
+    const { result } = props;
+
+    result.results.forEach((pin) => {
         if (pin.questionKey) {
-            totalCheckpoints++;
+            totalCheckpoints += 1;
         }
         if (pin.answeredCorrect) {
-            totalCorrect++;
+            totalCorrect += 1;
         }
     });
 
     return (
         <div>
             <p>
-Competition:
-                {props.result.attendee.competitionName}
+                Competition:
+                {result.attendee.competitionName}
             </p>
             <p>
-Track:
-                {props.result.attendee.trackName}
+                Track:
+                {result.attendee.trackName}
             </p>
             <p>
-Username:
-                {props.result.attendee.name}
+                Username:
+                {result.attendee.name}
             </p>
             <p>
-Total time:
-                {props.result.totalTime ? millisToMinutesAndSeconds(props.result.totalTime) : 'Did not finish'}
+                Total time:
+                {result.totalTime ? millisToMinutesAndSeconds(result.totalTime) : 'Did not finish'}
             </p>
             <p>
-This runner answered
+                This runner answered
+                {' '}
                 {totalCorrect}
                 {' '}
-out of
+                out of
+                {' '}
                 {totalCheckpoints}
                 {' '}
-questions correctly
+                questions correctly
             </p>
         </div>
     );

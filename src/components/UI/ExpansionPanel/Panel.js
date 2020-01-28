@@ -30,15 +30,17 @@ const useStyles = makeStyles((theme) => ({
 function Panel(props) {
     const classes = useStyles();
 
+    const { categories, label, object } = props;
+
     let categoryName = null;
-    const matchedCategory = props.categories.find((cat) => cat.id === props.object.category);
+    const matchedCategory = categories.find((cat) => cat.id === object.category);
     if (matchedCategory == null) {
         categoryName = 'No category found';
     } else {
         categoryName = matchedCategory.name;
     }
 
-    const { id } = props.object;
+    const { id } = object;
 
     return (
         <ExpansionPanel>
@@ -47,13 +49,13 @@ function Panel(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography className={classes.heading}>{props.label}</Typography>
+                <Typography className={classes.heading}>{label}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.container}>
                 <div className={classes.containerItem}>
                     <p>Text:</p>
                     {' '}
-                    <p>{props.object.text}</p>
+                    <p>{object.text}</p>
                     <p>Category:</p>
                     {' '}
                     <p>{categoryName}</p>
@@ -62,7 +64,7 @@ function Panel(props) {
 
                     Options:
                     {' '}
-                    {props.object.options.map((option) => (
+                    {object.options.map((option) => (
                         <p key={option.option}>
                             {option.option}
                             {' '}
@@ -72,7 +74,7 @@ function Panel(props) {
 
                     <p>
 Correct Answer:
-                        {props.object.correctAnswer}
+                        {object.correctAnswer}
                     </p>
                     <Button variant="contained" color="primary" onClick={() => props.onDelete(id)}>Delete Question</Button>
                 </div>

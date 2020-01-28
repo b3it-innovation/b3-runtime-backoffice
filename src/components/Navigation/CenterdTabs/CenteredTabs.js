@@ -13,16 +13,18 @@ const useStyles = makeStyles({
 const CenteredTabs = (props) => {
     const classes = useStyles();
 
+    const { value, change, tabs } = props;
+
     return (
         <Paper className={classes.root}>
             <Tabs
-                value={props.value}
-                onChange={props.change}
+                value={value}
+                onChange={change}
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"
             >
-                {props.tabs.map((tab) => <Tab key={tab} label={tab} />)}
+                {tabs.map((tab) => <Tab key={tab} label={tab} />)}
             </Tabs>
         </Paper>
     );

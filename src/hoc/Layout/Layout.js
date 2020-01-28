@@ -6,22 +6,26 @@ import NavBar from '../../components/Navigation/NavBar/NavBar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 
 class Layout extends Component {
-
-    state = {
-        open: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+        };
     }
 
     toggleDrawer = (open) => {
-        this.setState(({ open: open }))
+        this.setState(({ open }));
     }
 
     render() {
+        const { open } = this.state;
+        const { children } = this.props;
         return (
             <Aux>
                 <NavBar click={this.toggleDrawer} />
-                <SideDrawer close={this.toggleDrawer} open={this.state.open} />
+                <SideDrawer close={this.toggleDrawer} open={open} />
                 <main className={classes.Content}>
-                    {this.props.children}
+                    {children}
                 </main>
             </Aux>
         );
