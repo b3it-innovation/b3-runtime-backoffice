@@ -1,9 +1,11 @@
 import React, { Component, createRef } from 'react';
 import { Container } from '@material-ui/core';
+import { object } from 'prop-types';
 import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys';
 import classes from './Map.module.css';
 
 let map = null;
+let path = null;
 
 class GoogleMap extends Component {
     googleMapRef = createRef();
@@ -23,6 +25,25 @@ class GoogleMap extends Component {
             });
             this.addMapClickListener();
         });
+    }
+
+    componentDidUpdate() {
+        const { checkpoints } = this.props;
+
+        if (path != null) {
+            path.setMap(null);
+            path = null;
+        }
+
+        path = new window.google.maps.Polyline({
+            path: this.drawLines(checkpoints),
+            geodesic: true,
+            strokeColor: 'white',
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+        });
+
+        path.setMap(this.googleMap);
     }
 
     createGoogleMap = () => new window.google.maps.Map(this.googleMapRef.current, {
@@ -60,6 +81,17 @@ class GoogleMap extends Component {
         map.addListener('click', (event) => {
             this.createMarker(event.latLng.lat(), event.latLng.lng());
         });
+    }
+
+    drawLines = (markers) => {
+        const pathCoords = [];
+        markers.forEach((marker) => {
+            pathCoords.push({
+                lat: marker.lat,
+                lng: marker.lng,
+            });
+        });
+        return pathCoords;
     }
 
     render() {
