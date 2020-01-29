@@ -55,7 +55,7 @@ function PanelDetail(props) {
                     <p>{categoryName}</p>
                 </div>
                 <div className={classes.containerItem}>
-                Options:
+                    Options:
                     {' '}
                     {object.options.map((option) => (
                         <p key={option.option}>
@@ -65,7 +65,7 @@ function PanelDetail(props) {
                         </p>
                     ))}
                     <p>
-                    Correct Answer:
+                        Correct Answer:
                         {object.correctAnswer}
                     </p>
                     <Button variant="contained" color="secondary" onClick={() => onEdit(id)}>Edit Question</Button>
@@ -93,14 +93,31 @@ function PanelDetail(props) {
                     <p>{object.active.toString()}</p>
                 </div>
                 <div className={classes.containerItem}>
-                Tracks:
+                    Tracks:
                     {' '}
                     {matchedTracks.length > 0 ? matchedTracks.map((track) => (
                         <p key={track.id}>
                             {track.name}
                         </p>
-                    )) : (<p>No tracks</p>) }
+                    )) : (<p>No tracks</p>)}
                     <Button variant="contained" color="secondary" onClick={() => onEdit(object.id)}>Edit</Button>
+                </div>
+            </Aux>
+        );
+    } else if (type === 'checkpoint') {
+        const { lat, lng, order } = object;
+        content = (
+            <Aux>
+                <div className={classes.containerItem}>
+                    <p>Order:</p>
+                    {' '}
+                    <p>{order}</p>
+                    <p>Latitude:</p>
+                    {' '}
+                    <p>{lat}</p>
+                    <p>Longitude:</p>
+                    {' '}
+                    <p>{lng}</p>
                 </div>
             </Aux>
         );

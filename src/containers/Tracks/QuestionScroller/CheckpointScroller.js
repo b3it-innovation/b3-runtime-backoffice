@@ -1,4 +1,5 @@
 import React from 'react';
+import Panel from '../../../components/UI/ExpansionPanel/Panel';
 
 function CheckpointScroller(props) {
     const { checkpoints } = props;
@@ -9,9 +10,7 @@ function CheckpointScroller(props) {
         panels = (
             checkpoints.map((checkpoint) => (
                 <div>
-                    <p>{checkpoint.lat.toString()}</p>
-                    <p>{checkpoint.lng.toString()}</p>
-                    <p>{checkpoint.order.toString()}</p>
+                    <Panel type={'checkpoint'} object={checkpoint} label={checkpoint.order} />
                 </div>
             ))
         );

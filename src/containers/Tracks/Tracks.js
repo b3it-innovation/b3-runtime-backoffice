@@ -33,7 +33,6 @@ class Tracks extends Component {
     }
 
     render() {
-
         const { checkpoints } = this.state;
         return (
             <div className={classes.topContainer}>
