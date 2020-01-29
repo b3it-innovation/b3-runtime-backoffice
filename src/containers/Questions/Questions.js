@@ -12,6 +12,7 @@ class Questions extends Component {
         super(props);
         this.state = {
             tabValue: 0,
+            editQuestionKey: null,
         };
     }
 
@@ -24,16 +25,29 @@ class Questions extends Component {
         this.setState({ tabValue: newValue });
     };
 
+    handleEditQuestion = (questionKey) => {
+        this.setState({
+            editQuestionKey: questionKey,
+            tabValue: 0,
+        });
+    }
+
     render() {
         const tabs = ['Add Question', 'Browse Questions', 'Add Category'];
         const { tabValue } = this.state;
+        const { editQuestionKey } = this.state;
         let content = null;
         switch (tabValue) {
             case 0:
-                content = <AddQuestion />;
+                content = (
+                    <AddQuestion
+                        questionKey={editQuestionKey}
+                        resetKey={this.handleEditQuestion}
+                    />
+                );
                 break;
             case 1:
-                content = <BrowseQuestions />;
+                content = <BrowseQuestions editQuestion={this.handleEditQuestion} />;
                 break;
             case 2:
                 content = <Categories />;
