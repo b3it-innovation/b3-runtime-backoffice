@@ -24,9 +24,9 @@ export const addQuestion = (payload) => (dispatch) => {
 export const updateQuestion = (questionKey, question) => (dispatch) => {
     dispatch(connectQuestionsStart());
     firestore.collection('WilliamsTest').doc('test').collection(collectionsNames.QUESTIONS).doc(questionKey)
-        .update(question)
+        .set(question)
         .then(() => {
-            dispatch({ type: actionTypes.UPDATE_QUESTION_SUCCESS, questionKey });
+            dispatch({ type: actionTypes.UPDATE_QUESTION_SUCCESS, question });
         })
         .catch((err) => {
             dispatch({ type: actionTypes.UPDATE_QUESTION_ERROR, err });

@@ -70,7 +70,7 @@ const useStyles = makeStyles({
 });
 
 const AddQuestion = (props) => {
-    const [state, setState] = useState({
+    const [localState, setLocalState] = useState({
         text: '',
         category: '',
         options: [],
@@ -82,7 +82,7 @@ const AddQuestion = (props) => {
         currentOption: '',
     });
 
-    const { options } = state;
+    const { options } = localState;
     const { added, loading, questionKey } = props;
 
     useEffect(() => {
@@ -99,8 +99,8 @@ const AddQuestion = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.addQuestion({ ...state });
-        setState({
+        props.addQuestion({ ...localState });
+        setLocalState({
             text: '',
             category: '',
             options: [],
@@ -112,9 +112,9 @@ const AddQuestion = (props) => {
 
     const handleUpdate = (e) => {
         e.preventDefault();
-        props.updateQuestion(questionKey, { ...state });
+        props.updateQuestion(questionKey, { ...localState });
         props.resetKey(null);
-        setState({
+        setLocalState({
             text: '',
             category: '',
             options: [],
@@ -133,8 +133,8 @@ const AddQuestion = (props) => {
                 currentOption: e.target.value,
             });
         } else {
-            setState({
-                ...state,
+            setLocalState({
+                ...localState,
                 [e.target.name]: value,
             });
         }
@@ -144,19 +144,19 @@ const AddQuestion = (props) => {
         e.preventDefault();
         const option = (` ${optionInput.currentOption}`).slice(1);
         let optionLetter = null;
-        if (!state.options) {
+        if (!localState.options) {
             optionLetter = 'A';
         } else {
-            optionLetter = optionLetters[state.options.length];
+            optionLetter = optionLetters[localState.options.length];
         }
         const object = {
             text: option,
             option: optionLetter,
             imgUrl: null,
         };
-        const newOptions = [...state.options, object];
-        setState({
-            ...state,
+        const newOptions = [...localState.options, object];
+        setLocalState({
+            ...localState,
             options: newOptions,
         });
 
@@ -168,14 +168,15 @@ const AddQuestion = (props) => {
 
     function handleDeleteOption(index) {
         const newOptions = options.filter((option) => option.option !== index);
+        const copyoptions = [...newOptions];
 
-        const updOptions = newOptions.map((opt, i) => {
+        const updOptions = copyoptions.map((opt, i) => {
             opt.option = optionLetters[i];
             return opt;
         });
 
-        setState({
-            ...state,
+        setLocalState({
+            ...localState,
             options: updOptions,
         });
     }
@@ -186,11 +187,11 @@ const AddQuestion = (props) => {
     if (!loading) {
         form = (
             <form autoComplete="off">
-                <TextField className={classes.input} name="title" label="Title" variant="filled" value={state.title} onChange={handleChange} />
-                <TextField className={classes.input} multiline name="text" label="Question" variant="filled" value={state.text} onChange={handleChange} />
+                <TextField className={classes.input} name="title" label="Title" variant="filled" value={localState.title} onChange={handleChange} />
+                <TextField className={classes.input} multiline name="text" label="Question" variant="filled" value={localState.text} onChange={handleChange} />
 
                 <DropDown
-                    value={state.category}
+                    value={localState.category}
                     handleChange={handleChange}
                     obj={props.categories}
                     label="Category"
@@ -199,14 +200,14 @@ const AddQuestion = (props) => {
                 />
 
                 <TextField name="option" value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
-                {state.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
+                {localState.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
                     : <Button disabled size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
 
                 <FormControl component="fieldset" className={classes.radio}>
                     <FormLabel component="legend">Mark the correct answer</FormLabel>
-                    <RadioGroup name="correctAnswer" className={classes.radio} value={state.correctAnswer} onChange={handleChange}>
+                    <RadioGroup name="correctAnswer" className={classes.radio} value={localState.correctAnswer} onChange={handleChange}>
 
-                        {state.options.map((option, index) => (
+                        {localState.options.map((option, index) => (
                             <div className={classes.options} key={optionLetters[index]}>
                                 <FormControlLabel
                                     value={optionLetters[index]}
@@ -224,17 +225,16 @@ const AddQuestion = (props) => {
         );
     }
 
-    console.log('innan nullcheck: ', questionKey);
-    if (questionKey !== null && state.text === '') { // TODO: Find another way to prevent loop
-        const newState = [...props.questions];
-        const questionToEdit = newState.find((question) => question.id === questionKey);
-        console.log('inne i nullcheck: ', questionToEdit);
-        setState({
-            text: questionToEdit.text,
-            category: questionToEdit.category,
-            options: questionToEdit.options,
-            correctAnswer: questionToEdit.correctAnswer,
-            title: questionToEdit.title,
+    if (questionKey !== null && localState.text === '') { // TODO: Find another way to prevent loop
+        const questionToEdit = props.questions.find((question) => question.id === questionKey);
+        const deepCopy = JSON.parse(JSON.stringify(questionToEdit));
+
+        setLocalState({
+            text: deepCopy.text,
+            category: deepCopy.category,
+            options: deepCopy.options,
+            correctAnswer: deepCopy.correctAnswer,
+            title: deepCopy.title,
         });
     }
 

@@ -39,7 +39,12 @@ class Questions extends Component {
         let content = null;
         switch (tabValue) {
             case 0:
-                content = <AddQuestion questionKey={editQuestionKey} resetKey={this.handleEditQuestion} />;
+                content = (
+                    <AddQuestion
+                        questionKey={editQuestionKey}
+                        resetKey={this.handleEditQuestion}
+                    />
+                );
                 break;
             case 1:
                 content = <BrowseQuestions editQuestion={this.handleEditQuestion} />;
