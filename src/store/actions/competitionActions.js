@@ -83,3 +83,24 @@ export const deleteCompetition = (competitionId) => (dispatch) => {
             dispatch(deleteCompetitionError(err));
         });
 };
+
+const updateCompetitionSuccess = () => ({
+    type: actionTypes.UPDATE_COMPETITION_SUCCESS,
+});
+
+const updateCompetitionError = (error) => ({
+    type: actionTypes.UPDATE_COMPETITION_ERROR,
+    error,
+});
+
+export const updateCompetition = (id, competition) => (dispatch) => {
+    dispatch(connectCompetitionsStart());
+    firestore.collection(collectionsNames.COMPETITIONS).doc(id)
+        .update(competition)
+        .then(() => {
+            dispatch(updateCompetitionSuccess());
+        })
+        .catch((err) => {
+            dispatch(updateCompetitionError(err));
+        });
+};

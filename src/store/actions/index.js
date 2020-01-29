@@ -17,6 +17,7 @@ export {
     fetchCompetitionsByActive,
     addCompetition,
     deleteCompetition,
+    updateCompetition,
 } from './competitionActions';
 
 export {

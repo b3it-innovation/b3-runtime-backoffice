@@ -10,6 +10,7 @@ class Competitions extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            competitionId: null,
             tabValue: 0,
         };
     }
@@ -23,16 +24,29 @@ class Competitions extends Component {
         this.setState({ tabValue: newValue });
     };
 
+    handleEditCompetition = (competitionId) => {
+        this.setState({
+            competitionId,
+            tabValue: 0,
+        });
+    }
+
     render() {
         const tabs = ['Create Competition', 'Browse Competitions'];
+        const { competitionId } = this.state;
         const { tabValue } = this.state;
         let content = null;
         switch (tabValue) {
             case 0:
-                content = <CreateCompetition />;
+                content = (
+                    <CreateCompetition
+                        competitionId={competitionId}
+                        handleSetId={this.handleEditCompetition}
+                    />
+                );
                 break;
             case 1:
-                content = <BrowseCompetitions />;
+                content = <BrowseCompetitions onEdit={this.handleEditCompetition} />;
                 break;
             default:
                 content = null;
@@ -47,11 +61,8 @@ class Competitions extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-});
-
 const mapDispatchToProps = (dispatch) => ({
     fetchTracks: () => dispatch(actions.fetchTracks()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Competitions);
+export default connect(null, mapDispatchToProps)(Competitions);

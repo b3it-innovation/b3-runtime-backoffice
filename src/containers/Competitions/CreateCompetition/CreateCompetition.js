@@ -63,9 +63,32 @@ class CreateCompetition extends Component {
         };
     }
 
+    componentDidMount() {
+        const { competitionId, competitions } = this.props;
+        const { name } = this.state;
+        if (competitionId !== null && name === '') { // TODO: Find another way to prevent loop
+            const editComp = competitions.find((comp) => comp.id === competitionId);
+            const deepCopy = JSON.parse(JSON.stringify(editComp));
+
+            this.setState({
+                name: deepCopy.name,
+                active: deepCopy.active,
+                date: deepCopy.date,
+                trackKeys: deepCopy.trackKeys,
+            });
+        }
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.addCompetition({ ...this.state });
+        this.resetState();
+    }
+
+    handleUpdate = () => {
+        this.props.updateCompetition(this.props.competitionId, { ...this.state });
+        this.props.handleSetId(null);
+        this.resetState();
     }
 
     handleAddOption = (e) => {
@@ -97,14 +120,22 @@ class CreateCompetition extends Component {
         this.setState({ trackKeys: newChecked });
     };
 
-    handleDeleteOption = () => {
+    resetState = () => {
+        this.setState({
+            name: '',
+            active: false,
+            date: '',
+            trackKeys: [],
+        });
     }
 
     render() {
         const { classes } = this.props;
-        const { loading, tracks } = this.props;
+        const {
+            loading, tracks, competitionId,
+        } = this.props;
         const { name, active, trackKeys } = this.state;
-        let form = <Spinner />;
+
         let trackList = null;
         if (tracks) {
             trackList = (
@@ -133,6 +164,8 @@ class CreateCompetition extends Component {
                 </List>
             );
         }
+
+        let form = <Spinner />;
         if (!loading) {
             form = (
                 <form autoComplete="off">
@@ -161,12 +194,13 @@ class CreateCompetition extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <Typography className={classes.title} color="textPrimary" gutterBottom>
-                            Create a new competition
+                            {competitionId ? 'Edit competition' : 'Create a new competition' }
                         </Typography>
                         {form}
                     </CardContent>
                     <CardActions>
-                        <Button size="large" onClick={this.handleSubmit}>SAVE COMPETITION</Button>
+                        {competitionId ? <Button size="large" onClick={this.handleUpdate}>UPDATE COMPETITION</Button>
+                            : <Button size="large" onClick={this.handleSubmit}>SAVE COMPETITION</Button>}
                     </CardActions>
                 </Card>
             </div>
@@ -183,8 +217,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     addCompetition: (competition) => dispatch(actions.addCompetition(competition)),
+    updateCompetition: (id, competition) => dispatch(actions.updateCompetition(id, competition)),
     fetchTracks: () => dispatch(actions.fetchTracks()),
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CreateCompetition));

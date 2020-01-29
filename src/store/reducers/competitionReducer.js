@@ -75,6 +75,18 @@ const deleteCompetitionError = (state, action) => (
     }
 );
 
+const updateCompetitionSuccess = (state) => ({
+    ...state,
+    loading: false,
+    error: null,
+});
+
+const updateCompetitionError = (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.err,
+});
+
 const competitionReducer = (state = initState, action) => {
     switch (action.type) {
         case actionTypes.CONNECT_COMPETITONS_START:
@@ -91,6 +103,10 @@ const competitionReducer = (state = initState, action) => {
             return deleteCompetitionSuccess(state, action);
         case actionTypes.DELETE_COMPETITION_ERROR:
             return deleteCompetitionError(state, action);
+        case actionTypes.UPDATE_COMPETITION_SUCCESS:
+            return updateCompetitionSuccess(state, action);
+        case actionTypes.UPDATE_COMPETITION_ERROR:
+            return updateCompetitionError(state, action);
         default:
             return state;
     }

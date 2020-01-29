@@ -30,16 +30,6 @@ const styles = {
         maxWidth: 1075,
         margin: '0',
     },
-    input: {
-        width: '70%',
-        marginTop: 12,
-    },
-    optionsButton: {
-        width: '70%',
-        alignSelf: 'center',
-        fontSize: 14,
-        marginBottom: 8,
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -72,13 +62,13 @@ class BrowseCompetitions extends Component {
         const { classes } = this.props;
         const { dropDownValue } = this.state;
         const {
-            competitions, compLoading, tracks,
+            competitions, compLoading, tracks, onEdit,
         } = this.props;
 
         let competitionList = null;
         if (competitions && tracks) {
             competitionList = competitions.map((c) => (
-                <Panel key={c.id} type="competition" label={c.name} object={c} onDelete="" />
+                <Panel key={c.id} type="competition" label={c.name} object={c} onDelete="" onEdit={onEdit} />
             ));
         }
         let spinner = null;
