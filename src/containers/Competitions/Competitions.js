@@ -14,6 +14,11 @@ class Competitions extends Component {
         };
     }
 
+    componentDidMount() {
+        const { fetchTracks } = this.props;
+        fetchTracks();
+    }
+
     handleChange = (event, newValue) => {
         this.setState({ tabValue: newValue });
     };
@@ -46,6 +51,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    fetchTracks: () => dispatch(actions.fetchTracks()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Competitions);

@@ -10,9 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
 import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
@@ -55,12 +59,13 @@ class CreateCompetition extends Component {
             name: '',
             active: false,
             date: '',
-            tracks: [],
+            trackKeys: [],
         };
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
+        this.props.addCompetition({ ...this.state });
     }
 
     handleAddOption = (e) => {
@@ -69,7 +74,6 @@ class CreateCompetition extends Component {
 
     handleChange = (event) => {
         const { value } = event.target;
-        console.log(value);
         if (event.target.name === 'active') {
             this.setState((prevState) => ({
                 active: !prevState.active,
@@ -81,19 +85,58 @@ class CreateCompetition extends Component {
         }
     }
 
+    handleTrackCheckToggle = (id) => () => {
+        const { trackKeys } = this.state;
+        const currentIndex = trackKeys.indexOf(id);
+        const newChecked = [...trackKeys];
+        if (currentIndex === -1) {
+            newChecked.push(id);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+        this.setState({ trackKeys: newChecked });
+    };
+
     handleDeleteOption = () => {
     }
 
     render() {
         const { classes } = this.props;
-        const { loading } = this.props;
-        const { name, active, date } = this.state;
+        const { loading, tracks } = this.props;
+        const { name, active, trackKeys } = this.state;
         let form = <Spinner />;
+        let trackList = null;
+        if (tracks) {
+            trackList = (
+                <List
+                    dense
+                    className={classes.root}
+                    subheader={(
+                        <ListSubheader component="div" id="nested-list-subheader">
+                            choose tracks
+                        </ListSubheader>
+                    )}
+                >
+                    { tracks.map((track) => (
+                        <ListItem key={track.id} button>
+                            <ListItemText id={track.id} primary={track.name} />
+                            <ListItemSecondaryAction>
+                                <Checkbox
+                                    edge="end"
+                                    onChange={this.handleTrackCheckToggle(track.id)}
+                                    checked={trackKeys.indexOf(track.id) !== -1}
+                                    inputProps={{ 'aria-labelledby': track.id }}
+                                />
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    ))}
+                </List>
+            );
+        }
         if (!loading) {
             form = (
                 <form autoComplete="off">
                     <TextField className={classes.input} name="name" label="Name" variant="filled" value={name} onChange={this.handleChange} />
-
                     <FormGroup row className={classes.formRow}>
                         <FormControlLabel
                             control={(
@@ -108,15 +151,7 @@ class CreateCompetition extends Component {
                             label="Active"
                         />
                     </FormGroup>
-                    {/* <DropDown
-                        value={this.state.tracks}
-                        handleChange={this.handleChange}
-                        obj={this.props.tracks}
-                        label="Category"
-                        name="category"
-                        id="categoryId"
-                    /> */}
-
+                    {trackList}
                 </form>
             );
         }

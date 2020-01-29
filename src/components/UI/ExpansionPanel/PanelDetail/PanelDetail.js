@@ -65,7 +65,7 @@ function PanelDetail(props) {
                         </p>
                     ))}
                     <p>
-                    Correct Answer:&nbsp
+                    Correct Answer:
                         {object.correctAnswer}
                     </p>
                     <Button variant="contained" color="secondary" onClick={() => onEdit(id)}>Edit Question</Button>
@@ -75,7 +75,7 @@ function PanelDetail(props) {
         );
     } else if (type === 'competition') {
         const { tracks } = props;
-        let matchedTracks = [];
+        let matchedTracks = null;
         if (tracks) {
             matchedTracks = object.trackKeys.map((key) => tracks.find((t) => t.id === key));
         }
@@ -95,12 +95,12 @@ function PanelDetail(props) {
                 <div className={classes.containerItem}>
                 Tracks:
                     {' '}
-                    {matchedTracks.map((track) => (
+                    {matchedTracks.length > 0 ? matchedTracks.map((track) => (
                         <p key={track.id}>
                             {track.name}
                         </p>
-                    ))}
-                    <Button variant="contained" color="primary">Edit</Button>
+                    )) : (<p>No tracks</p>) }
+                    <Button variant="contained" color="secondary" onClick={() => onEdit(object.id)}>Edit</Button>
                 </div>
             </Aux>
         );

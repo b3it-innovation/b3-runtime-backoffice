@@ -57,11 +57,6 @@ class BrowseCompetitions extends Component {
         };
     }
 
-    // componentDidMount() {
-    //     const { fetchTracks } = this.props;
-    //     fetchTracks();
-    // }
-
     handleChange = (e) => {
         const { value } = e.target;
         this.setState({
@@ -71,13 +66,13 @@ class BrowseCompetitions extends Component {
 
     handleSearch = () => {
         this.props.fetchCompetitions(this.state.dropDownValue);
-        this.props.fetchTracks();
     }
 
     render() {
         const { classes } = this.props;
+        const { dropDownValue } = this.state;
         const {
-            competitions, comploading, tracks, tracksLoading,
+            competitions, compLoading, tracks,
         } = this.props;
 
         let competitionList = null;
@@ -87,7 +82,7 @@ class BrowseCompetitions extends Component {
             ));
         }
         let spinner = null;
-        if (comploading || tracksLoading) {
+        if (compLoading) {
             spinner = <Spinner />;
         }
 
@@ -96,12 +91,12 @@ class BrowseCompetitions extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <Typography className={classes.title} color="textPrimary" gutterBottom>
-                            Browse questions
+                            Browse competitions
                         </Typography>
                         <DropDown
                             all
                             obj={dropDownValues}
-                            value={this.state.dropDownValue || ''}
+                            value={dropDownValue || ''}
                             handleChange={this.handleChange}
                             label="Select"
                             name="dropDownValue"
@@ -125,13 +120,11 @@ const mapStateToProps = (state) => ({
     competitions: state.competitions.competitions,
     compLoading: state.competitions.loading,
     tracks: state.tracks.tracks,
-    tracksLoading: state.tracks.loading,
     err: state.competitions.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     fetchCompetitions: (active) => dispatch(actions.fetchCompetitionsByActive(active)),
-    fetchTracks: () => dispatch(actions.fetchTracks()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BrowseCompetitions));
