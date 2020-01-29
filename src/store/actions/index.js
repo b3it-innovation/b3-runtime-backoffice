@@ -14,11 +14,13 @@ export {
 
 export {
     fetchCompetitions,
+    fetchCompetitionsByActive,
     addCompetition,
     deleteCompetition,
 } from './competitionActions';
 
 export {
+    fetchTracks,
     searchTracksByKeys,
     addTrack,
     deleteTrack,

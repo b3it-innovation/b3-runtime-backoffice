@@ -2,12 +2,41 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../store/actions/index';
+import CenteredTabs from '../../components/Navigation/CenterdTabs/CenteredTabs';
+import CreateCompetition from './CreateCompetition/CreateCompetition';
+import BrowseCompetitions from './BrowseCompetitions/BrowseCompetitions';
 
 class Competitions extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            tabValue: 0,
+        };
+    }
+
+    handleChange = (event, newValue) => {
+        this.setState({ tabValue: newValue });
+    };
+
     render() {
+        const tabs = ['Create Competition', 'Browse Competitions'];
+        const { tabValue } = this.state;
+        let content = null;
+        switch (tabValue) {
+            case 0:
+                content = <CreateCompetition />;
+                break;
+            case 1:
+                content = <BrowseCompetitions />;
+                break;
+            default:
+                content = null;
+        }
+
         return (
             <div>
-                <h1>Competitions</h1>
+                <CenteredTabs tabs={tabs} value={tabValue} change={this.handleChange} />
+                {content}
             </div>
         );
     }

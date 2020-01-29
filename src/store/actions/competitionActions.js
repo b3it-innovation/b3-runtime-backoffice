@@ -27,6 +27,23 @@ export const fetchCompetitions = () => (dispatch) => {
         });
 };
 
+export const fetchCompetitionsByActive = (active) => (dispatch) => {
+    if (active === 'all') {
+        dispatch(fetchCompetitions());
+    } else {
+        const isActive = active === 'active';
+        dispatch(connectCompetitionsStart());
+        firestore.collection(collectionsNames.COMPETITIONS)
+            .where('active', '==', isActive).get()
+            .then((response) => {
+                dispatch(fetchCompetitionsSuccess(response));
+            })
+            .catch((err) => {
+                dispatch(fetchCompetitionsError(err));
+            });
+    }
+};
+
 const addCompetitionSuccess = () => ({
     type: actionTypes.ADD_COMPETITION_SUCCESS,
 });
