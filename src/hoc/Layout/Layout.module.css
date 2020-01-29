@@ -1,5 +1,5 @@
 .Content {
     margin-top: 0px;
     background-color: lightgray;
-    height: 100vh;
+    height: calc(100vh - 73px);
 }

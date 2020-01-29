@@ -1,0 +1,11 @@
+.topContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.checkpointsContainer {
+    background-color: blueviolet;
+    width: 30%;
+}
