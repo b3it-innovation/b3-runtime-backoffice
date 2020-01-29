@@ -30,16 +30,6 @@ const styles = {
         maxWidth: 1075,
         margin: '0',
     },
-    input: {
-        width: '70%',
-        marginTop: 12,
-    },
-    optionsButton: {
-        width: '70%',
-        alignSelf: 'center',
-        fontSize: 14,
-        marginBottom: 8,
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -47,11 +37,13 @@ const styles = {
     },
 };
 
-class BrowseQuestions extends Component {
+const dropDownValues = [{ id: 'active', name: 'Active' }, { id: 'inactive', name: 'Inactive' }];
+
+class BrowseCompetitions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: null,
+            dropDownValue: null,
         };
     }
 
@@ -63,36 +55,24 @@ class BrowseQuestions extends Component {
     }
 
     handleSearch = () => {
-        this.props.searchQuestions(this.state.category);
-    }
-
-    handleDeleteQuestion = (id) => {
-        this.props.deleteQuestion(id);
+        this.props.fetchCompetitions(this.state.dropDownValue);
     }
 
     render() {
         const { classes } = this.props;
-        const { category } = this.state;
+        const { dropDownValue } = this.state;
         const {
-            categories, questions, loading, editQuestion,
+            competitions, compLoading, tracks, onEdit,
         } = this.props;
 
-        let questionList = null;
-        if (questions) {
-            questionList = questions.map((q) => (
-                <Panel
-                    key={q.id}
-                    type="question"
-                    label={q.title}
-                    object={q}
-                    onDelete={this.handleDeleteQuestion}
-                    onEdit={editQuestion}
-                />
-
+        let competitionList = null;
+        if (competitions && tracks) {
+            competitionList = competitions.map((c) => (
+                <Panel key={c.id} type="competition" label={c.name} object={c} onDelete="" onEdit={onEdit} />
             ));
         }
         let spinner = null;
-        if (loading) {
+        if (compLoading) {
             spinner = <Spinner />;
         }
 
@@ -101,20 +81,20 @@ class BrowseQuestions extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <Typography className={classes.title} color="textPrimary" gutterBottom>
-                            Browse questions
+                            Browse competitions
                         </Typography>
                         <DropDown
                             all
-                            obj={categories}
-                            value={category || ''}
+                            obj={dropDownValues}
+                            value={dropDownValue || ''}
                             handleChange={this.handleChange}
-                            label="Category"
-                            name="category"
-                            id="categoryId"
+                            label="Select"
+                            name="dropDownValue"
+                            id="id"
                         />
                         <SearchButton click={this.handleSearch} />
                         {spinner}
-                        {questionList}
+                        {competitionList}
                     </CardContent>
                 </Card>
             </div>
@@ -122,20 +102,19 @@ class BrowseQuestions extends Component {
     }
 }
 
-BrowseQuestions.propTypes = {
+BrowseCompetitions.propTypes = {
     classes: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
 const mapStateToProps = (state) => ({
-    categories: state.categories.categories,
-    questions: state.questions.fetchedQuestions,
-    loading: state.questions.loading,
-    err: state.questions.error,
+    competitions: state.competitions.competitions,
+    compLoading: state.competitions.loading,
+    tracks: state.tracks.tracks,
+    err: state.competitions.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    searchQuestions: (category) => dispatch(actions.searchQuestions(category)),
-    deleteQuestion: (id) => dispatch(actions.deleteQuestion(id)),
+    fetchCompetitions: (active) => dispatch(actions.fetchCompetitionsByActive(active)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BrowseQuestions));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BrowseCompetitions));

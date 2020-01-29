@@ -16,10 +16,21 @@ const fetchTracksError = (error) => ({
     error,
 });
 
+export const fetchTracks = () => (dispatch) => {
+    dispatch(connectTracksStart());
+    firestore.collection(collectionsNames.TRACKS).get()
+        .then((response) => {
+            dispatch(fetchTracksSuccess(response));
+        })
+        .catch((err) => {
+            dispatch(fetchTracksError(err));
+        });
+};
+
 export const searchTracksByKeys = (trackKeys) => (dispatch) => {
     dispatch(connectTracksStart());
     firestore.collection(collectionsNames.TRACKS)
-        .where(fieldPath.documentId(), 'in', trackKeys).get()
+        .where(fieldPath.documentId(), 'in', trackKeys).orderBy('name').get()
         .then((response) => {
             dispatch(fetchTracksSuccess(response));
         })
