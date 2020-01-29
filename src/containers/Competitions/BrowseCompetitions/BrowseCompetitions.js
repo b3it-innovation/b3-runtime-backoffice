@@ -55,7 +55,9 @@ class BrowseCompetitions extends Component {
     }
 
     handleSearch = () => {
-        this.props.fetchCompetitions(this.state.dropDownValue);
+        if (this.state.dropDownValue !== null && this.state.dropDownValue !== '') {
+            this.props.fetchCompetitions(this.state.dropDownValue);
+        }
     }
 
     render() {
@@ -92,7 +94,7 @@ class BrowseCompetitions extends Component {
                             name="dropDownValue"
                             id="id"
                         />
-                        <SearchButton click={this.handleSearch} />
+                        <div><SearchButton click={this.handleSearch} /></div>
                         {spinner}
                         {competitionList}
                     </CardContent>

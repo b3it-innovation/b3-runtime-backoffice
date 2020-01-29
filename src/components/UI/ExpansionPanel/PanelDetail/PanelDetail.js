@@ -7,6 +7,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
 
+import EditButton from '../../../../components/UI/Button/EditButton/EditButton';
+import DeleteButton from '../../../../components/UI/Button/DeleteButton/DeleteButton';
 import Aux from '../../../../hoc/Auxiliary/Auxiliary';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +40,7 @@ function PanelDetail(props) {
     if (type === 'question') {
         const { id } = object;
         let categoryName = null;
-        const matchedCategory = categories.find((cat) => cat.id === object.category);
+        const matchedCategory = categories.find((cat) => cat.id === object.categoryKey);
         if (matchedCategory == null) {
             categoryName = 'No category found';
         } else {
@@ -68,8 +70,8 @@ function PanelDetail(props) {
                     Correct Answer:
                         {object.correctAnswer}
                     </p>
-                    <Button variant="contained" color="secondary" onClick={() => onEdit(id)}>Edit Question</Button>
-                    <Button variant="contained" color="primary" onClick={() => onDelete(id)}>Delete Question</Button>
+                    <EditButton click={() => onEdit(id)} />
+                    <DeleteButton click={() => onDelete(id)} />
                 </div>
             </Aux>
         );
@@ -100,7 +102,7 @@ function PanelDetail(props) {
                             {track.name}
                         </p>
                     )) : (<p>No tracks</p>) }
-                    <Button variant="contained" color="secondary" onClick={() => onEdit(object.id)}>Edit</Button>
+                    <EditButton click={() => onEdit(object.id)} />
                 </div>
             </Aux>
         );

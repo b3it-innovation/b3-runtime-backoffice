@@ -50,7 +50,7 @@ const searchQuestionsSuccess = (state, action) => {
     action.fetchedQuestions.forEach((q) => {
         questionArray.push({
             id: q.id,
-            category: q.data().category,
+            categoryKey: q.data().categoryKey,
             correctAnswer: q.data().correctAnswer,
             text: q.data().text,
             title: q.data().title,
