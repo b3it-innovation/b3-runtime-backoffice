@@ -12,6 +12,7 @@ import Questions from './containers/Questions/Questions';
 import Results from './containers/Results/Results';
 import Competitions from './containers/Competitions/Competitions';
 import Tracks from './containers/Tracks/Tracks';
+import Categories from './containers/Categories/Categories';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/competitions" exact component={Competitions} />
                     <Route path="/questions" exact component={Questions} />
                     <Route path="/tracks" exact component={Tracks} />
+                    <Route path="/categories" exact component={Categories} />
                     <Route path="/results" exact component={Results} />
                 </div>
             </Layout>

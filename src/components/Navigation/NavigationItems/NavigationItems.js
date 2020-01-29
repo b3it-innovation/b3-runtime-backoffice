@@ -25,6 +25,8 @@ export default function NavigationItems() {
             <Divider className={classes.divider} />
             <NavigationItem path="/questions" label="Questions" iconType="questions" />
             <Divider className={classes.divider} />
+            <NavigationItem path="/categories" label="Categories" iconType="categories" />
+            <Divider className={classes.divider} />
             <NavigationItem path="/results" label="Results" iconType="results" />
         </Aux>
     );

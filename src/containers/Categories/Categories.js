@@ -13,10 +13,10 @@ import {
     TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Table,
 } from '@material-ui/core';
 
-import Spinner from '../../../components/UI/Spinner/Spinner';
-import * as actions from '../../../store/actions/index';
-import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
-import { checkValidity, updateObject } from '../../../utility/Util/Util';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import * as actions from '../../store/actions/index';
+import DeleteButton from '../../components/UI/Button/DeleteButton/DeleteButton';
+import { checkValidity, updateObject } from '../../utility/Util/Util';
 
 const styles = {
     container: {
@@ -65,6 +65,13 @@ class Categories extends Component {
             },
             formIsValid: false,
         };
+    }
+
+    componentDidMount() {
+        const { categories, fetchCategories } = this.props;
+        if (!categories) {
+            fetchCategories();
+        }
     }
 
     handleSubmit = (e) => {
@@ -192,6 +199,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    fetchCategories: () => dispatch(actions.fetchCategories()),
     addCategory: (category) => dispatch(actions.addCategory(category)),
     deleteCategory: (id) => dispatch(actions.deleteCategory(id)),
 });
