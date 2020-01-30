@@ -10,6 +10,7 @@ export {
     fetchCategories,
     addCategory,
     deleteCategory,
+    updateCategory,
 } from './categoryActions';
 
 export {

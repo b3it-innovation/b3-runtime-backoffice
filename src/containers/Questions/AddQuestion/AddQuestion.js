@@ -72,7 +72,7 @@ const useStyles = makeStyles({
 const AddQuestion = (props) => {
     const [localState, setLocalState] = useState({
         text: '',
-        category: '',
+        categoryKey: '',
         options: [],
         correctAnswer: '',
         title: '',
@@ -102,7 +102,7 @@ const AddQuestion = (props) => {
         props.addQuestion({ ...localState });
         setLocalState({
             text: '',
-            category: '',
+            categoryKey: '',
             options: [],
             correctAnswer: '',
             title: '',
@@ -116,7 +116,7 @@ const AddQuestion = (props) => {
         props.resetKey(null);
         setLocalState({
             text: '',
-            category: '',
+            categoryKey: '',
             options: [],
             correctAnswer: '',
             title: '',
@@ -191,11 +191,11 @@ const AddQuestion = (props) => {
                 <TextField className={classes.input} multiline name="text" label="Question" variant="filled" value={localState.text} onChange={handleChange} />
 
                 <DropDown
-                    value={localState.category}
+                    value={localState.categoryKey}
                     handleChange={handleChange}
                     obj={props.categories}
                     label="Category"
-                    name="category"
+                    name="categoryKey"
                     id="categoryId"
                 />
 
@@ -231,7 +231,7 @@ const AddQuestion = (props) => {
 
         setLocalState({
             text: deepCopy.text,
-            category: deepCopy.category,
+            categoryKey: deepCopy.categoryKey,
             options: deepCopy.options,
             correctAnswer: deepCopy.correctAnswer,
             title: deepCopy.title,

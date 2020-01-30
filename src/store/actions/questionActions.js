@@ -12,7 +12,7 @@ export const connectQuestionsStart = () => ({
 
 export const addQuestion = (payload) => (dispatch) => {
     dispatch(connectQuestionsStart());
-    firestore.collection('WilliamsTest').doc('test').collection(collectionsNames.QUESTIONS).add(payload)
+    firestore.collection(collectionsNames.QUESTIONS).add(payload)
         .then(() => {
             dispatch({ type: actionTypes.ADD_QUESTION_SUCCESS, payload });
         })
@@ -23,7 +23,7 @@ export const addQuestion = (payload) => (dispatch) => {
 
 export const updateQuestion = (questionKey, question) => (dispatch) => {
     dispatch(connectQuestionsStart());
-    firestore.collection('WilliamsTest').doc('test').collection(collectionsNames.QUESTIONS).doc(questionKey)
+    firestore.collection(collectionsNames.QUESTIONS).doc(questionKey)
         .set(question)
         .then(() => {
             dispatch({ type: actionTypes.UPDATE_QUESTION_SUCCESS, question });
@@ -43,10 +43,26 @@ const searchQuestionsError = (err) => ({
     error: err,
 });
 
-export const searchQuestions = (category) => (dispatch) => {
+const fetchQuestions = () => (dispatch) => {
     dispatch(connectQuestionsStart());
-    firestore.collection('WilliamsTest').doc('test').collection(collectionsNames.QUESTIONS)
-        .where('category', '==', category)
+    firestore.collection(collectionsNames.QUESTIONS)
+        .get()
+        .then((response) => {
+            dispatch(searchQuestionsSuccess(response));
+        })
+        .catch((err) => {
+            dispatch(searchQuestionsError(err));
+        });
+};
+
+export const searchQuestions = (category) => (dispatch) => {
+    if (category.toLowerCase() === 'all') {
+        dispatch(fetchQuestions());
+        return;
+    }
+    dispatch(connectQuestionsStart());
+    firestore.collection(collectionsNames.QUESTIONS)
+        .where('categoryKey', '==', category)
         .get()
         .then((response) => {
             dispatch(searchQuestionsSuccess(response));
@@ -68,7 +84,7 @@ const deleteQuestionError = (error) => ({
 
 export const deleteQuestion = (questionId) => (dispatch) => {
     dispatch(connectQuestionsStart());
-    firestore.collection('WilliamsTest').doc('test').collection(collectionsNames.QUESTIONS).doc(questionId)
+    firestore.collection(collectionsNames.QUESTIONS).doc(questionId)
         .delete()
         .then(() => {
             dispatch(deleteQuestionSuccess(questionId));

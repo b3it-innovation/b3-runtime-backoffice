@@ -68,6 +68,26 @@ const deleteCategoryError = (state, action) => (
     }
 );
 
+const updateCategorySuccess = (state, action) => {
+    const categoriesCopy = JSON.parse(JSON.stringify(state.categories));
+    const toUpdate = categoriesCopy.find((c) => c.id === action.updatedId);
+    toUpdate.name = action.updatedName;
+    return {
+        ...state,
+        categories: categoriesCopy,
+        loading: false,
+        error: null,
+    };
+};
+
+const updateCategoryError = (state, action) => (
+    {
+        ...state,
+        loading: false,
+        error: action.err,
+    }
+);
+
 const categoryReducer = (state = initState, action) => {
     switch (action.type) {
         case actionTypes.CONNECT_CATEGORIES_START:
@@ -84,6 +104,10 @@ const categoryReducer = (state = initState, action) => {
             return deleteCategorySuccess(state, action);
         case actionTypes.DELETE_CATEGORY_ERROR:
             return deleteCategoryError(state, action);
+        case actionTypes.UPDATE_CATEGORY_SUCCESS:
+            return updateCategorySuccess(state, action);
+        case actionTypes.UPDATE_CATEGORY_ERROR:
+            return updateCategoryError(state, action);
         default:
             return state;
     }

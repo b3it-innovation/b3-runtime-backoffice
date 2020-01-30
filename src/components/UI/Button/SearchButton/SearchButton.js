@@ -15,17 +15,15 @@ function SearchButton(props) {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <Button
-                variant="contained"
-                className={classes.button}
-                startIcon={<SearchIcon />}
-                size="small"
-                onClick={() => props.click()}
-            >
+        <Button
+            variant="contained"
+            className={classes.button}
+            startIcon={<SearchIcon />}
+            size="small"
+            onClick={() => props.click()}
+        >
         Search
-            </Button>
-        </div>
+        </Button>
     );
 }
 

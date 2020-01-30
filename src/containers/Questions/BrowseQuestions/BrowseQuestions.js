@@ -63,7 +63,9 @@ class BrowseQuestions extends Component {
     }
 
     handleSearch = () => {
-        this.props.searchQuestions(this.state.category);
+        if (this.state.category !== null && this.state.category !== '') {
+            this.props.searchQuestions(this.state.category);
+        }
     }
 
     handleDeleteQuestion = (id) => {
@@ -79,6 +81,7 @@ class BrowseQuestions extends Component {
 
         let questionList = null;
         if (questions) {
+            console.log(questions);
             questionList = questions.map((q) => (
                 <Panel
                     key={q.id}
@@ -112,7 +115,7 @@ class BrowseQuestions extends Component {
                             name="category"
                             id="categoryId"
                         />
-                        <SearchButton click={this.handleSearch} />
+                        <div><SearchButton click={this.handleSearch} /></div>
                         {spinner}
                         {questionList}
                     </CardContent>

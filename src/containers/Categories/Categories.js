@@ -16,6 +16,8 @@ import {
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/index';
 import DeleteButton from '../../components/UI/Button/DeleteButton/DeleteButton';
+import EditButton from '../../components/UI/Button/EditButton/EditButton';
+import TransitionModal from '../../components/UI/Modal/Modal';
 import { checkValidity, updateObject } from '../../utility/Util/Util';
 
 const styles = {
@@ -40,7 +42,6 @@ const styles = {
     input: {
         width: '70%',
         marginTop: 12,
-
     },
 };
 
@@ -62,8 +63,23 @@ class Categories extends Component {
                     valid: false,
                     touched: false,
                 },
+                editName: {
+                    elementType: 'input',
+                    elementConfig: {
+                        type: 'text',
+                        placeholder: 'Name',
+                    },
+                    value: '',
+                    validation: {
+                        required: true,
+                    },
+                    valid: false,
+                    touched: false,
+                },
             },
             formIsValid: false,
+            modalOpen: false,
+            editId: null,
         };
     }
 
@@ -114,16 +130,65 @@ class Categories extends Component {
         this.props.deleteCategory(id);
     }
 
+    handleEdit = (id, name) => {
+        this.setState((prevState) => ({
+            form: {
+                ...prevState.form,
+                editName: {
+                    ...prevState.form.editName,
+                    value: name,
+                },
+            },
+            modalOpen: true,
+            editId: id,
+        }));
+    }
+
+    handleUpdate = () => {
+        this.props.updateCategory(this.state.editId, this.state.form.editName.value);
+        this.handleClose();
+    }
+
+    handleClose = () => {
+        this.setState({
+            modalOpen: false,
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const { categories, loading } = this.props;
-        const { form, formIsValid } = this.state;
+        const {
+            form, formIsValid, modalOpen, editId,
+        } = this.state;
+
+        const modal = (
+            <TransitionModal
+                open={modalOpen}
+                handleClose={this.handleClose}
+            >
+                <div className={classes.container}>
+                    <TextField
+                        className={classes.input}
+                        id={editId}
+                        error={!form.editName.valid && form.editName.touched}
+                        name="editName"
+                        label="name"
+                        type="text"
+                        variant="filled"
+                        value={form.editName.value}
+                        onChange={this.handleChange}
+                        helperText={!form.editName.valid && form.editName.touched ? 'Required' : null}
+                    />
+                    <div><EditButton click={() => this.handleUpdate()} /></div>
+                </div>
+            </TransitionModal>
+        );
 
         let formContent = <Spinner />;
         if (!loading) {
             formContent = (
                 <form autoComplete="off">
-
                     <TextField
                         className={classes.input}
                         error={!form.name.valid && form.name.touched}
@@ -159,6 +224,10 @@ class Categories extends Component {
                                         {cat.name}
                                     </TableCell>
                                     <TableCell align="right">
+                                        <EditButton
+                                            click={() => this.handleEdit(cat.id, cat.name)}
+                                            index={cat.id}
+                                        />
                                         <DeleteButton click={this.handleDelete} index={cat.id} />
                                     </TableCell>
                                 </TableRow>
@@ -182,6 +251,7 @@ class Categories extends Component {
                         <Button size="large" onClick={this.handleSubmit} disabled={!formIsValid}>ADD CATEGORY</Button>
                     </CardActions>
                 </Card>
+                {modal}
                 {table}
             </div>
         );
@@ -202,6 +272,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchCategories: () => dispatch(actions.fetchCategories()),
     addCategory: (category) => dispatch(actions.addCategory(category)),
     deleteCategory: (id) => dispatch(actions.deleteCategory(id)),
+    updateCategory: (id, newName) => dispatch(actions.updateCategory(id, newName)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Categories));

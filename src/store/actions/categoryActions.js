@@ -87,3 +87,32 @@ export const deleteCategory = (categoryId) => (
             });
     }
 );
+
+const updateCategorySuccess = (id, name) => (
+    {
+        type: actionTypes.UPDATE_CATEGORY_SUCCESS,
+        updatedId: id,
+        updatedName: name,
+    }
+);
+
+const updateCategoryError = (error) => (
+    {
+        type: actionTypes.UPDATE_CATEGORY_ERROR,
+        err: error,
+    }
+);
+
+export const updateCategory = (id, newName) => (
+    (dispatch) => {
+        dispatch(connectCategoriesStart());
+        firestore.collection(collectionsNames.CATEGORIES).doc(id)
+            .update({ name: newName })
+            .then(() => {
+                dispatch(updateCategorySuccess(id, newName));
+            })
+            .catch((err) => {
+                dispatch(updateCategoryError(err));
+            });
+    }
+);

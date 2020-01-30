@@ -149,7 +149,7 @@ class CreateCompetition extends Component {
                     )}
                 >
                     { tracks.map((track) => (
-                        <ListItem key={track.id} button>
+                        <ListItem key={track.id} button onClick={this.handleTrackCheckToggle(track.id)}>
                             <ListItemText id={track.id} primary={track.name} />
                             <ListItemSecondaryAction>
                                 <Checkbox
