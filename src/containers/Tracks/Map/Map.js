@@ -1,6 +1,4 @@
 import React, { Component, createRef } from 'react';
-import { Container } from '@material-ui/core';
-import { object } from 'prop-types';
 import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys';
 import classes from './Map.module.css';
 
@@ -28,7 +26,14 @@ class GoogleMap extends Component {
     }
 
     componentDidUpdate() {
-        const { checkpoints } = this.props;
+        const { checkpoints, expanded } = this.props;
+
+        if (expanded) {
+            const checkpoint = checkpoints.filter((c) => c.order === expanded);
+            const lt = checkpoint[0].position.lat();
+            const lg = checkpoint[0].position.lng();
+            map.panTo({ lat: lt, lng: lg });
+        }
 
         if (path != null) {
             path.setMap(null);
@@ -62,19 +67,16 @@ class GoogleMap extends Component {
             position: { lat, lng },
             map: this.googleMap,
             draggable: true,
-        });
-
-        const checkpoint = {
-            lat: marker.position.lat(),
-            lng: marker.position.lng(),
             order: this.props.length + 1,
-        };
+        });
 
         marker.addListener('dragend', (event) => {
-            this.props.drag(checkpoint.order, event.latLng.lat(), event.latLng.lng());
+            this.props.drag(marker.order, event.latLng.lat(), event.latLng.lng());
         });
 
-        this.props.addCheckpoint(checkpoint);
+        this.addMarkerClickListener(marker);
+
+        this.props.addCheckpoint(marker);
     }
 
     addMapClickListener = () => {
@@ -83,12 +85,26 @@ class GoogleMap extends Component {
         });
     }
 
+    deleteMarker = (marker) => {
+        console.log('hallelujah');
+    }
+
+    addMarkerClickListener = (marker) => {
+        const contentString = 'test';
+        const infoWindow = new window.google.maps.InfoWindow({
+            content: contentString,
+        });
+        marker.addListener('click', (event) => {
+            infoWindow.open(map, marker);
+        });
+    }
+
     drawLines = (markers) => {
         const pathCoords = [];
         markers.forEach((marker) => {
             pathCoords.push({
-                lat: marker.lat,
-                lng: marker.lng,
+                lat: marker.position.lat(),
+                lng: marker.position.lng(),
             });
         });
         return pathCoords;

@@ -13,38 +13,85 @@ class Tracks extends Component {
             checkpoints: [],
             category: null,
             name: null,
+            expanded: false,
         };
     }
 
     handleAddCheckpoint = (checkpoint) => {
         this.setState((prevState) => {
             const newCheckpoints = prevState.checkpoints.concat(checkpoint);
+            return ({ checkpoints: newCheckpoints, expanded: false });
+        });
+        this.onOpenPanel();
+    }
+
+    handlePanelChange = (panelId) => (event, newExpanded) => {
+        this.setState({
+            expanded: newExpanded ? panelId : false,
+        });
+        this.onOpenPanel();
+    }
+
+    onOpenPanel = () => {
+        this.setState((prevState) => {
+            const newCheckpoints = [...prevState.checkpoints];
+            newCheckpoints.forEach((checkpoint) => {
+                if (checkpoint.order === prevState.expanded) {
+                    checkpoint.setAnimation(window.google.maps.Animation.BOUNCE);
+                } else {
+                    checkpoint.setAnimation(null);
+                }
+            });
             return ({ checkpoints: newCheckpoints });
         });
     }
 
     handleDraggedCheckpoint = (order, newLat, newLng) => {
         this.setState((prevState) => {
-            console.log('checkpoints before stringify', prevState.checkpoints);
-
-            const newCheckpoints = JSON.parse(JSON.stringify(prevState.checkpoints));
-            console.log('checkpoints after stringify', newCheckpoints);
-
+            // const newCheckpoints = JSON.parse(JSON.stringify(prevState.checkpoints));
+            // Titta på om detta är immutable?
+            const newCheckpoints = [...prevState.checkpoints];
             const newCheckpoint = newCheckpoints[order - 1];
-            console.log('new checkpoint', newCheckpoint);
-            newCheckpoint.lat = newLat;
-            newCheckpoint.lng = newLng;
+            const latlng = new window.google.maps.LatLng(newLat, newLng);
+            newCheckpoint.setPosition(latlng);
             return ({ checkpoints: newCheckpoints });
         });
     }
 
+    deleteMarker = (order) => {
+        this.setState({
+            expanded: false,
+        });
+        let newCheckpoints = [...this.state.checkpoints];
+        const delCheckpoint = newCheckpoints.splice(order - 1, 1);
+        delCheckpoint[0].setMap(null);
+        newCheckpoints = newCheckpoints.map((checkpoint, index) => {
+            checkpoint.order = index + 1;
+            return checkpoint;
+        });
+        this.setState({
+            checkpoints: newCheckpoints,
+        });
+    }
+
     render() {
-        const { checkpoints } = this.state;
+        const { checkpoints, expanded } = this.state;
         return (
             <div className={classes.topContainer}>
-                <Map checkpoints={checkpoints} addCheckpoint={this.handleAddCheckpoint} length={checkpoints.length} drag={this.handleDraggedCheckpoint} />
+                <Map
+                    expanded={expanded}
+                    checkpoints={checkpoints}
+                    addCheckpoint={this.handleAddCheckpoint}
+                    length={checkpoints.length}
+                    drag={this.handleDraggedCheckpoint}
+                />
                 <div className={classes.checkpointsContainer}>
-                    <CheckpointScroller checkpoints={checkpoints} />
+                    <CheckpointScroller
+                        checkpoints={checkpoints}
+                        expanded={expanded}
+                        handleChange={this.handlePanelChange}
+                        onDelete={this.deleteMarker}
+                    />
                 </div>
             </div>
         );

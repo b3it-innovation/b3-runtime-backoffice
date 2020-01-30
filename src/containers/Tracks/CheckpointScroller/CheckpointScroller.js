@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
-import Panel from '../../../components/UI/ExpansionPanel/Panel';
-import aux from '../../../hoc/Auxiliary/Auxiliary';
+import { Typography, Button } from '@material-ui/core';
+import SingleOpenPanel from '../../../components/UI/Panel/SingleOpenPanel/SingleOpenPanel';
+import Aux from '../../../hoc/Auxiliary/Auxiliary';
 import classes from './CheckpointScroller.module.css';
 
 function CheckpointScroller(props) {
@@ -10,16 +10,26 @@ function CheckpointScroller(props) {
     let panels = null;
     if (checkpoints) {
         panels = (
-            <aux>
+            <Aux>
                 <Typography variant="h4" gutterBottom>Checkpoints</Typography>
                 <div className={classes.checkpoints}>
                     {checkpoints.map((checkpoint) => (
-                        <div>
-                            <Panel type="checkpoint" object={checkpoint} label={checkpoint.order} />
+                        <div key={checkpoint.order}>
+                            <SingleOpenPanel
+                                type="checkpoint"
+                                object={checkpoint}
+                                label={checkpoint.order}
+                                expanded={props.expanded}
+                                id={checkpoint.order}
+                                handleChange={props.handleChange}
+                                onDelete={props.onDelete}
+                            />
                         </div>
                     ))}
+                    <Button>Save track</Button>
+                    <Button>Continue</Button>
                 </div>
-            </aux>
+            </Aux>
         );
     }
 

@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
+import DeleteButton from './../../Button/DeleteButton/DeleteButton';
 
 import Aux from '../../../../hoc/Auxiliary/Auxiliary';
 
@@ -105,7 +106,7 @@ function PanelDetail(props) {
             </Aux>
         );
     } else if (type === 'checkpoint') {
-        const { lat, lng, order } = object;
+        const { order } = object;
         content = (
             <Aux>
                 <div className={classes.containerItem}>
@@ -114,10 +115,11 @@ function PanelDetail(props) {
                     <p>{order}</p>
                     <p>Latitude:</p>
                     {' '}
-                    <p>{lat}</p>
+                    <p>{object.position.lat()}</p>
                     <p>Longitude:</p>
                     {' '}
-                    <p>{lng}</p>
+                    <p>{object.position.lng()}</p>
+                    <DeleteButton click={() => onDelete(order)} />
                 </div>
             </Aux>
         );
