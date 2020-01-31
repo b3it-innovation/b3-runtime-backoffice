@@ -5,6 +5,11 @@ import classes from './Map.module.css';
 let map = null;
 let path = null;
 
+const YELLOW_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fbff0f';
+const RED_MARKER = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569';
+const GREEN_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|1dc41d';
+const STAR_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=star|ff55ff';
+
 class GoogleMap extends Component {
     googleMapRef = createRef();
 
@@ -59,15 +64,55 @@ class GoogleMap extends Component {
         },
         disableDefaultUI: true,
         mapTypeId: 'hybrid',
+        styles: [
+            {
+                elementType: 'labels',
+                stylers: [
+                    {
+                        visibility: 'off',
+                    },
+                ],
+            },
+            {
+                featureType: 'administrative.land_parcel',
+                stylers: [
+                    {
+                        visibility: 'off',
+                    },
+                ],
+            },
+            {
+                featureType: 'administrative.neighborhood',
+                stylers: [
+                    {
+                        visibility: 'off',
+                    },
+                ],
+            },
+        ],
     })
 
 
     createMarker = (lat, lng) => {
+        let iconColor = RED_MARKER;
+        let pen = false;
+        if (this.props.length === 0) {
+            iconColor = GREEN_MARKER;
+        } else if (this.props.length % 2 === 0) {
+            iconColor = YELLOW_MARKER;
+            pen = true;
+        } else if (this.props.length > 2) {
+            iconColor = STAR_MARKER;
+            this.props.onUpdate();
+        }
+
         const marker = new window.google.maps.Marker({
             position: { lat, lng },
             map: this.googleMap,
             draggable: true,
             order: this.props.length + 1,
+            icon: iconColor,
+            penalty: pen,
         });
 
         marker.addListener('dragend', (event) => {

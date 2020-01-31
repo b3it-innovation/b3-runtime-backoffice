@@ -5,6 +5,13 @@ import classes from './Tracks.module.css';
 import Map from './Map/Map';
 import * as actions from '../../store/actions/index';
 import CheckpointScroller from './CheckpointScroller/CheckpointScroller';
+import TrackForm from './TrackForm/TrackForm';
+import Aux from '../../hoc/Auxiliary/Auxiliary';
+
+const YELLOW_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fbff0f';
+const RED_MARKER = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569';
+const GREEN_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|1dc41d';
+const STAR_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=star|ff55ff';
 
 class Tracks extends Component {
     constructor(props) {
@@ -14,6 +21,7 @@ class Tracks extends Component {
             category: null,
             name: null,
             expanded: false,
+            editView: false,
         };
     }
 
@@ -67,6 +75,16 @@ class Tracks extends Component {
         delCheckpoint[0].setMap(null);
         newCheckpoints = newCheckpoints.map((checkpoint, index) => {
             checkpoint.order = index + 1;
+            let iconColor = RED_MARKER;
+            let pen = false;
+            if (checkpoint.order === 1) {
+                iconColor = GREEN_MARKER;
+            } else if (checkpoint.order % 2 === 1) {
+                iconColor = YELLOW_MARKER;
+                pen = true;
+            }
+            checkpoint.setIcon(iconColor);
+            checkpoint.penalty = pen;
             return checkpoint;
         });
         this.setState({
@@ -74,25 +92,73 @@ class Tracks extends Component {
         });
     }
 
+    updateGoalMarkerIcon = () => {
+        const newCheckpoints = [...this.state.checkpoints];
+        const checkpoint = newCheckpoints[newCheckpoints.length - 2];
+        checkpoint.setIcon(RED_MARKER);
+        this.setState({
+            checkpoints: newCheckpoints,
+        });
+    }
+
+    handleContinue = () => {
+        this.setState({
+            editView: true,
+        });
+    }
+
     render() {
         const { checkpoints, expanded } = this.state;
-        return (
-            <div className={classes.topContainer}>
-                <Map
-                    expanded={expanded}
-                    checkpoints={checkpoints}
-                    addCheckpoint={this.handleAddCheckpoint}
-                    length={checkpoints.length}
-                    drag={this.handleDraggedCheckpoint}
-                />
-                <div className={classes.checkpointsContainer}>
-                    <CheckpointScroller
-                        checkpoints={checkpoints}
+
+        let trackView = null;
+
+        trackView = (
+            <Aux>
+                <div className={classes.topContainer}>
+                    <Map
                         expanded={expanded}
-                        handleChange={this.handlePanelChange}
-                        onDelete={this.deleteMarker}
+                        checkpoints={checkpoints}
+                        addCheckpoint={this.handleAddCheckpoint}
+                        length={checkpoints.length}
+                        drag={this.handleDraggedCheckpoint}
+                        onUpdate={this.updateGoalMarkerIcon}
                     />
+                    <div className={classes.checkpointsContainer}>
+                        <CheckpointScroller
+                            checkpoints={checkpoints}
+                            expanded={expanded}
+                            handleChange={this.handlePanelChange}
+                            onDelete={this.deleteMarker}
+                        />
+                    </div>
                 </div>
+                <div>
+                    <TrackForm checkpoints={checkpoints} handleContinue={this.handleContinue}/>
+                </div>
+            </Aux>
+        );
+
+        let editView = null;
+
+        editView = (
+            <Aux>
+                <div className={classes.topContainer}>
+                    <div className={classes.checkpointsContainer}>
+                        <CheckpointScroller
+                            checkpoints={checkpoints}
+                            expanded={expanded}
+                            handleChange={this.handlePanelChange}
+                            onDelete={this.deleteMarker}
+                        />
+                    </div>
+                </div>
+            </Aux>
+        );
+
+
+        return (
+            <div>
+                {this.state.editView ? editView : trackView}
             </div>
         );
     }

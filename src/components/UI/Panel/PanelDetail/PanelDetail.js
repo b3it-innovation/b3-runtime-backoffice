@@ -113,12 +113,9 @@ function PanelDetail(props) {
                     <p>Order:</p>
                     {' '}
                     <p>{order}</p>
-                    <p>Latitude:</p>
+                    <p>Penalty:</p>
                     {' '}
-                    <p>{object.position.lat()}</p>
-                    <p>Longitude:</p>
-                    {' '}
-                    <p>{object.position.lng()}</p>
+                    <p>{object.penalty.toString()}</p>
                     <DeleteButton click={() => onDelete(order)} />
                 </div>
             </Aux>

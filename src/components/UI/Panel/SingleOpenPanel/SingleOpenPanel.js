@@ -1,30 +1,55 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
-import { makeStyles } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
+import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { FormControlLabel } from '@material-ui/core';
-import PanelDetail from '../PanelDetail/PanelDetail';
+import MuiExpansionPanelDetails from '../PanelDetail/PanelDetail';
 
-const useStyles = makeStyles((theme) => ({
+const ExpansionPanel = withStyles({
     root: {
-        width: '100%',
+        border: '1px solid rgba(0, 0, 0, .125)',
+        boxShadow: 'none',
+        '&:not(:last-child)': {
+            borderBottom: 0,
+        },
+        '&:before': {
+            display: 'none',
+        },
+        '&$expanded': {
+            margin: 'auto',
+        },
     },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightRegular,
+    expanded: {},
+})(MuiExpansionPanel);
+
+const ExpansionPanelSummary = withStyles({
+    root: {
+        backgroundColor: 'rgba(0, 0, 0, .03)',
+        borderBottom: '1px solid rgba(0, 0, 0, .125)',
+        marginBottom: -1,
+        minHeight: 56,
+        '&$expanded': {
+            minHeight: 56,
+        },
     },
-    container: {
-        display: 'flex',
-        justifyContent: 'space-around',
-        alignItems: 'center',
+    content: {
+        '&$expanded': {
+            margin: '12px 0',
+        },
     },
-}));
+    expanded: {},
+})(MuiExpansionPanelSummary);
+
+const ExpansionPanelDetails = withStyles(theme => ({
+    root: {
+        padding: theme.spacing(2),
+    },
+}))(MuiExpansionPanelDetails);
 
 function SingleOpenPanel(props) {
-    const classes = useStyles();
 
     const {
         label, object, type, onEdit, onDelete, expanded, id, handleChange,
@@ -36,8 +61,8 @@ function SingleOpenPanel(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography className={classes.heading}>{label}</Typography>
-{/* 
+                <Typography>{label}</Typography>
+                {/* 
                 <FormControlLabel
                     aria-label="icon"
                     onClick={(event) => event.stopPropagation()}
@@ -45,8 +70,7 @@ function SingleOpenPanel(props) {
                     control={<DeleteForeverIcon />}
                 /> */}
             </ExpansionPanelSummary>
-            <PanelDetail
-                className={classes.container}
+            <ExpansionPanelDetails
                 type={type}
                 object={object}
                 onEdit={onEdit}
