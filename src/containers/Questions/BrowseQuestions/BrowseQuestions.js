@@ -20,10 +20,10 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%',
+        width: '80%',
         flexWrap: 'nowrap',
         padding: '0',
-        margin: '0',
+        margin: 'auto',
     },
     card: {
         minWidth: '100%',

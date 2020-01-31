@@ -30,7 +30,7 @@ export const fetchTracks = () => (dispatch) => {
 export const searchTracksByKeys = (trackKeys) => (dispatch) => {
     dispatch(connectTracksStart());
     firestore.collection(collectionsNames.TRACKS)
-        .where(fieldPath.documentId(), 'in', trackKeys).orderBy('name').get()
+        .where(fieldPath.documentId(), 'in', trackKeys).get()
         .then((response) => {
             dispatch(fetchTracksSuccess(response));
         })

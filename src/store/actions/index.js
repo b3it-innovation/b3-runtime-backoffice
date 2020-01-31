@@ -11,6 +11,7 @@ export {
     addCategory,
     deleteCategory,
     updateCategory,
+    resetCategoryError,
 } from './categoryActions';
 
 export {

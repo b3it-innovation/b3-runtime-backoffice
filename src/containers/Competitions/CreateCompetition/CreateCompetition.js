@@ -27,9 +27,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%',
+        width: '80%',
         padding: '0',
-        margin: '0',
+        margin: 'auto',
         flexWrap: 'nowrap',
     },
     card: {
