@@ -72,7 +72,9 @@ function PanelDetail(props) {
                     </p>
                     {onEdit ? (<EditButton click={() => onEdit(id)} />) : null}
                     {onDelete ? (<DeleteButton click={() => onDelete(id)} />) : null }
-                    {onSelect ? (<Button onClick={() => onSelect(id, object.title)}>SELECT</Button>) : null}
+                    {onSelect
+                        ? (<Button onClick={() => onSelect(id, object.title)}>SELECT</Button>)
+                        : null}
                 </div>
             </Aux>
         );

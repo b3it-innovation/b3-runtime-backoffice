@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
+
 import MuiExpansionPanelDetails from '../PanelDetail/PanelDetail';
 
 const ExpansionPanel = withStyles({
@@ -47,18 +47,40 @@ const ExpansionPanelDetails = withStyles((theme) => ({
     },
 }))(MuiExpansionPanelDetails);
 
+const getLabelColor = (order, length) => {
+    let labelColor;
+    if (order === 1) {
+        labelColor = 'green';
+    } else if (length === order && length > 3 && order % 2 === 0) {
+        labelColor = 'purple';
+    } else if (order % 2 === 0) {
+        labelColor = 'red';
+    } else {
+        labelColor = '#EFB612';
+    }
+    return labelColor;
+};
+
 function SingleOpenPanel(props) {
     const {
-        label, object, type, onEdit, onDelete, onSelect, expanded, id, handleChange,
+        label, object, type, onEdit, onDelete, expanded, id,
+        handleChange, checkpointsLength, onSelect,
     } = props;
+
+    let styleObject;
+    if (type === 'checkpoint') {
+        const labelColor = getLabelColor(object.order, checkpointsLength);
+        styleObject = { borderLeft: `7px solid ${labelColor}` };
+    }
 
     return (
         <ExpansionPanel expanded={expanded === id} onChange={handleChange(id)} key={id}>
             <ExpansionPanelSummary
+                style={styleObject}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography>{label}</Typography>
+                <h4>{label}</h4>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails
                 type={type}

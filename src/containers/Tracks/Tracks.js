@@ -22,7 +22,7 @@ class Tracks extends Component {
             category: null,
             name: null,
             expanded: false,
-            editView: false,
+            editing: false,
         };
     }
 
@@ -68,10 +68,11 @@ class Tracks extends Component {
     }
 
     deleteMarker = (order) => {
+        const { checkpoints } = this.state;
         this.setState({
             expanded: false,
         });
-        let newCheckpoints = [...this.state.checkpoints];
+        let newCheckpoints = [...checkpoints];
         const delCheckpoint = newCheckpoints.splice(order - 1, 1);
         delCheckpoint[0].setMap(null);
         newCheckpoints = newCheckpoints.map((checkpoint, index) => {
@@ -83,7 +84,8 @@ class Tracks extends Component {
             } else if (checkpoint.order % 2 === 1) {
                 iconColor = YELLOW_MARKER;
                 pen = true;
-            } else if (checkpoint.order === newCheckpoints.length && checkpoint.order % 2 !== 1 && newCheckpoints.length > 3) {
+            } else if (checkpoint.order === newCheckpoints.length
+                && checkpoint.order % 2 !== 1 && newCheckpoints.length > 3) {
                 iconColor = STAR_MARKER;
             }
             checkpoint.setIcon(iconColor);
@@ -96,7 +98,8 @@ class Tracks extends Component {
     }
 
     updateGoalMarkerIcon = () => {
-        const newCheckpoints = [...this.state.checkpoints];
+        const { checkpoints } = this.state;
+        const newCheckpoints = [...checkpoints];
         const checkpoint = newCheckpoints[newCheckpoints.length - 2];
         checkpoint.setIcon(RED_MARKER);
         this.setState({
@@ -106,7 +109,7 @@ class Tracks extends Component {
 
     handleContinue = () => {
         this.setState({
-            editView: true,
+            editing: true,
         });
     }
 
@@ -131,7 +134,7 @@ class Tracks extends Component {
     }
 
     render() {
-        const { checkpoints, expanded } = this.state;
+        const { checkpoints, expanded, editing } = this.state;
 
         let trackView = null;
 
@@ -167,30 +170,32 @@ class Tracks extends Component {
 
         let editView = null;
 
-        editView = (
-            <Aux>
-                <div className={classes.topContainer}>
-                    <div className={classes.checkpointsContainer}>
-                        <CheckpointScroller
-                            checkpoints={checkpoints}
-                            expanded={expanded}
-                            handleChange={this.handlePanelChange}
-                        />
+        if (editing) {
+            editView = (
+                <Aux>
+                    <div className={classes.topContainer}>
+                        <div className={classes.checkpointsContainer}>
+                            <CheckpointScroller
+                                checkpoints={checkpoints}
+                                expanded={expanded}
+                                handleChange={this.handlePanelChange}
+                                onDelete={this.deleteMarker}
+                            />
+                        </div>
+                        <div className={classes.checkpointsContainer}>
+                            <h1>Vald checkpoint</h1>
+                        </div>
+                        <div className={classes.checkpointsContainer}>
+                            <QuestionScroller onSelect={this.handleSelect} />
+                        </div>
                     </div>
-                    <div className={classes.checkpointsContainer}>
-                        <h1>Vald checkpoint</h1>
-                    </div>
-                    <div className={classes.checkpointsContainer}>
-                        <QuestionScroller onSelect={this.handleSelect} />
-                    </div>
-                </div>
-            </Aux>
-        );
-
+                </Aux>
+            );
+        }
 
         return (
             <div>
-                {this.state.editView ? editView : trackView}
+                {editing ? editView : trackView}
             </div>
         );
     }

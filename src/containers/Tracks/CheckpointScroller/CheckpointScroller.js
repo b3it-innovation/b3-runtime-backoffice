@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
+
 import SingleOpenPanel from '../../../components/UI/Panel/SingleOpenPanel/SingleOpenPanel';
 import Aux from '../../../hoc/Auxiliary/Auxiliary';
 import classes from './CheckpointScroller.module.css';
@@ -36,6 +37,7 @@ function CheckpointScroller(props) {
                                     type="checkpoint"
                                     object={checkpoint}
                                     label={label}
+                                    checkpointsLength={checkpoints.length}
                                     expanded={props.expanded}
                                     id={checkpoint.order}
                                     handleChange={props.handleChange}
