@@ -113,7 +113,7 @@ class Tracks extends Component {
         const track = { categoryKey: catKey, name: trackName };
 
         const trackCheckpoints = this.state.checkpoints.map((marker) => {
-            let checkpoint = {};
+            const checkpoint = {};
             checkpoint.order = marker.order;
             checkpoint.latitude = marker.position.lat();
             checkpoint.longitude = marker.position.lng();
@@ -166,6 +166,7 @@ class Tracks extends Component {
                             expanded={expanded}
                             handleChange={this.handlePanelChange}
                             onDelete={this.deleteMarker}
+                            editView
                         />
                     </div>
                     <div className={classes.checkpointsContainer}>

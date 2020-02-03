@@ -3,9 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { FormControlLabel } from '@material-ui/core';
 import MuiExpansionPanelDetails from '../PanelDetail/PanelDetail';
 
 const ExpansionPanel = withStyles({
@@ -43,32 +40,41 @@ const ExpansionPanelSummary = withStyles({
     expanded: {},
 })(MuiExpansionPanelSummary);
 
-const ExpansionPanelDetails = withStyles(theme => ({
+const ExpansionPanelDetails = withStyles((theme) => ({
     root: {
         padding: theme.spacing(2),
     },
 }))(MuiExpansionPanelDetails);
 
-function SingleOpenPanel(props) {
+const getLabelColor = (order, length) => {
+    let labelColor;
+    if (order === 1) {
+        labelColor = 'green';
+    } else if (length === order && length > 3 && order % 2 === 0) {
+        labelColor = 'purple';
+    } else if (order % 2 === 0) {
+        labelColor = 'red';
+    } else {
+        labelColor = '#EFB612';
+    }
+    return labelColor;
+};
 
+function SingleOpenPanel(props) {
     const {
-        label, object, type, onEdit, onDelete, expanded, id, handleChange,
+        label, object, type, onEdit, onDelete, expanded, id, handleChange, checkpointsLength,
     } = props;
+
+    const labelColor = getLabelColor(object.order, checkpointsLength);
 
     return (
         <ExpansionPanel expanded={expanded === id} onChange={handleChange(id)} key={id}>
             <ExpansionPanelSummary
+                style={{ borderLeft: `7px solid ${labelColor}` }}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography>{label}</Typography>
-                {/* 
-                <FormControlLabel
-                    aria-label="icon"
-                    onClick={(event) => event.stopPropagation()}
-                    onFocus={(event) => event.stopPropagation()}
-                    control={<DeleteForeverIcon />}
-                /> */}
+                <h4>{label}</h4>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails
                 type={type}

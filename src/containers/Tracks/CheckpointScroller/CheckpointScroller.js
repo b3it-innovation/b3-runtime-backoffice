@@ -36,6 +36,7 @@ function CheckpointScroller(props) {
                                     type="checkpoint"
                                     object={checkpoint}
                                     label={label}
+                                    checkpointsLength={checkpoints.length}
                                     expanded={props.expanded}
                                     id={checkpoint.order}
                                     handleChange={props.handleChange}
