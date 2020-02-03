@@ -78,9 +78,33 @@ const deleteCategoryError = (error) => (
 export const deleteCategory = (categoryId) => (
     (dispatch) => {
         dispatch(connectCategoriesStart());
-        firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
-            .then(() => {
-                dispatch(deleteCategorySuccess(categoryId));
+        firestore.collection(collectionsNames.TRACKS).where('categoryKey', '==', categoryId)
+            .get()
+            .then((response) => {
+                if (response.size === 0) {
+                    firestore.collection(collectionsNames.QUESTIONS).where('categoryKey', '==', categoryId)
+                        .get()
+                        .then((res) => {
+                            if (res.size === 0) {
+                                firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
+                                    .then(() => {
+                                        dispatch(deleteCategorySuccess(categoryId));
+                                    })
+                                    .catch((err) => {
+                                        dispatch(deleteCategoryError(err));
+                                    });
+                            } else {
+                                const err = { message: 'There are some questions that have this category' };
+                                dispatch(deleteCategoryError(err));
+                            }
+                        })
+                        .catch((err) => {
+                            dispatch(deleteCategoryError(err));
+                        });
+                } else {
+                    const err = { message: 'There are some tracks that have this category' };
+                    dispatch(deleteCategoryError(err));
+                }
             })
             .catch((err) => {
                 dispatch(deleteCategoryError(err));
@@ -114,5 +138,11 @@ export const updateCategory = (id, newName) => (
             .catch((err) => {
                 dispatch(updateCategoryError(err));
             });
+    }
+);
+
+export const resetCategoryError = () => (
+    {
+        type: actionTypes.RESET_CATEGORY_ERROR,
     }
 );

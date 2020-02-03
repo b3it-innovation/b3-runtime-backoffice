@@ -88,6 +88,11 @@ const updateCategoryError = (state, action) => (
     }
 );
 
+const resetCategoryError = (state) => ({
+    ...state,
+    error: null,
+});
+
 const categoryReducer = (state = initState, action) => {
     switch (action.type) {
         case actionTypes.CONNECT_CATEGORIES_START:
@@ -108,6 +113,8 @@ const categoryReducer = (state = initState, action) => {
             return updateCategorySuccess(state, action);
         case actionTypes.UPDATE_CATEGORY_ERROR:
             return updateCategoryError(state, action);
+        case actionTypes.RESET_CATEGORY_ERROR:
+            return resetCategoryError(state, action);
         default:
             return state;
     }

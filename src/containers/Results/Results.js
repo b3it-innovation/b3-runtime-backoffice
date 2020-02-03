@@ -24,7 +24,8 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%',
+        width: '80%',
+        margin: 'auto',
         flexWrap: 'nowrap',
     },
     card: {
@@ -48,7 +49,7 @@ const styles = {
         marginBottom: 24,
     },
     table: {
-        minWidth: 650,
+        minWidth: 375,
     },
 };
 
@@ -74,8 +75,10 @@ class Results extends Component {
         const { competitions, searchTracks } = this.props;
         if (competition && !tracksFetched) {
             const comp = competitions.find((c) => c.id === competition);
-            searchTracks(comp.trackKeys);
-            this.updateTrackFetched();
+            if (comp.trackKeys) {
+                searchTracks(comp.trackKeys);
+                this.updateTrackFetched();
+            }
         }
     }
 
@@ -83,6 +86,7 @@ class Results extends Component {
         const { value } = e.target;
         this.setState({
             [e.target.name]: value,
+            tracksFetched: false,
         });
     }
 
@@ -155,7 +159,7 @@ class Results extends Component {
         }
         let button = null;
         if (track) {
-            button = <SearchButton click={this.handleSearch} />;
+            button = <div><SearchButton click={this.handleSearch} /></div>;
         }
 
         let table = null;

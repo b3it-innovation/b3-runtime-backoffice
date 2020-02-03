@@ -18,6 +18,7 @@ import * as actions from '../../store/actions/index';
 import DeleteButton from '../../components/UI/Button/DeleteButton/DeleteButton';
 import EditButton from '../../components/UI/Button/EditButton/EditButton';
 import TransitionModal from '../../components/UI/Modal/Modal';
+import ErrorModal from '../../components/UI/Modal/ErrorModal/ErrorModal';
 import { checkValidity, updateObject } from '../../utility/Util/Util';
 
 const styles = {
@@ -25,9 +26,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%',
+        width: '80%',
         padding: '0',
-        margin: '0',
+        margin: 'auto',
         flexWrap: 'nowrap',
     },
     card: {
@@ -63,6 +64,8 @@ class Categories extends Component {
                     valid: false,
                     touched: false,
                 },
+            },
+            editForm: {
                 editName: {
                     elementType: 'input',
                     elementConfig: {
@@ -78,7 +81,9 @@ class Categories extends Component {
                 },
             },
             formIsValid: false,
+            editFormIsValid: false,
             modalOpen: false,
+            errorModalOpen: true,
             editId: null,
         };
     }
@@ -113,53 +118,87 @@ class Categories extends Component {
             valid: checkValidity(e.target.value, form[e.target.name].validation),
             touched: true,
         });
-
         const updatedForm = updateObject(form, {
             [e.target.name]: updatedFormElement,
         });
-
         let formIsValid = true;
         Object.keys(updatedForm).forEach((key) => {
             formIsValid = updatedForm[key].valid && formIsValid;
         });
-
         this.setState({ form: updatedForm, formIsValid });
+    }
+
+    handleEditFormChange = (e) => {
+        const { editForm } = this.state;
+        const updatedFormElement = updateObject(editForm[e.target.name], {
+            value: e.target.value,
+            valid: checkValidity(e.target.value, editForm[e.target.name].validation),
+            touched: true,
+        });
+        const updatedForm = updateObject(editForm, {
+            [e.target.name]: updatedFormElement,
+        });
+        let editFormIsValid = true;
+        Object.keys(updatedForm).forEach((key) => {
+            editFormIsValid = updatedForm[key].valid && editFormIsValid;
+        });
+        this.setState({ editForm: updatedForm, editFormIsValid });
     }
 
     handleDelete = (id) => {
         this.props.deleteCategory(id);
+        this.setState({
+            errorModalOpen: true,
+        });
     }
 
     handleEdit = (id, name) => {
-        this.setState((prevState) => ({
-            form: {
-                ...prevState.form,
-                editName: {
-                    ...prevState.form.editName,
-                    value: name,
-                },
-            },
+        const { editForm } = this.state;
+        const updatedFormElement = updateObject(editForm.editName, {
+            value: name,
+        });
+        const updatedForm = updateObject(editForm, {
+            editName: updatedFormElement,
+        });
+        this.setState({
+            editForm: updatedForm,
             modalOpen: true,
             editId: id,
-        }));
+        });
     }
 
     handleUpdate = () => {
-        this.props.updateCategory(this.state.editId, this.state.form.editName.value);
+        this.props.updateCategory(this.state.editId, this.state.editForm.editName.value);
         this.handleClose();
     }
 
     handleClose = () => {
+        const { editForm } = this.state;
+        const updatedFormElement = updateObject(editForm.editName, {
+            valid: false,
+            touched: false,
+        });
+        const updatedForm = updateObject(editForm, {
+            editName: updatedFormElement,
+        });
         this.setState({
+            editForm: updatedForm,
             modalOpen: false,
         });
     }
 
+    handleErrorModalClose = () => {
+        this.setState({
+            errorModalOpen: false,
+        });
+        this.props.resetCategoryError();
+    }
+
     render() {
         const { classes } = this.props;
-        const { categories, loading } = this.props;
+        const { categories, loading, err } = this.props;
         const {
-            form, formIsValid, modalOpen, editId,
+            form, editForm, formIsValid, editFormIsValid, modalOpen, errorModalOpen, editId,
         } = this.state;
 
         const modal = (
@@ -171,19 +210,35 @@ class Categories extends Component {
                     <TextField
                         className={classes.input}
                         id={editId}
-                        error={!form.editName.valid && form.editName.touched}
+                        error={!editForm.editName.valid && editForm.editName.touched}
                         name="editName"
                         label="name"
                         type="text"
                         variant="filled"
-                        value={form.editName.value}
-                        onChange={this.handleChange}
-                        helperText={!form.editName.valid && form.editName.touched ? 'Required' : null}
+                        value={editForm.editName.value}
+                        onChange={this.handleEditFormChange}
+                        helperText={!editForm.editName.valid && editForm.editName.touched ? 'Required' : null}
                     />
-                    <div><EditButton click={() => this.handleUpdate()} /></div>
+                    <div>
+                        <EditButton click={() => this.handleUpdate()} disabled={!editFormIsValid} />
+                    </div>
                 </div>
             </TransitionModal>
         );
+
+        let errorModal = null;
+        if (err) {
+            errorModal = (
+                <ErrorModal
+                    open={errorModalOpen}
+                    handleClose={this.handleErrorModalClose}
+                >
+                    <div className={classes.container}>
+                        <p style={{ color: 'red' }}>{err.message}</p>
+                    </div>
+                </ErrorModal>
+            );
+        }
 
         let formContent = <Spinner />;
         if (!loading) {
@@ -248,9 +303,10 @@ class Categories extends Component {
                         {formContent}
                     </CardContent>
                     <CardActions>
-                        <Button size="large" onClick={this.handleSubmit} disabled={!formIsValid}>ADD CATEGORY</Button>
+                        <Button size="large" onClick={this.handleSubmit} disabled={!formIsValid || form.name.value === ''}>ADD CATEGORY</Button>
                     </CardActions>
                 </Card>
+                {errorModal}
                 {modal}
                 {table}
             </div>
@@ -273,6 +329,7 @@ const mapDispatchToProps = (dispatch) => ({
     addCategory: (category) => dispatch(actions.addCategory(category)),
     deleteCategory: (id) => dispatch(actions.deleteCategory(id)),
     updateCategory: (id, newName) => dispatch(actions.updateCategory(id, newName)),
+    resetCategoryError: () => dispatch(actions.resetCategoryError()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Categories));

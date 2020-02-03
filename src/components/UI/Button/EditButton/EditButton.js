@@ -14,14 +14,15 @@ const useStyles = makeStyles((theme) => ({
 
 const EditButton = (props) => {
     const classes = useStyles();
-
+    const { click, disabled } = props;
     return (
         <Button
             variant="contained"
             className={classes.button}
             startIcon={<EditIcon />}
             size="small"
-            onClick={() => props.click()}
+            onClick={() => click()}
+            disabled={disabled}
         >
             Edit
         </Button>
