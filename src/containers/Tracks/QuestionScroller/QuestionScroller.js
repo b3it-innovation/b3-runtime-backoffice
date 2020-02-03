@@ -44,8 +44,14 @@ class QuestionScroller extends Component {
 
     render() {
         const { category, expanded } = this.state;
-        const { categories, questions, onSelect } = this.props;
+        const { categories, questions, onSelect, currentCheckpoint, checkpointsLength } = this.props;
         let panels = null;
+        let select = null;
+        if (currentCheckpoint) {
+            if (currentCheckpoint.order !== 1 && !currentCheckpoint.penalty && checkpointsLength !== currentCheckpoint.order) {
+                select = onSelect;
+            }
+        }
         if (questions) {
             panels = questions.map((q) => (
                 <SingleOpenPanel
@@ -56,7 +62,7 @@ class QuestionScroller extends Component {
                     object={q}
                     expanded={expanded}
                     handleChange={this.handlePanelChange}
-                    onSelect={onSelect}
+                    onSelect={select}
                 />
 
             ));

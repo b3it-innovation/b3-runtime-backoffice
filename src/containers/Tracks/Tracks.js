@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Button from '@material-ui/core/Button';
 import classes from './Tracks.module.css';
 
 import Map from './Map/Map';
@@ -8,6 +9,7 @@ import CheckpointScroller from './CheckpointScroller/CheckpointScroller';
 import TrackForm from './TrackForm/TrackForm';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import QuestionScroller from './QuestionScroller/QuestionScroller';
+import CheckpointPresenter from './CheckpointPresenter/CheckpointPresenter';
 
 const YELLOW_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fbff0f';
 const RED_MARKER = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569';
@@ -19,10 +21,11 @@ class Tracks extends Component {
         super(props);
         this.state = {
             checkpoints: [],
-            category: null,
-            name: null,
+            categoryKey: null,
+            trackName: null,
             expanded: false,
             editing: false,
+            currentCheckpoint: null,
         };
     }
 
@@ -35,10 +38,16 @@ class Tracks extends Component {
     }
 
     handlePanelChange = (panelId) => (event, newExpanded) => {
+        const { editing } = this.state;
         this.setState({
             expanded: newExpanded ? panelId : false,
         });
-        this.onOpenPanel();
+
+        if (editing) {
+            this.onOpenPanelEdit(panelId);
+        } else {
+            this.onOpenPanel();
+        }
     }
 
     onOpenPanel = () => {
@@ -52,6 +61,14 @@ class Tracks extends Component {
                 }
             });
             return ({ checkpoints: newCheckpoints });
+        });
+    }
+
+    onOpenPanelEdit = (order) => {
+        this.setState((prevState) => {
+            const newCheckpoints = [...prevState.checkpoints];
+            const checkpoint = newCheckpoints[order - 1];
+            return ({ currentCheckpoint: checkpoint });
         });
     }
 
@@ -107,34 +124,73 @@ class Tracks extends Component {
         });
     }
 
-    handleContinue = () => {
+    handleContinue = (name, categoryId) => {
         this.setState({
             editing: true,
+            trackName: name,
+            categoryKey: categoryId,
         });
     }
 
-    handleSave = (trackName, catKey) => {
-        const track = { categoryKey: catKey, name: trackName };
+    handleCheckpointTitleChange = (event) => {
+        const { checkpoints, currentCheckpoint } = this.state;
+        const checkpoint = { ...currentCheckpoint };
+        checkpoint.title = event.target.value;
+        const newCheckpoints = [...checkpoints];
+        newCheckpoints[checkpoint.order - 1] = checkpoint;
+        this.setState({
+            checkpoints: newCheckpoints,
+            currentCheckpoint: checkpoint,
+        });
+    }
 
-        const trackCheckpoints = this.state.checkpoints.map((marker) => {
+    convertMarkersToCheckpoints = (markers) => {
+        const trackCheckpoints = markers.map((marker) => {
             const checkpoint = {};
             checkpoint.order = marker.order;
             checkpoint.latitude = marker.position.lat();
             checkpoint.longitude = marker.position.lng();
             checkpoint.penalty = marker.penalty;
+            checkpoint.questionKey = marker.questionKey ? marker.questionKey : null;
+            checkpoint.label = marker.title ? marker.title : null;
             return (checkpoint);
         });
+        return trackCheckpoints;
+    }
 
+    handleSave = (name, key) => {
+        let trackName = name;
+        let catKey = key;
+        if (!trackName || !catKey) {
+            trackName = this.state.trackName;
+            catKey = this.state.categoryKey;
+        }
+        const track = { categoryKey: catKey, name: trackName };
+
+        const trackCheckpoints = this.convertMarkersToCheckpoints(this.state.checkpoints);
         this.props.addTrack(track, trackCheckpoints);
     };
 
-    // TODO: add selected question to chosen checkpoint
+
     handleSelect = (questionId, questionTitle) => {
-        console.log(questionId, questionTitle);
+        const { checkpoints, currentCheckpoint } = this.state;
+        if (currentCheckpoint) {
+            const newCheckpoint = { ...currentCheckpoint };
+            newCheckpoint.questionKey = questionId;
+            newCheckpoint.questionTitle = questionTitle;
+            const newCheckpoints = [...checkpoints];
+            newCheckpoints[newCheckpoint.order - 1] = newCheckpoint;
+            this.setState({
+                checkpoints: newCheckpoints,
+                currentCheckpoint: newCheckpoint,
+            });
+        }
     }
 
     render() {
-        const { checkpoints, expanded, editing } = this.state;
+        const {
+            checkpoints, expanded, editing, currentCheckpoint,
+        } = this.state;
 
         let trackView = null;
 
@@ -172,24 +228,32 @@ class Tracks extends Component {
 
         if (editing) {
             editView = (
-                <Aux>
-                    <div className={classes.topContainer}>
-                        <div className={classes.checkpointsContainer}>
-                            <CheckpointScroller
-                                checkpoints={checkpoints}
-                                expanded={expanded}
-                                handleChange={this.handlePanelChange}
-                                onDelete={this.deleteMarker}
-                            />
-                        </div>
-                        <div className={classes.checkpointsContainer}>
-                            <h1>Vald checkpoint</h1>
-                        </div>
-                        <div className={classes.checkpointsContainer}>
-                            <QuestionScroller onSelect={this.handleSelect} />
-                        </div>
+                <div className={classes.topContainer}>
+                    <div className={classes.checkpointsContainer}>
+                        <CheckpointScroller
+                            checkpoints={checkpoints}
+                            expanded={expanded}
+                            handleChange={this.handlePanelChange}
+                        />
                     </div>
-                </Aux>
+                    <div className={classes.checkpointsContainer}>
+                        {currentCheckpoint
+                            ? (
+                                <CheckpointPresenter
+                                    checkpoint={currentCheckpoint}
+                                    onChange={this.handleCheckpointTitleChange}
+                                />
+                            ) : null}
+                        <Button onClick={this.handleSave}>Save track</Button>
+                    </div>
+                    <div className={classes.checkpointsContainer}>
+                        <QuestionScroller
+                            onSelect={this.handleSelect}
+                            currentCheckpoint={currentCheckpoint}
+                            checkpointsLength={checkpoints.length}
+                        />
+                    </div>
+                </div>
             );
         }
 

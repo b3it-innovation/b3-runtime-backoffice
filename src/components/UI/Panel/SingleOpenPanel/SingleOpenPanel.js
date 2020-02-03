@@ -80,7 +80,11 @@ function SingleOpenPanel(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <h4>{label}</h4>
+                <h4>
+                    {label}
+                    {object.questionTitle ? ', ' : null}
+                    {object.questionTitle}
+                </h4>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails
                 type={type}

@@ -134,9 +134,9 @@ class TrackForm extends Component {
                     className={classes.button}
                     disabled={checkpoints.length < 4
                         || checkpoints.length % 2 === 1 || !formIsValid}
-                    onClick={handleContinue}
+                    onClick={() => handleContinue(form.name.value, form.categoryKey.value)}
                 >
-                Continue
+                    Continue
                 </Button>
             </div>
         );
