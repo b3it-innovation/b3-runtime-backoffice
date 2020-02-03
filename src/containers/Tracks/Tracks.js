@@ -7,6 +7,7 @@ import * as actions from '../../store/actions/index';
 import CheckpointScroller from './CheckpointScroller/CheckpointScroller';
 import TrackForm from './TrackForm/TrackForm';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
+import QuestionScroller from './QuestionScroller/QuestionScroller';
 
 const YELLOW_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fbff0f';
 const RED_MARKER = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569';
@@ -113,7 +114,7 @@ class Tracks extends Component {
         const track = { categoryKey: catKey, name: trackName };
 
         const trackCheckpoints = this.state.checkpoints.map((marker) => {
-            let checkpoint = {};
+            const checkpoint = {};
             checkpoint.order = marker.order;
             checkpoint.latitude = marker.position.lat();
             checkpoint.longitude = marker.position.lng();
@@ -123,6 +124,11 @@ class Tracks extends Component {
 
         this.props.addTrack(track, trackCheckpoints);
     };
+
+    // TODO: add selected question to chosen checkpoint
+    handleSelect = (questionId, questionTitle) => {
+        console.log(questionId, questionTitle);
+    }
 
     render() {
         const { checkpoints, expanded } = this.state;
@@ -150,7 +156,11 @@ class Tracks extends Component {
                     </div>
                 </div>
                 <div>
-                    <TrackForm checkpoints={checkpoints} handleContinue={this.handleContinue} handleSave={this.handleSave} />
+                    <TrackForm
+                        checkpoints={checkpoints}
+                        handleContinue={this.handleContinue}
+                        handleSave={this.handleSave}
+                    />
                 </div>
             </Aux>
         );
@@ -165,13 +175,14 @@ class Tracks extends Component {
                             checkpoints={checkpoints}
                             expanded={expanded}
                             handleChange={this.handlePanelChange}
-                            onDelete={this.deleteMarker}
                         />
                     </div>
                     <div className={classes.checkpointsContainer}>
                         <h1>Vald checkpoint</h1>
                     </div>
-                    <div className={classes.checkpointsContainer}><h1>Frågor</h1></div>
+                    <div className={classes.checkpointsContainer}>
+                        <QuestionScroller onSelect={this.handleSelect} />
+                    </div>
                 </div>
             </Aux>
         );

@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import EditButton from '../../Button/EditButton/EditButton';
 import DeleteButton from '../../Button/DeleteButton/DeleteButton';
@@ -32,7 +33,7 @@ function PanelDetail(props) {
     const classes = useStyles();
 
     const {
-        categories, object, type, onEdit, onDelete,
+        categories, object, type, onEdit, onDelete, onSelect,
     } = props;
 
     let content = null;
@@ -69,8 +70,9 @@ function PanelDetail(props) {
                         Correct Answer:
                         {object.correctAnswer}
                     </p>
-                    <EditButton click={() => onEdit(id)} />
-                    <DeleteButton click={() => onDelete(id)} />
+                    {onEdit ? (<EditButton click={() => onEdit(id)} />) : null}
+                    {onDelete ? (<DeleteButton click={() => onDelete(id)} />) : null }
+                    {onSelect ? (<Button onClick={() => onSelect(id, object.title)}>SELECT</Button>) : null}
                 </div>
             </Aux>
         );
@@ -101,7 +103,7 @@ function PanelDetail(props) {
                             {track.name}
                         </p>
                     )) : (<p>No tracks</p>) }
-                    <EditButton click={() => onEdit(object.id)} />
+                    {onEdit ? (<EditButton click={() => onEdit(object.id)} />) : null }
                 </div>
             </Aux>
         );
@@ -116,7 +118,7 @@ function PanelDetail(props) {
                     <p>Penalty:</p>
                     {' '}
                     <p>{object.penalty.toString()}</p>
-                    <DeleteButton click={() => onDelete(order)} />
+                    {onDelete ? (<DeleteButton click={() => onDelete(order)} />) : null }
                 </div>
             </Aux>
         );

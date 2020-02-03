@@ -81,7 +81,6 @@ class BrowseQuestions extends Component {
 
         let questionList = null;
         if (questions) {
-            console.log(questions);
             questionList = questions.map((q) => (
                 <Panel
                     key={q.id}

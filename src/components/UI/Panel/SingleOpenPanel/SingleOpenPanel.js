@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { FormControlLabel } from '@material-ui/core';
 import MuiExpansionPanelDetails from '../PanelDetail/PanelDetail';
 
 const ExpansionPanel = withStyles({
@@ -43,16 +41,15 @@ const ExpansionPanelSummary = withStyles({
     expanded: {},
 })(MuiExpansionPanelSummary);
 
-const ExpansionPanelDetails = withStyles(theme => ({
+const ExpansionPanelDetails = withStyles((theme) => ({
     root: {
         padding: theme.spacing(2),
     },
 }))(MuiExpansionPanelDetails);
 
 function SingleOpenPanel(props) {
-
     const {
-        label, object, type, onEdit, onDelete, expanded, id, handleChange,
+        label, object, type, onEdit, onDelete, onSelect, expanded, id, handleChange,
     } = props;
 
     return (
@@ -62,19 +59,13 @@ function SingleOpenPanel(props) {
                 id="panel1a-header"
             >
                 <Typography>{label}</Typography>
-                {/* 
-                <FormControlLabel
-                    aria-label="icon"
-                    onClick={(event) => event.stopPropagation()}
-                    onFocus={(event) => event.stopPropagation()}
-                    control={<DeleteForeverIcon />}
-                /> */}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails
                 type={type}
                 object={object}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onSelect={onSelect}
             />
         </ExpansionPanel>
     );
