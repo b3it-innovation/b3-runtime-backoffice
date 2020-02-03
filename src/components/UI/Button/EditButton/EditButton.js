@@ -1,30 +1,32 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
-        backgroundColor: '#EE4319',
+        backgroundColor: '#006A8E',
+        color: 'white',
     },
 }));
 
-function DeleteButton(props) {
+const EditButton = (props) => {
     const classes = useStyles();
-
+    const { click, disabled } = props;
     return (
         <Button
             variant="contained"
             className={classes.button}
-            startIcon={<DeleteIcon />}
+            startIcon={<EditIcon />}
             size="small"
-            onClick={() => props.click(props.index)}
+            onClick={() => click()}
+            disabled={disabled}
         >
-            Delete
+            Edit
         </Button>
     );
-}
+};
 
-export default DeleteButton;
+export default EditButton;

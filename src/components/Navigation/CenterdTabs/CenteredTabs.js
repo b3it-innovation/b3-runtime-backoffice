@@ -7,6 +7,8 @@ import Tab from '@material-ui/core/Tab';
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
+        width: '80%',
+        margin: 'auto',
     },
 });
 

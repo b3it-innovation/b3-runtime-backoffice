@@ -27,9 +27,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%',
+        width: '80%',
         padding: '0',
-        margin: '0',
+        margin: 'auto',
         flexWrap: 'nowrap',
     },
     card: {
@@ -149,7 +149,7 @@ class CreateCompetition extends Component {
                     )}
                 >
                     { tracks.map((track) => (
-                        <ListItem key={track.id} button>
+                        <ListItem key={track.id} button onClick={this.handleTrackCheckToggle(track.id)}>
                             <ListItemText id={track.id} primary={track.name} />
                             <ListItemSecondaryAction>
                                 <Checkbox

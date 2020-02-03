@@ -78,12 +78,71 @@ const deleteCategoryError = (error) => (
 export const deleteCategory = (categoryId) => (
     (dispatch) => {
         dispatch(connectCategoriesStart());
-        firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
-            .then(() => {
-                dispatch(deleteCategorySuccess(categoryId));
+        firestore.collection(collectionsNames.TRACKS).where('categoryKey', '==', categoryId)
+            .get()
+            .then((response) => {
+                if (response.size === 0) {
+                    firestore.collection(collectionsNames.QUESTIONS).where('categoryKey', '==', categoryId)
+                        .get()
+                        .then((res) => {
+                            if (res.size === 0) {
+                                firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
+                                    .then(() => {
+                                        dispatch(deleteCategorySuccess(categoryId));
+                                    })
+                                    .catch((err) => {
+                                        dispatch(deleteCategoryError(err));
+                                    });
+                            } else {
+                                const err = { message: 'There are some questions that have this category' };
+                                dispatch(deleteCategoryError(err));
+                            }
+                        })
+                        .catch((err) => {
+                            dispatch(deleteCategoryError(err));
+                        });
+                } else {
+                    const err = { message: 'There are some tracks that have this category' };
+                    dispatch(deleteCategoryError(err));
+                }
             })
             .catch((err) => {
                 dispatch(deleteCategoryError(err));
             });
+    }
+);
+
+const updateCategorySuccess = (id, name) => (
+    {
+        type: actionTypes.UPDATE_CATEGORY_SUCCESS,
+        updatedId: id,
+        updatedName: name,
+    }
+);
+
+const updateCategoryError = (error) => (
+    {
+        type: actionTypes.UPDATE_CATEGORY_ERROR,
+        err: error,
+    }
+);
+
+export const updateCategory = (id, newName) => (
+    (dispatch) => {
+        dispatch(connectCategoriesStart());
+        firestore.collection(collectionsNames.CATEGORIES).doc(id)
+            .update({ name: newName })
+            .then(() => {
+                dispatch(updateCategorySuccess(id, newName));
+            })
+            .catch((err) => {
+                dispatch(updateCategoryError(err));
+            });
+    }
+);
+
+export const resetCategoryError = () => (
+    {
+        type: actionTypes.RESET_CATEGORY_ERROR,
     }
 );

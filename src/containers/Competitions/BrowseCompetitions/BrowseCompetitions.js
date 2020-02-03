@@ -20,10 +20,10 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%',
+        width: '80%',
         flexWrap: 'nowrap',
         padding: '0',
-        margin: '0',
+        margin: 'auto',
     },
     card: {
         minWidth: '100%',
@@ -55,7 +55,9 @@ class BrowseCompetitions extends Component {
     }
 
     handleSearch = () => {
-        this.props.fetchCompetitions(this.state.dropDownValue);
+        if (this.state.dropDownValue !== null && this.state.dropDownValue !== '') {
+            this.props.fetchCompetitions(this.state.dropDownValue);
+        }
     }
 
     render() {
@@ -92,7 +94,7 @@ class BrowseCompetitions extends Component {
                             name="dropDownValue"
                             id="id"
                         />
-                        <SearchButton click={this.handleSearch} />
+                        <div><SearchButton click={this.handleSearch} /></div>
                         {spinner}
                         {competitionList}
                     </CardContent>
