@@ -82,6 +82,8 @@ class Tracks extends Component {
             } else if (checkpoint.order % 2 === 1) {
                 iconColor = YELLOW_MARKER;
                 pen = true;
+            } else if (checkpoint.order === newCheckpoints.length && checkpoint.order % 2 !== 1 && newCheckpoints.length > 3) {
+                iconColor = STAR_MARKER;
             }
             checkpoint.setIcon(iconColor);
             checkpoint.penalty = pen;
@@ -166,6 +168,10 @@ class Tracks extends Component {
                             onDelete={this.deleteMarker}
                         />
                     </div>
+                    <div className={classes.checkpointsContainer}>
+                        <h1>Vald checkpoint</h1>
+                    </div>
+                    <div className={classes.checkpointsContainer}><h1>Frågor</h1></div>
                 </div>
             </Aux>
         );

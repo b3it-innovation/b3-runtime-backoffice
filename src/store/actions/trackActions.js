@@ -58,21 +58,18 @@ export const addTrack = (newTrack, checkpoints) => (dispatch) => {
         checkpointRef.push(ref);
     });
 
-    return firestore.runTransaction((transaction) => {
-        return transaction.get(trackRef)
-            .then((trackDoc) => {
-                transaction.set(trackRef, newTrack);
-                checkpointRef.forEach((ref, index) => {
-                    transaction.set(ref, checkpoints[index]);
-                });
-                dispatch(addTrackSuccess());
-            }).catch((err) => {
-                dispatch(addTrackError(err));
+    return firestore.runTransaction((transaction) => transaction.get(trackRef)
+        .then((trackDoc) => {
+            transaction.set(trackRef, newTrack);
+            checkpointRef.forEach((ref, index) => {
+                transaction.set(ref, checkpoints[index]);
             });
-    }).then(() => {
-        console.log('transaction successful');
+        }).catch((err) => {
+            dispatch(addTrackError(err));
+        })).then(() => {
+        dispatch(addTrackSuccess());
     }).catch((err) => {
-        console.log(err);
+        dispatch(addTrackError(err));
     });
 };
 
