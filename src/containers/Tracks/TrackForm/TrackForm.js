@@ -121,7 +121,7 @@ class TrackForm extends Component {
                     name="categoryKey"
                     id="categoryId"
                 />
-                <Button className={classes.button} disabled={checkpoints.length < 1 || !formIsValid}>Save track</Button>
+                <Button className={classes.button} disabled={checkpoints.length < 1 || !formIsValid} onClick={() => this.props.handleSave(this.state.form.name.value, this.state.form.categoryKey.value)}>Save track</Button>
                 <Button className={classes.button} disabled={checkpoints.length < 4 || checkpoints.length % 2 === 1 || !formIsValid} onClick={this.props.handleContinue}>Continue</Button>
             </div>
         );

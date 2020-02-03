@@ -107,6 +107,21 @@ class Tracks extends Component {
         });
     }
 
+    handleSave = (trackName, catKey) => {
+        const track = { categoryKey: catKey, name: trackName };
+
+        const trackCheckpoints = this.state.checkpoints.map((marker) => {
+            let checkpoint = {};
+            checkpoint.order = marker.order;
+            checkpoint.latitude = marker.position.lat();
+            checkpoint.longitude = marker.position.lng();
+            checkpoint.penalty = marker.penalty;
+            return (checkpoint);
+        });
+
+        this.props.addTrack(track, trackCheckpoints);
+    };
+
     render() {
         const { checkpoints, expanded } = this.state;
 
@@ -133,7 +148,7 @@ class Tracks extends Component {
                     </div>
                 </div>
                 <div>
-                    <TrackForm checkpoints={checkpoints} handleContinue={this.handleContinue}/>
+                    <TrackForm checkpoints={checkpoints} handleContinue={this.handleContinue} handleSave={this.handleSave} />
                 </div>
             </Aux>
         );
@@ -168,6 +183,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    addTrack: (track, trackCheckpoints) => dispatch(actions.addTrack(track, trackCheckpoints)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tracks);
