@@ -5,10 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
-import EditButton from '../../../../components/UI/Button/EditButton/EditButton';
-import DeleteButton from '../../../../components/UI/Button/DeleteButton/DeleteButton';
+import EditButton from '../../Button/EditButton/EditButton';
+import DeleteButton from '../../Button/DeleteButton/DeleteButton';
 import Aux from '../../../../hoc/Auxiliary/Auxiliary';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,7 @@ function PanelDetail(props) {
     const classes = useStyles();
 
     const {
-        categories, object, type, onEdit, onDelete,
+        categories, object, type, onEdit, onDelete, onSelect,
     } = props;
 
     let content = null;
@@ -57,7 +57,7 @@ function PanelDetail(props) {
                     <p>{categoryName}</p>
                 </div>
                 <div className={classes.containerItem}>
-                Options:
+                    Options:
                     {' '}
                     {object.options.map((option) => (
                         <p key={option.option}>
@@ -67,11 +67,14 @@ function PanelDetail(props) {
                         </p>
                     ))}
                     <p>
-                    Correct Answer:
+                        Correct Answer:
                         {object.correctAnswer}
                     </p>
-                    <EditButton click={() => onEdit(id)} />
-                    <DeleteButton click={() => onDelete(id)} />
+                    {onEdit ? (<EditButton click={() => onEdit(id)} />) : null}
+                    {onDelete ? (<DeleteButton click={() => onDelete(id)} />) : null }
+                    {onSelect
+                        ? (<Button onClick={() => onSelect(id, object.title)}>SELECT</Button>)
+                        : null}
                 </div>
             </Aux>
         );
@@ -95,14 +98,29 @@ function PanelDetail(props) {
                     <p>{object.active.toString()}</p>
                 </div>
                 <div className={classes.containerItem}>
-                Tracks:
+                    Tracks:
                     {' '}
                     {matchedTracks.length > 0 ? matchedTracks.map((track) => (
                         <p key={track.id}>
                             {track.name}
                         </p>
                     )) : (<p>No tracks</p>) }
-                    <EditButton click={() => onEdit(object.id)} />
+                    {onEdit ? (<EditButton click={() => onEdit(object.id)} />) : null }
+                </div>
+            </Aux>
+        );
+    } else if (type === 'checkpoint') {
+        const { order } = object;
+        content = (
+            <Aux>
+                <div className={classes.containerItem}>
+                    <p>Order:</p>
+                    {' '}
+                    <p>{order}</p>
+                    <p>Penalty:</p>
+                    {' '}
+                    <p>{object.penalty.toString()}</p>
+                    {onDelete ? (<DeleteButton click={() => onDelete(order)} />) : null }
                 </div>
             </Aux>
         );

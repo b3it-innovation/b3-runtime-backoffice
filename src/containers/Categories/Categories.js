@@ -95,20 +95,33 @@ class Categories extends Component {
         }
     }
 
+    checkSameCategoryNameExists = (name) => {
+        const { categories } = this.props;
+        const array = categories.filter((cat) => (cat.name === name));
+        return array.length > 0;
+    }
+
     handleSubmit = (e) => {
         const { form } = this.state;
         e.preventDefault();
-        this.props.addCategory({ name: this.state.form.name.value });
-        const updatedFormElement = updateObject(this.state.form.name, {
-            value: '',
-            valid: false,
-            touched: false,
-        });
-        const updatedForm = updateObject(form, {
-            name: updatedFormElement,
-        });
-
-        this.setState({ form: updatedForm });
+        if (this.checkSameCategoryNameExists(form.name.value)) {
+            const errorMessage = 'Same category name already exists.';
+            this.props.addCategoryError({ message: errorMessage });
+            this.setState({
+                errorModalOpen: true,
+            });
+        } else {
+            this.props.addCategory({ name: form.name.value });
+            const updatedFormElement = updateObject(form.name, {
+                value: '',
+                valid: false,
+                touched: false,
+            });
+            const updatedForm = updateObject(form, {
+                name: updatedFormElement,
+            });
+            this.setState({ form: updatedForm });
+        }
     }
 
     handleChange = (e) => {
@@ -327,6 +340,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     fetchCategories: () => dispatch(actions.fetchCategories()),
     addCategory: (category) => dispatch(actions.addCategory(category)),
+    addCategoryError: (error) => dispatch(actions.addCategoryError(error)),
     deleteCategory: (id) => dispatch(actions.deleteCategory(id)),
     updateCategory: (id, newName) => dispatch(actions.updateCategory(id, newName)),
     resetCategoryError: () => dispatch(actions.resetCategoryError()),

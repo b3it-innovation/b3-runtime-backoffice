@@ -1,0 +1,5 @@
+.mapDiv {
+    width: 70%;
+    height: 80%;
+    min-height: calc(100vh - 141px);
+}

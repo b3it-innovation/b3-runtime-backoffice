@@ -9,7 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import DropDown from '../../../components/UI/Dropdown/DropDown';
-import Panel from '../../../components/UI/ExpansionPanel/Panel';
+import Panel from '../../../components/UI/Panel/Panel';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
 import SearchButton from '../../../components/UI/Button/SearchButton/SearchButton';
@@ -81,7 +81,6 @@ class BrowseQuestions extends Component {
 
         let questionList = null;
         if (questions) {
-            console.log(questions);
             questionList = questions.map((q) => (
                 <Panel
                     key={q.id}

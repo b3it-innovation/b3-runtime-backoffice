@@ -48,14 +48,29 @@ const addTrackError = (error) => ({
     error,
 });
 
-export const addTrack = (newTrack) => (dispatch) => {
+export const addTrack = (newTrack, checkpoints) => (dispatch) => {
     dispatch(connectTracksStart());
-    firestore.collection(collectionsNames.TRACKS).add(newTrack)
-        .then(() => {
-            dispatch(addTrackSuccess());
+
+    const trackRef = firestore.collection(collectionsNames.TRACKS).doc();
+    const checkpointRef = [];
+    checkpoints.forEach((checkpoint) => {
+        const ref = trackRef.collection(collectionsNames.CHECKPOINTS).doc();
+        checkpointRef.push(ref);
+    });
+
+    return firestore.runTransaction((transaction) => transaction.get(trackRef)
+        .then((trackDoc) => {
+            transaction.set(trackRef, newTrack);
+            checkpointRef.forEach((ref, index) => {
+                transaction.set(ref, checkpoints[index]);
+            });
         }).catch((err) => {
             dispatch(addTrackError(err));
-        });
+        })).then(() => {
+        dispatch(addTrackSuccess());
+    }).catch((err) => {
+        dispatch(addTrackError(err));
+    });
 };
 
 const deleteTrackSuccess = (id) => ({

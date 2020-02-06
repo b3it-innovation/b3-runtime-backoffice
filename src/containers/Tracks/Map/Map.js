@@ -1,13 +1,21 @@
 import React, { Component, createRef } from 'react';
-import { Container } from '@material-ui/core';
 import { GOOGLE_MAP_API_KEY } from '../../../utility/apiKeys';
+import classes from './Map.module.css';
 
 let map = null;
+let path = null;
+
+const YELLOW_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fbff0f';
+const RED_MARKER = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569';
+const GREEN_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|1dc41d';
+const STAR_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=star|ff55ff';
 
 class GoogleMap extends Component {
     googleMapRef = createRef();
 
     componentDidMount() {
+        const { checkpoints, clearCheckpoints } = this.props;
+
         const googleMapScript = document.createElement('script');
         googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&libraries=places`;
         window.document.body.appendChild(googleMapScript);
@@ -21,7 +29,70 @@ class GoogleMap extends Component {
                 map.setCenter(center);
             });
             this.addMapClickListener();
+            if (checkpoints && checkpoints.length > 0) {
+                const copyCheckpoints = [...checkpoints];
+                clearCheckpoints();
+                this.redrawMarkers(copyCheckpoints);
+            }
         });
+    }
+
+    componentDidUpdate() {
+        const { checkpoints, expanded } = this.props;
+
+        if (checkpoints && (checkpoints.length > 0) && expanded) {
+            const checkpoint = checkpoints.filter((c) => c.order === expanded);
+            const lt = checkpoint[0].position.lat();
+            const lg = checkpoint[0].position.lng();
+            map.panTo({ lat: lt, lng: lg });
+        }
+        this.drawPath();
+    }
+
+    drawPath = () => {
+        const { checkpoints } = this.props;
+
+        if (path != null) {
+            path.setMap(null);
+            path = null;
+        }
+
+        path = new window.google.maps.Polyline({
+            path: this.drawLines(checkpoints),
+            geodesic: true,
+            strokeColor: 'white',
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+        });
+
+        path.setMap(this.googleMap);
+    }
+
+    redrawMarkers = (markers) => {
+        for (let i = 0; i < markers.length; i += 1) {
+            const oldMarker = markers[i];
+            const {
+                position, icon, penalty, questionKey, questionTitle,
+            } = oldMarker;
+            const lat = position.lat();
+            const lng = position.lng();
+            const newMarker = new window.google.maps.Marker({
+                position: { lat, lng },
+                map,
+                draggable: true,
+                order: i + 1,
+                icon,
+                penalty,
+                questionKey,
+                questionTitle,
+            });
+            newMarker.addListener('dragend', (event) => {
+                this.props.drag(newMarker.order, event.latLng.lat(), event.latLng.lng());
+            });
+            this.props.addCheckpoint(newMarker);
+        }
+
+        this.drawPath();
     }
 
     createGoogleMap = () => new window.google.maps.Map(this.googleMapRef.current, {
@@ -32,27 +103,64 @@ class GoogleMap extends Component {
         },
         disableDefaultUI: true,
         mapTypeId: 'hybrid',
+        styles: [
+            {
+                elementType: 'labels',
+                stylers: [
+                    {
+                        visibility: 'off',
+                    },
+                ],
+            },
+            {
+                featureType: 'administrative.land_parcel',
+                stylers: [
+                    {
+                        visibility: 'off',
+                    },
+                ],
+            },
+            {
+                featureType: 'administrative.neighborhood',
+                stylers: [
+                    {
+                        visibility: 'off',
+                    },
+                ],
+            },
+        ],
     })
 
 
     createMarker = (lat, lng) => {
+        let iconColor = RED_MARKER;
+        let pen = false;
+        if (this.props.length === 0) {
+            iconColor = GREEN_MARKER;
+        } else if (this.props.length % 2 === 0) {
+            iconColor = YELLOW_MARKER;
+            pen = true;
+        } else if (this.props.length > 2) {
+            iconColor = STAR_MARKER;
+            this.props.onUpdate();
+        }
+
         const marker = new window.google.maps.Marker({
             position: { lat, lng },
             map: this.googleMap,
             draggable: true,
-        });
-
-        const checkpoint = {
-            lat: marker.position.lat(),
-            lng: marker.position.lng(),
             order: this.props.length + 1,
-        };
+            icon: iconColor,
+            penalty: pen,
+        });
 
         marker.addListener('dragend', (event) => {
-            this.props.drag(checkpoint.order, event.latLng.lat(), event.latLng.lng());
+            this.props.drag(marker.order, event.latLng.lat(), event.latLng.lng());
         });
 
-        this.props.addCheckpoint(checkpoint);
+        // this.addMarkerClickListener(marker);
+
+        this.props.addCheckpoint(marker);
     }
 
     addMapClickListener = () => {
@@ -61,15 +169,34 @@ class GoogleMap extends Component {
         });
     }
 
+    // addMarkerClickListener = (marker) => {
+    //     const contentString = 'test';
+    //     const infoWindow = new window.google.maps.InfoWindow({
+    //         content: contentString,
+    //     });
+    //     marker.addListener('click', (event) => {
+    //         infoWindow.open(map, marker);
+    //     });
+    // }
+
+    drawLines = (markers) => {
+        const pathCoords = [];
+        markers.forEach((marker) => {
+            pathCoords.push({
+                lat: marker.position.lat(),
+                lng: marker.position.lng(),
+            });
+        });
+        return pathCoords;
+    }
+
     render() {
         return (
-            <Container maxWidth="lg">
-                <div
-                    id="google-map"
-                    ref={this.googleMapRef}
-                    style={{ width: '80%', height: '500px' }}
-                />
-            </Container>
+            <div
+                id="google-map"
+                ref={this.googleMapRef}
+                className={classes.mapDiv}
+            />
         );
     }
 }
