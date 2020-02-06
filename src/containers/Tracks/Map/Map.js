@@ -14,6 +14,8 @@ class GoogleMap extends Component {
     googleMapRef = createRef();
 
     componentDidMount() {
+        const { checkpoints, clearCheckpoints } = this.props;
+
         const googleMapScript = document.createElement('script');
         googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&libraries=places`;
         window.document.body.appendChild(googleMapScript);
@@ -27,18 +29,28 @@ class GoogleMap extends Component {
                 map.setCenter(center);
             });
             this.addMapClickListener();
+            if (checkpoints && checkpoints.length > 0) {
+                const copyCheckpoints = [...checkpoints];
+                clearCheckpoints();
+                this.redrawMarkers(copyCheckpoints);
+            }
         });
     }
 
     componentDidUpdate() {
         const { checkpoints, expanded } = this.props;
 
-        if (expanded) {
+        if (checkpoints && (checkpoints.length > 0) && expanded) {
             const checkpoint = checkpoints.filter((c) => c.order === expanded);
             const lt = checkpoint[0].position.lat();
             const lg = checkpoint[0].position.lng();
             map.panTo({ lat: lt, lng: lg });
         }
+        this.drawPath();
+    }
+
+    drawPath = () => {
+        const { checkpoints } = this.props;
 
         if (path != null) {
             path.setMap(null);
@@ -54,6 +66,33 @@ class GoogleMap extends Component {
         });
 
         path.setMap(this.googleMap);
+    }
+
+    redrawMarkers = (markers) => {
+        for (let i = 0; i < markers.length; i += 1) {
+            const oldMarker = markers[i];
+            const {
+                position, icon, penalty, questionKey, questionTitle,
+            } = oldMarker;
+            const lat = position.lat();
+            const lng = position.lng();
+            const newMarker = new window.google.maps.Marker({
+                position: { lat, lng },
+                map,
+                draggable: true,
+                order: i + 1,
+                icon,
+                penalty,
+                questionKey,
+                questionTitle,
+            });
+            newMarker.addListener('dragend', (event) => {
+                this.props.drag(newMarker.order, event.latLng.lat(), event.latLng.lng());
+            });
+            this.props.addCheckpoint(newMarker);
+        }
+
+        this.drawPath();
     }
 
     createGoogleMap = () => new window.google.maps.Map(this.googleMapRef.current, {
@@ -119,7 +158,7 @@ class GoogleMap extends Component {
             this.props.drag(marker.order, event.latLng.lat(), event.latLng.lng());
         });
 
-        this.addMarkerClickListener(marker);
+        // this.addMarkerClickListener(marker);
 
         this.props.addCheckpoint(marker);
     }
@@ -130,19 +169,15 @@ class GoogleMap extends Component {
         });
     }
 
-    deleteMarker = (marker) => {
-        console.log('hallelujah');
-    }
-
-    addMarkerClickListener = (marker) => {
-        const contentString = 'test';
-        const infoWindow = new window.google.maps.InfoWindow({
-            content: contentString,
-        });
-        marker.addListener('click', (event) => {
-            infoWindow.open(map, marker);
-        });
-    }
+    // addMarkerClickListener = (marker) => {
+    //     const contentString = 'test';
+    //     const infoWindow = new window.google.maps.InfoWindow({
+    //         content: contentString,
+    //     });
+    //     marker.addListener('click', (event) => {
+    //         infoWindow.open(map, marker);
+    //     });
+    // }
 
     drawLines = (markers) => {
         const pathCoords = [];

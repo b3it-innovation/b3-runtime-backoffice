@@ -8,6 +8,7 @@ import { Button } from '@material-ui/core';
 
 import * as actions from '../../../store/actions/index';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
+import SaveButton from '../../../components/UI/Button/SaveButton/SaveButton';
 import { checkValidity, updateObject } from '../../../utility/Util/Util';
 
 const styles = {
@@ -37,6 +38,9 @@ const styles = {
 class TrackForm extends Component {
     constructor(props) {
         super(props);
+
+        const { categoryKey, trackName } = this.props;
+
         this.state = {
             form: {
                 name: {
@@ -45,7 +49,7 @@ class TrackForm extends Component {
                         type: 'text',
                         placeholder: 'Name',
                     },
-                    value: '',
+                    value: trackName || '',
                     validation: {
                         required: true,
                     },
@@ -58,7 +62,7 @@ class TrackForm extends Component {
                         type: 'text',
                         placeholder: 'Name',
                     },
-                    value: '',
+                    value: categoryKey || '',
                     validation: {
                         required: true,
                     },
@@ -123,13 +127,14 @@ class TrackForm extends Component {
                     name="categoryKey"
                     id="categoryId"
                 />
-                <Button
+                <SaveButton
                     className={classes.button}
+                    label="Save Track"
                     disabled={checkpoints.length < 1 || !formIsValid}
-                    onClick={() => handleSave(form.name.value, form.categoryKey.value)}
+                    click={() => handleSave(form.name.value, form.categoryKey.value)}
                 >
                     Save track
-                </Button>
+                </SaveButton>
                 <Button
                     className={classes.button}
                     disabled={checkpoints.length < 4

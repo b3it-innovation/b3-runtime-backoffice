@@ -10,6 +10,9 @@ import TrackForm from './TrackForm/TrackForm';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import QuestionScroller from './QuestionScroller/QuestionScroller';
 import CheckpointPresenter from './CheckpointPresenter/CheckpointPresenter';
+import SaveButton from '../../components/UI/Button/SaveButton/SaveButton';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import Modal from '../../components/UI/Modal/Modal';
 
 const YELLOW_MARKER = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fbff0f';
 const RED_MARKER = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569';
@@ -35,6 +38,12 @@ class Tracks extends Component {
             return ({ checkpoints: newCheckpoints, expanded: false });
         });
         this.onOpenPanel();
+    }
+
+    clearCheckpoints = () => {
+        this.setState({
+            checkpoints: [],
+        });
     }
 
     handlePanelChange = (panelId) => (event, newExpanded) => {
@@ -109,9 +118,35 @@ class Tracks extends Component {
             checkpoint.penalty = pen;
             return checkpoint;
         });
+        this.moveQuestionsInCheckpoints(newCheckpoints, order);
         this.setState({
             checkpoints: newCheckpoints,
         });
+    }
+
+    moveQuestionsInCheckpoints = (checkpoints, order) => {
+        if ((order === 1 || order % 2 === 1) && order !== checkpoints.length + 1) {
+            for (let i = order - 1; i < checkpoints.length - 1; i += 2) {
+                const title = checkpoints[i].questionTitle;
+                const key = checkpoints[i].questionKey;
+                checkpoints[i + 1].questionTitle = title;
+                checkpoints[i + 1].questionKey = key;
+                checkpoints[i].questionTitle = null;
+                checkpoints[i].questionKey = null;
+            }
+        } else if (order === (checkpoints.length + 1)) {
+            checkpoints[order - 2].questionTitle = null;
+            checkpoints[order - 2].questionKey = null;
+        } else {
+            for (let i = order; i < checkpoints.length - 1; i += 2) {
+                const title = checkpoints[i].questionTitle;
+                const key = checkpoints[i].questionKey;
+                checkpoints[i - 1].questionTitle = title;
+                checkpoints[i - 1].questionKey = key;
+                checkpoints[i].questionTitle = null;
+                checkpoints[i].questionKey = null;
+            }
+        }
     }
 
     updateGoalMarkerIcon = () => {
@@ -187,10 +222,23 @@ class Tracks extends Component {
         }
     }
 
+    handleBack = () => {
+        this.setState({
+            editing: false,
+        });
+    }
+
     render() {
         const {
-            checkpoints, expanded, editing, currentCheckpoint,
+            checkpoints, expanded, editing, currentCheckpoint, trackName, categoryKey,
         } = this.state;
+        const { loading } = this.props;
+
+        let spinner = null;
+        if (loading) {
+            spinner = <Spinner />;
+        }
+        const modal = <Modal open={loading}>{spinner}</Modal>;
 
         let trackView = null;
 
@@ -204,6 +252,7 @@ class Tracks extends Component {
                         length={checkpoints.length}
                         drag={this.handleDraggedCheckpoint}
                         onUpdate={this.updateGoalMarkerIcon}
+                        clearCheckpoints={this.clearCheckpoints}
                     />
                     <div className={classes.checkpointsContainer}>
                         <CheckpointScroller
@@ -219,8 +268,11 @@ class Tracks extends Component {
                         checkpoints={checkpoints}
                         handleContinue={this.handleContinue}
                         handleSave={this.handleSave}
+                        categoryKey={categoryKey}
+                        trackName={trackName}
                     />
                 </div>
+                {modal}
             </Aux>
         );
 
@@ -237,22 +289,30 @@ class Tracks extends Component {
                         />
                     </div>
                     <div className={classes.checkpointsContainer}>
-                        {currentCheckpoint
+                        {currentCheckpoint && expanded
                             ? (
                                 <CheckpointPresenter
                                     checkpoint={currentCheckpoint}
                                     onChange={this.handleCheckpointTitleChange}
                                 />
                             ) : null}
-                        <Button onClick={this.handleSave}>Save track</Button>
+                        <SaveButton click={this.handleSave}>Save track</SaveButton>
+                        <Button
+                            className={classes.button}
+                            onClick={() => this.handleBack()}
+                        >
+                            Back to map
+                        </Button>
                     </div>
                     <div className={classes.checkpointsContainer}>
                         <QuestionScroller
                             onSelect={this.handleSelect}
+                            checkpointExpanded={expanded}
                             currentCheckpoint={currentCheckpoint}
                             checkpointsLength={checkpoints.length}
                         />
                     </div>
+                    {modal}
                 </div>
             );
         }
@@ -266,6 +326,7 @@ class Tracks extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    loading: state.tracks.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({

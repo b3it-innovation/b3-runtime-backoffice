@@ -41,7 +41,7 @@ const addCategorySuccess = () => (
     }
 );
 
-const addCategoryError = (error) => (
+export const addCategoryError = (error) => (
     {
         type: actionTypes.ADD_CATEGORY_ERROR,
         err: error,
@@ -86,7 +86,8 @@ export const deleteCategory = (categoryId) => (
                         .get()
                         .then((res) => {
                             if (res.size === 0) {
-                                firestore.collection(collectionsNames.CATEGORIES).doc(categoryId).delete()
+                                firestore.collection(collectionsNames.CATEGORIES).doc(categoryId)
+                                    .delete()
                                     .then(() => {
                                         dispatch(deleteCategorySuccess(categoryId));
                                     })

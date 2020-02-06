@@ -96,6 +96,7 @@ class Results extends Component {
 
     showDetails = (id) => {
         const result = this.props.results.find((res) => res.id === id);
+        this.props.fetchUserAccountById(result.attendee.userAccountKey);
         this.setState({
             chosenResult: result,
         });
@@ -124,7 +125,7 @@ class Results extends Component {
             competition, track, chosenResult, modalOpen,
         } = this.state;
         const {
-            competitions, tracks, results, compLoading, trackLoading, resultLoading,
+            competitions, tracks, results, compLoading, trackLoading, resultLoading, userAccount,
         } = this.props;
         let spinner = null;
         if (compLoading || trackLoading || resultLoading) {
@@ -208,7 +209,9 @@ class Results extends Component {
                             open={modalOpen}
                             handleClose={this.handleClose}
                         >
-                            {chosenResult ? <ResultDisplay result={chosenResult} /> : null}
+                            {chosenResult && userAccount
+                                ? <ResultDisplay result={chosenResult} userAccount={userAccount} /> 
+                                : null}
                         </TransitionModal>
                         {table}
                         {spinner}
@@ -230,12 +233,14 @@ const mapStateToProps = (state) => ({
     compLoading: state.competitions.loading,
     trackLoading: state.tracks.loading,
     resultLoading: state.results.loading,
+    userAccount: state.userAccounts.userAccount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     initCompetitions: () => dispatch(actions.fetchCompetitions()),
     searchTracks: (trackKeys) => dispatch(actions.searchTracksByKeys(trackKeys)),
     searchResults: (trackKey) => dispatch(actions.fetchResultsByTrackKey(trackKey)),
+    fetchUserAccountById: (userId) => dispatch(actions.fetchUserAccountById(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Results));

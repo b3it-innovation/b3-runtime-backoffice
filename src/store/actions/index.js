@@ -9,6 +9,7 @@ export {
 export {
     fetchCategories,
     addCategory,
+    addCategoryError,
     deleteCategory,
     updateCategory,
     resetCategoryError,
@@ -32,3 +33,7 @@ export {
 export {
     fetchResultsByTrackKey,
 } from './resultActions';
+
+export {
+    fetchUserAccountById,
+} from './userAccountActions';

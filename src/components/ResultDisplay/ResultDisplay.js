@@ -6,7 +6,7 @@ export default function ResultDisplay(props) {
     let totalCheckpoints = 0;
     let totalCorrect = 0;
 
-    const { result } = props;
+    const { result, userAccount } = props;
 
     result.results.forEach((pin) => {
         if (pin.questionKey) {
@@ -28,8 +28,24 @@ export default function ResultDisplay(props) {
                 {result.attendee.trackName}
             </p>
             <p>
+                UserID:
+                {userAccount ? userAccount.id : ''}
+            </p>
+            <p>
                 Username:
                 {result.attendee.name}
+            </p>
+            <p>
+                Firstname:
+                {userAccount ? userAccount.firstName : ''}
+            </p>
+            <p>
+                Lastname:
+                {userAccount ? userAccount.lastName : ''}
+            </p>
+            <p>
+                Organization:
+                {userAccount ? userAccount.organization : ''}
             </p>
             <p>
                 Total time:

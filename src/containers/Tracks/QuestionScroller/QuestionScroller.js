@@ -44,11 +44,15 @@ class QuestionScroller extends Component {
 
     render() {
         const { category, expanded } = this.state;
-        const { categories, questions, onSelect, currentCheckpoint, checkpointsLength } = this.props;
+        const {
+            categories, questions, onSelect, currentCheckpoint,
+            checkpointsLength, checkpointExpanded,
+        } = this.props;
         let panels = null;
         let select = null;
-        if (currentCheckpoint) {
-            if (currentCheckpoint.order !== 1 && !currentCheckpoint.penalty && checkpointsLength !== currentCheckpoint.order) {
+        if (currentCheckpoint && checkpointExpanded) {
+            if (currentCheckpoint.order !== 1
+                && !currentCheckpoint.penalty && checkpointsLength !== currentCheckpoint.order) {
                 select = onSelect;
             }
         }
@@ -64,7 +68,6 @@ class QuestionScroller extends Component {
                     handleChange={this.handlePanelChange}
                     onSelect={select}
                 />
-
             ));
         }
 

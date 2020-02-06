@@ -4,6 +4,7 @@ import categoryReducer from './categoryReducer';
 import competitionReducer from './competitionReducer';
 import trackReducer from './trackReducer';
 import resultReducer from './resultReducer';
+import userAccountReducer from './userAccountReducer';
 
 const rootReducer = combineReducers({
     questions: questionReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     competitions: competitionReducer,
     tracks: trackReducer,
     results: resultReducer,
+    userAccounts: userAccountReducer,
 });
 
 export default rootReducer;
