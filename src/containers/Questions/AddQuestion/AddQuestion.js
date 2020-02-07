@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
@@ -16,8 +15,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 
 import * as actions from '../../../store/actions/index';
+import Button from '../../../components/UI/Button/Button';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
-import DeleteButton from '../../../components/UI/Button/DeleteButton/DeleteButton';
 import ImageTransitionOverlay from '../../../components/UI/ImageTransitionOverlay/ImageTransitionOverlay';
 import checkbox from '../../../assets/images/checkbox.png';
 
@@ -35,6 +34,9 @@ const useStyles = makeStyles({
     card: {
         minWidth: '100%',
         maxWidth: 1075,
+    },
+    cardAction: {
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
@@ -97,8 +99,7 @@ const AddQuestion = (props) => {
 
     const classes = useStyles();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         props.addQuestion({ ...localState });
         setLocalState({
             text: '',
@@ -140,8 +141,7 @@ const AddQuestion = (props) => {
         }
     }
 
-    const handleAddOption = (e) => {
-        e.preventDefault();
+    const handleAddOption = () => {
         const option = (` ${optionInput.currentOption}`).slice(1);
         let optionLetter = null;
         if (!localState.options) {
@@ -183,7 +183,7 @@ const AddQuestion = (props) => {
 
 
     let form = <Spinner />;
-
+    const disabled = localState.options.length >= 4;
     if (!loading) {
         form = (
             <form autoComplete="off">
@@ -200,9 +200,9 @@ const AddQuestion = (props) => {
                 />
 
                 <TextField name="option" value={optionInput.currentOption} onChange={handleChange} className={classes.input} label="Option" variant="filled" />
-                {localState.options.length < 4 ? <Button size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>
-                    : <Button disabled size="small" className={classes.optionsButton} onClick={handleAddOption}>ADD OPTION</Button>}
-
+                <div>
+                    <Button size="small" disabled={disabled} className={classes.optionsButton} click={handleAddOption} text="add option" type="add" />
+                </div>
                 <FormControl component="fieldset" className={classes.radio}>
                     <FormLabel component="legend">Mark the correct answer</FormLabel>
                     <RadioGroup name="correctAnswer" className={classes.radio} value={localState.correctAnswer} onChange={handleChange}>
@@ -215,7 +215,7 @@ const AddQuestion = (props) => {
                                     label={`${optionLetters[index]} ${option.text}`}
                                     labelPlacement="end"
                                 />
-                                <DeleteButton click={handleDeleteOption} index={option.option} />
+                                <Button click={handleDeleteOption} index={option.option} type="delete" text="delete" />
                             </div>
                         ))}
 
@@ -254,10 +254,9 @@ const AddQuestion = (props) => {
                         : null}
                     {form}
                 </CardContent>
-                <CardActions>
-                    {questionKey ? <Button size="large" onClick={handleUpdate}>UPDATE QUESTION</Button>
-                        : <Button size="large" onClick={handleSubmit}>SAVE QUESTION</Button>}
-
+                <CardActions className={classes.cardAction}>
+                    {questionKey ? <Button size="large" click={handleUpdate} text="update question" type="update" />
+                        : <Button size="large" click={handleSubmit} text="save question" type="save" />}
                 </CardActions>
             </Card>
         </div>
@@ -274,7 +273,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     addQuestion: (question) => dispatch(actions.addQuestion(question)),
-    updateQuestion: (questionKey, question) => dispatch(actions.updateQuestion(questionKey, question)),
+    updateQuestion: (Key, question) => dispatch(actions.updateQuestion(Key, question)),
     init: () => dispatch(actions.addQuestionInit()),
 });
 

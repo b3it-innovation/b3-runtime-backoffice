@@ -5,10 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 
-import EditButton from '../../Button/EditButton/EditButton';
-import DeleteButton from '../../Button/DeleteButton/DeleteButton';
+import Button from '../../Button/Button';
 import Aux from '../../../../hoc/Auxiliary/Auxiliary';
 
 const useStyles = makeStyles((theme) => ({
@@ -70,10 +68,10 @@ function PanelDetail(props) {
                         Correct Answer:
                         {object.correctAnswer}
                     </p>
-                    {onEdit ? (<EditButton click={() => onEdit(id)} />) : null}
-                    {onDelete ? (<DeleteButton click={() => onDelete(id)} />) : null }
+                    {onEdit ? (<Button click={() => onEdit(id)} type="edit" text="Edit" />) : null}
+                    {onDelete ? (<Button click={() => onDelete(id)} type="delete" text="delete" />) : null }
                     {onSelect
-                        ? (<Button onClick={() => onSelect(id, object.title)}>SELECT</Button>)
+                        ? (<Button click={() => onSelect(id, object.title)} text="select" />)
                         : null}
                 </div>
             </Aux>
@@ -100,12 +98,12 @@ function PanelDetail(props) {
                 <div className={classes.containerItem}>
                     Tracks:
                     {' '}
-                    {matchedTracks.length > 0 ? matchedTracks.map((track) => (
+                    {matchedTracks && matchedTracks.length > 0 ? matchedTracks.map((track) => (
                         <p key={track.id}>
                             {track.name}
                         </p>
                     )) : (<p>No tracks</p>) }
-                    {onEdit ? (<EditButton click={() => onEdit(object.id)} />) : null }
+                    {onEdit ? (<Button click={() => onEdit(object.id)} type="edit" text="Edit" />) : null }
                 </div>
             </Aux>
         );
@@ -120,7 +118,7 @@ function PanelDetail(props) {
                     <p>Penalty:</p>
                     {' '}
                     <p>{object.penalty.toString()}</p>
-                    {onDelete ? (<DeleteButton click={() => onDelete(order)} />) : null }
+                    {onDelete ? (<Button click={() => onDelete(order)} type="delete" text="delete" />) : null }
                 </div>
             </Aux>
         );

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
 import classes from './Tracks.module.css';
 
 import Map from './Map/Map';
@@ -10,7 +9,7 @@ import TrackForm from './TrackForm/TrackForm';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import QuestionScroller from './QuestionScroller/QuestionScroller';
 import CheckpointPresenter from './CheckpointPresenter/CheckpointPresenter';
-import SaveButton from '../../components/UI/Button/SaveButton/SaveButton';
+import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Modal from '../../components/UI/Modal/Modal';
 
@@ -296,13 +295,12 @@ class Tracks extends Component {
                                     onChange={this.handleCheckpointTitleChange}
                                 />
                             ) : null}
-                        <SaveButton click={this.handleSave}>Save track</SaveButton>
+                        <Button click={this.handleSave} type="save" text="save track" />
                         <Button
-                            className={classes.button}
-                            onClick={() => this.handleBack()}
-                        >
-                            Back to map
-                        </Button>
+                            click={() => this.handleBack()}
+                            text="Back to map"
+                            type="back"
+                        />
                     </div>
                     <div className={classes.checkpointsContainer}>
                         <QuestionScroller

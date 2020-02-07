@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
 
 import * as actions from '../../../store/actions/index';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
-import SaveButton from '../../../components/UI/Button/SaveButton/SaveButton';
+import Button from '../../../components/UI/Button/Button';
 import { checkValidity, updateObject } from '../../../utility/Util/Util';
 
 const styles = {
@@ -127,22 +126,20 @@ class TrackForm extends Component {
                     name="categoryKey"
                     id="categoryId"
                 />
-                <SaveButton
-                    className={classes.button}
-                    label="Save Track"
+                <Button
+                    text="Save Track"
+                    type="save"
                     disabled={checkpoints.length < 1 || !formIsValid}
                     click={() => handleSave(form.name.value, form.categoryKey.value)}
-                >
-                    Save track
-                </SaveButton>
+                />
                 <Button
                     className={classes.button}
+                    text="continue edit"
+                    type="continue"
                     disabled={checkpoints.length < 4
                         || checkpoints.length % 2 === 1 || !formIsValid}
-                    onClick={() => handleContinue(form.name.value, form.categoryKey.value)}
-                >
-                    Continue
-                </Button>
+                    click={() => handleContinue(form.name.value, form.categoryKey.value)}
+                />
             </div>
         );
     }

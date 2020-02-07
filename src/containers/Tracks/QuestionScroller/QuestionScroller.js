@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import SingleOpenPanel from '../../../components/UI/Panel/SingleOpenPanel/SingleOpenPanel';
 import DropDown from '../../../components/UI/Dropdown/DropDown';
-import SearchButton from '../../../components/UI/Button/SearchButton/SearchButton';
+import Button from '../../../components/UI/Button/Button';
 import Aux from '../../../hoc/Auxiliary/Auxiliary';
 import * as actions from '../../../store/actions/index';
 
@@ -83,7 +83,7 @@ class QuestionScroller extends Component {
                     name="category"
                     id="categoryId"
                 />
-                <div><SearchButton click={this.handleSearch} /></div>
+                <div><Button click={this.handleSearch} type="search" text="Search" /></div>
                 {panels}
             </Aux>
         );
