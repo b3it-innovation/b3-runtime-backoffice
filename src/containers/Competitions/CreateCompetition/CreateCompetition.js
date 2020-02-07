@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -18,6 +17,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
 
@@ -35,6 +35,9 @@ const styles = {
     card: {
         minWidth: '100%',
         maxWidth: 1075,
+    },
+    cardAction: {
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
@@ -79,8 +82,7 @@ class CreateCompetition extends Component {
         }
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
+    handleSubmit = () => {
         this.props.addCompetition({ ...this.state });
         this.resetState();
     }
@@ -89,10 +91,6 @@ class CreateCompetition extends Component {
         this.props.updateCompetition(this.props.competitionId, { ...this.state });
         this.props.handleSetId(null);
         this.resetState();
-    }
-
-    handleAddOption = (e) => {
-        e.preventDefault();
     }
 
     handleChange = (event) => {
@@ -149,7 +147,11 @@ class CreateCompetition extends Component {
                     )}
                 >
                     { tracks.map((track) => (
-                        <ListItem key={track.id} button onClick={this.handleTrackCheckToggle(track.id)}>
+                        <ListItem
+                            key={track.id}
+                            button
+                            onClick={this.handleTrackCheckToggle(track.id)}
+                        >
                             <ListItemText id={track.id} primary={track.name} />
                             <ListItemSecondaryAction>
                                 <Checkbox
@@ -198,9 +200,10 @@ class CreateCompetition extends Component {
                         </Typography>
                         {form}
                     </CardContent>
-                    <CardActions>
-                        {competitionId ? <Button size="large" onClick={this.handleUpdate}>UPDATE COMPETITION</Button>
-                            : <Button size="large" onClick={this.handleSubmit}>SAVE COMPETITION</Button>}
+                    <CardActions className={classes.cardAction}>
+                        {competitionId
+                            ? <Button size="large" click={this.handleUpdate} text="update competition" type="update" />
+                            : <Button size="large" click={this.handleSubmit} text="save competition" type="save" />}
                     </CardActions>
                 </Card>
             </div>

@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import {
@@ -15,8 +14,7 @@ import {
 
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/index';
-import DeleteButton from '../../components/UI/Button/DeleteButton/DeleteButton';
-import EditButton from '../../components/UI/Button/EditButton/EditButton';
+import Button from '../../components/UI/Button/Button';
 import TransitionModal from '../../components/UI/Modal/Modal';
 import ErrorModal from '../../components/UI/Modal/ErrorModal/ErrorModal';
 import { checkValidity, updateObject } from '../../utility/Util/Util';
@@ -34,6 +32,9 @@ const styles = {
     card: {
         minWidth: '100%',
         maxWidth: 1075,
+    },
+    cardAction: {
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
@@ -101,9 +102,8 @@ class Categories extends Component {
         return array.length > 0;
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = () => {
         const { form } = this.state;
-        e.preventDefault();
         if (this.checkSameCategoryNameExists(form.name.value)) {
             const errorMessage = 'Same category name already exists.';
             this.props.addCategoryError({ message: errorMessage });
@@ -233,7 +233,7 @@ class Categories extends Component {
                         helperText={!editForm.editName.valid && editForm.editName.touched ? 'Required' : null}
                     />
                     <div>
-                        <EditButton click={() => this.handleUpdate()} disabled={!editFormIsValid} />
+                        <Button click={() => this.handleUpdate()} disabled={!editFormIsValid} type="update" text="UPDATE" />
                     </div>
                 </div>
             </TransitionModal>
@@ -292,11 +292,13 @@ class Categories extends Component {
                                         {cat.name}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <EditButton
+                                        <Button
                                             click={() => this.handleEdit(cat.id, cat.name)}
                                             index={cat.id}
+                                            type="edit"
+                                            text="edit"
                                         />
-                                        <DeleteButton click={this.handleDelete} index={cat.id} />
+                                        <Button click={this.handleDelete} index={cat.id} type="delete" text="delete" />
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -315,8 +317,14 @@ class Categories extends Component {
                         </Typography>
                         {formContent}
                     </CardContent>
-                    <CardActions>
-                        <Button size="large" onClick={this.handleSubmit} disabled={!formIsValid || form.name.value === ''}>ADD CATEGORY</Button>
+                    <CardActions className={classes.cardAction}>
+                        <Button
+                            click={this.handleSubmit}
+                            size="large"
+                            text="ADD CATEGORY"
+                            type="add"
+                            disabled={!formIsValid || form.name.value === ''}
+                        />
                     </CardActions>
                 </Card>
                 {errorModal}

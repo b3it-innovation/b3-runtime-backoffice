@@ -12,7 +12,7 @@ import DropDown from '../../../components/UI/Dropdown/DropDown';
 import Panel from '../../../components/UI/Panel/Panel';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../store/actions/index';
-import SearchButton from '../../../components/UI/Button/SearchButton/SearchButton';
+import Button from '../../../components/UI/Button/Button';
 
 
 const styles = {
@@ -114,7 +114,7 @@ class BrowseQuestions extends Component {
                             name="category"
                             id="categoryId"
                         />
-                        <div><SearchButton click={this.handleSearch} /></div>
+                        <div><Button click={this.handleSearch} type="search" text="Search" /></div>
                         {spinner}
                         {questionList}
                     </CardContent>

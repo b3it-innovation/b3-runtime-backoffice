@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import DropDown from '../../components/UI/Dropdown/DropDown';
 import * as actions from '../../store/actions/index';
-import SearchButton from '../../components/UI/Button/SearchButton/SearchButton';
+import Button from '../../components/UI/Button/Button';
 import TransitionModal from '../../components/UI/Modal/Modal';
 import ResultDisplay from '../../components/ResultDisplay/ResultDisplay';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -160,7 +160,7 @@ class Results extends Component {
         }
         let button = null;
         if (track) {
-            button = <div><SearchButton click={this.handleSearch} /></div>;
+            button = <div><Button click={this.handleSearch} type="search" text="Search" /></div>;
         }
 
         let table = null;
