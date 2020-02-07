@@ -210,7 +210,7 @@ class Results extends Component {
                             handleClose={this.handleClose}
                         >
                             {chosenResult && userAccount
-                                ? <ResultDisplay result={chosenResult} userAccount={userAccount} /> 
+                                ? <ResultDisplay result={chosenResult} userAccount={userAccount} />
                                 : null}
                         </TransitionModal>
                         {table}

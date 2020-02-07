@@ -15,6 +15,7 @@
 /src/utility/apiKeys.js
 
 # misc
+/.vscode
 /.idea
 .DS_Store
 .env.local
