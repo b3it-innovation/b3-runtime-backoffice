@@ -86,6 +86,9 @@ class Categories extends Component {
             modalOpen: false,
             errorModalOpen: true,
             editId: null,
+            questionCount: {
+                chosenCategory: null,
+            },
         };
     }
 
@@ -207,6 +210,17 @@ class Categories extends Component {
         this.props.resetCategoryError();
     }
 
+    showQuestionCount = (catId) => {
+        const { searchQuestionsByCategory } = this.props;
+        if (this.state.questionCount.chosenCategory !== catId) {
+            searchQuestionsByCategory(catId);
+        }
+
+        this.setState({
+            questionCount: { chosenCategory: catId },
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const { categories, loading, err } = this.props;
@@ -274,6 +288,8 @@ class Categories extends Component {
 
         let table = null;
         if (categories) {
+            const { questionCount } = this.state;
+            const { fetchedQuestions } = this.props;
             table = (
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
@@ -290,8 +306,10 @@ class Categories extends Component {
                                 <TableRow key={cat.id}>
                                     <TableCell component="th" scope="row">
                                         {cat.name}
+                                        <Typography variant="subtitle2">{questionCount.chosenCategory === cat.id ? `Number of questions: ${fetchedQuestions.length}` : null}</Typography>
                                     </TableCell>
                                     <TableCell align="right">
+                                        <Button click={() => this.showQuestionCount(cat.id)} text="Show number of questions" type="search" />
                                         <Button
                                             click={() => this.handleEdit(cat.id, cat.name)}
                                             index={cat.id}
@@ -343,6 +361,7 @@ const mapStateToProps = (state) => ({
     categories: state.categories.categories,
     loading: state.categories.loading,
     err: state.categories.error,
+    fetchedQuestions: state.questions.fetchedQuestions,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -352,6 +371,7 @@ const mapDispatchToProps = (dispatch) => ({
     deleteCategory: (id) => dispatch(actions.deleteCategory(id)),
     updateCategory: (id, newName) => dispatch(actions.updateCategory(id, newName)),
     resetCategoryError: () => dispatch(actions.resetCategoryError()),
+    searchQuestionsByCategory: (categoryId) => dispatch(actions.searchQuestions(categoryId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Categories));
